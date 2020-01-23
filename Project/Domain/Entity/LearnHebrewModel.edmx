@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Adult">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Password" Type="nvarchar(max)" />
+          <Property Name="Data" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Child">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Password" Type="nvarchar(max)" />
+          <Property Name="Color" Type="nvarchar(max)" />
+          <Property Name="Data" Type="nvarchar(max)" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChildToAdult">
+          <Key>
+            <PropertyRef Name="ChildToAdultID" />
+          </Key>
+          <Property Name="ChildToAdultID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ChildID" Type="int" Nullable="false" />
+          <Property Name="AdultID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChildToGame">
+          <Key>
+            <PropertyRef Name="ChildToGameID" />
+          </Key>
+          <Property Name="ChildToGameID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ChildID" Type="int" Nullable="false" />
+          <Property Name="AdultID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChildToUnseen">
+          <Key>
+            <PropertyRef Name="ChildToUnseenID" />
+          </Key>
+          <Property Name="ChildToUnseenID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ChildID" Type="int" Nullable="false" />
+          <Property Name="UnseenID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Game">
+          <Key>
+            <PropertyRef Name="GameID" />
+          </Key>
+          <Property Name="GameID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Unseen">
+          <Key>
+            <PropertyRef Name="UnseenID" />
+          </Key>
+          <Property Name="UnseenID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="nvarchar(max)" />
+          <Property Name="AdultID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="Adult" EntityType="Self.Adult" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Child" EntityType="Self.Child" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChildToAdult" EntityType="Self.ChildToAdult" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChildToGame" EntityType="Self.ChildToGame" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChildToUnseen" EntityType="Self.ChildToUnseen" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Game" EntityType="Self.Game" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Unseen" EntityType="Self.Unseen" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Adult">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Child">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Color" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="ChildToAdult">
+          <Key>
+            <PropertyRef Name="ChildToAdultID" />
+          </Key>
+          <Property Name="ChildToAdultID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ChildID" Type="Int32" Nullable="false" />
+          <Property Name="AdultID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChildToGame">
+          <Key>
+            <PropertyRef Name="ChildToGameID" />
+          </Key>
+          <Property Name="ChildToGameID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ChildID" Type="Int32" Nullable="false" />
+          <Property Name="AdultID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChildToUnseen">
+          <Key>
+            <PropertyRef Name="ChildToUnseenID" />
+          </Key>
+          <Property Name="ChildToUnseenID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ChildID" Type="Int32" Nullable="false" />
+          <Property Name="UnseenID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Game">
+          <Key>
+            <PropertyRef Name="GameID" />
+          </Key>
+          <Property Name="GameID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Unseen">
+          <Key>
+            <PropertyRef Name="UnseenID" />
+          </Key>
+          <Property Name="UnseenID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AdultID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="LearnHebrewDbContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Adults" EntityType="Self.Adult" />
+          <EntitySet Name="Children" EntityType="Self.Child" />
+          <EntitySet Name="ChildToAdults" EntityType="Self.ChildToAdult" />
+          <EntitySet Name="ChildToGames" EntityType="Self.ChildToGame" />
+          <EntitySet Name="ChildToUnseens" EntityType="Self.ChildToUnseen" />
+          <EntitySet Name="Games" EntityType="Self.Game" />
+          <EntitySet Name="Unseens" EntityType="Self.Unseen" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="LearnHebrewDbContext">
+          <EntitySetMapping Name="Adults">
+            <EntityTypeMapping TypeName="Model.Adult">
+              <MappingFragment StoreEntitySet="Adult">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Children">
+            <EntityTypeMapping TypeName="Model.Child">
+              <MappingFragment StoreEntitySet="Child">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChildToAdults">
+            <EntityTypeMapping TypeName="Model.ChildToAdult">
+              <MappingFragment StoreEntitySet="ChildToAdult">
+                <ScalarProperty Name="ChildToAdultID" ColumnName="ChildToAdultID" />
+                <ScalarProperty Name="ChildID" ColumnName="ChildID" />
+                <ScalarProperty Name="AdultID" ColumnName="AdultID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChildToGames">
+            <EntityTypeMapping TypeName="Model.ChildToGame">
+              <MappingFragment StoreEntitySet="ChildToGame">
+                <ScalarProperty Name="ChildToGameID" ColumnName="ChildToGameID" />
+                <ScalarProperty Name="ChildID" ColumnName="ChildID" />
+                <ScalarProperty Name="AdultID" ColumnName="AdultID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChildToUnseens">
+            <EntityTypeMapping TypeName="Model.ChildToUnseen">
+              <MappingFragment StoreEntitySet="ChildToUnseen">
+                <ScalarProperty Name="ChildToUnseenID" ColumnName="ChildToUnseenID" />
+                <ScalarProperty Name="ChildID" ColumnName="ChildID" />
+                <ScalarProperty Name="UnseenID" ColumnName="UnseenID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Games">
+            <EntityTypeMapping TypeName="Model.Game">
+              <MappingFragment StoreEntitySet="Game">
+                <ScalarProperty Name="GameID" ColumnName="GameID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Unseens">
+            <EntityTypeMapping TypeName="Model.Unseen">
+              <MappingFragment StoreEntitySet="Unseen">
+                <ScalarProperty Name="UnseenID" ColumnName="UnseenID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AdultID" ColumnName="AdultID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
