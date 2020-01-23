@@ -50,15 +50,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\Adult.cs">
+      <DependentUpon>LearnHebrewModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\Child.cs">
+      <DependentUpon>LearnHebrewModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\ChildToAdult.cs">
+      <DependentUpon>LearnHebrewModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\ChildToGame.cs">
+      <DependentUpon>LearnHebrewModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\ChildToUnseen.cs">
+      <DependentUpon>LearnHebrewModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\Game.cs">
+      <DependentUpon>LearnHebrewModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entity\LearnHebrewModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>LearnHebrewModel.Context.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entity\LearnHebrewModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LearnHebrewModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entity\LearnHebrewModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>LearnHebrewModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\Unseen.cs">
+      <DependentUpon>LearnHebrewModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -79,10 +105,19 @@
     <Content Include="Entity\LearnHebrewModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>LearnHebrewModel.Context.cs</LastGenOutput>
+      <DependentUpon>LearnHebrewModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Entity\LearnHebrewModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>LearnHebrewModel.edmx</DependentUpon>
+      <LastGenOutput>LearnHebrewModel.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
