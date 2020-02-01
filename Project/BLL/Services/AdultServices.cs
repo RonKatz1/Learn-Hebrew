@@ -58,7 +58,7 @@ namespace BLL.Services
                 EAdult.AdultID = BAdult.AdultID;
                 EAdult.Name = BAdult.Name;
                 EAdult.Password = BAdult.Password;
-                EAdult.Data = Serialization.Serialize2(BAdult.Data));
+                EAdult.Data = Serialization.Serialize2(BAdult.Data);
                 return EAdult;
             }
             catch (Exception ex)
