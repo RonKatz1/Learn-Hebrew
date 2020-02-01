@@ -18,6 +18,6 @@ namespace Domain.Entity
         public string Password { get; set; }
         public string Color { get; set; }
         public string Data { get; set; }
-        public int ID { get; set; }
+        public int ChildID { get; set; }
     }
 }

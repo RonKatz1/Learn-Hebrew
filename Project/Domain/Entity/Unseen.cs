@@ -15,7 +15,7 @@ namespace Domain.Entity
     public partial class Unseen
     {
         public int UnseenID { get; set; }
-        public string Date { get; set; }
         public int AdultID { get; set; }
+        public string Data { get; set; }
     }
 }

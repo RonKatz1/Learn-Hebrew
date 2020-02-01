@@ -14,9 +14,9 @@ namespace Domain.Entity
     
     public partial class Adult
     {
-        public int ID { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         public string Data { get; set; }
+        public int AdultID { get; set; }
     }
 }

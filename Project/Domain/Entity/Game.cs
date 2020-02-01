@@ -16,5 +16,6 @@ namespace Domain.Entity
     {
         public int GameID { get; set; }
         public string Name { get; set; }
+        public string Data { get; set; }
     }
 }

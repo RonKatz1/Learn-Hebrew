@@ -16,6 +16,6 @@ namespace Domain.Entity
     {
         public int ChildToGameID { get; set; }
         public int ChildID { get; set; }
-        public int AdultID { get; set; }
+        public int GameID { get; set; }
     }
 }

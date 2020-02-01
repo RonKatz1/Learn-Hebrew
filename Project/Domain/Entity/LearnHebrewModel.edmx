@@ -4,25 +4,25 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Adult">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="AdultID" />
           </Key>
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AdultID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" />
           <Property Name="Password" Type="nvarchar(max)" />
           <Property Name="Data" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Child">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="ChildID" />
           </Key>
           <Property Name="Name" Type="nvarchar(max)" />
           <Property Name="Password" Type="nvarchar(max)" />
           <Property Name="Color" Type="nvarchar(max)" />
           <Property Name="Data" Type="nvarchar(max)" />
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ChildID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="ChildToAdult">
           <Key>
@@ -38,7 +38,7 @@
           </Key>
           <Property Name="ChildToGameID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ChildID" Type="int" Nullable="false" />
-          <Property Name="AdultID" Type="int" Nullable="false" />
+          <Property Name="GameID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ChildToUnseen">
           <Key>
@@ -54,13 +54,14 @@
           </Key>
           <Property Name="GameID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Data" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Unseen">
           <Key>
             <PropertyRef Name="UnseenID" />
           </Key>
           <Property Name="UnseenID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Date" Type="nvarchar(max)" />
+          <Property Name="Data" Type="nvarchar(max)" />
           <Property Name="AdultID" Type="int" Nullable="false" />
         </EntityType>
         <EntityContainer Name="ModelStoreContainer">
@@ -72,29 +73,28 @@
           <EntitySet Name="Game" EntityType="Self.Game" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Unseen" EntityType="Self.Unseen" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Adult">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="AdultID" />
           </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AdultID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="Child">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="ChildID" />
           </Key>
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Color" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ChildID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="ChildToAdult">
           <Key>
@@ -110,7 +110,7 @@
           </Key>
           <Property Name="ChildToGameID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ChildID" Type="Int32" Nullable="false" />
-          <Property Name="AdultID" Type="Int32" Nullable="false" />
+          <Property Name="GameID" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="ChildToUnseen">
           <Key>
@@ -126,14 +126,15 @@
           </Key>
           <Property Name="GameID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Unseen">
           <Key>
             <PropertyRef Name="UnseenID" />
           </Key>
           <Property Name="UnseenID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Date" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="AdultID" Type="Int32" Nullable="false" />
+          <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="LearnHebrewDbContext" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Adults" EntityType="Self.Adult" />
@@ -153,7 +154,7 @@
           <EntitySetMapping Name="Adults">
             <EntityTypeMapping TypeName="Model.Adult">
               <MappingFragment StoreEntitySet="Adult">
-                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="AdultID" ColumnName="AdultID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Data" ColumnName="Data" />
@@ -163,11 +164,11 @@
           <EntitySetMapping Name="Children">
             <EntityTypeMapping TypeName="Model.Child">
               <MappingFragment StoreEntitySet="Child">
+                <ScalarProperty Name="ChildID" ColumnName="ChildID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Color" ColumnName="Color" />
                 <ScalarProperty Name="Data" ColumnName="Data" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -183,9 +184,9 @@
           <EntitySetMapping Name="ChildToGames">
             <EntityTypeMapping TypeName="Model.ChildToGame">
               <MappingFragment StoreEntitySet="ChildToGame">
+                <ScalarProperty Name="GameID" ColumnName="GameID" />
                 <ScalarProperty Name="ChildToGameID" ColumnName="ChildToGameID" />
                 <ScalarProperty Name="ChildID" ColumnName="ChildID" />
-                <ScalarProperty Name="AdultID" ColumnName="AdultID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -201,6 +202,7 @@
           <EntitySetMapping Name="Games">
             <EntityTypeMapping TypeName="Model.Game">
               <MappingFragment StoreEntitySet="Game">
+                <ScalarProperty Name="Data" ColumnName="Data" />
                 <ScalarProperty Name="GameID" ColumnName="GameID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
@@ -209,8 +211,8 @@
           <EntitySetMapping Name="Unseens">
             <EntityTypeMapping TypeName="Model.Unseen">
               <MappingFragment StoreEntitySet="Unseen">
+                <ScalarProperty Name="Data" ColumnName="Data" />
                 <ScalarProperty Name="UnseenID" ColumnName="UnseenID" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="AdultID" ColumnName="AdultID" />
               </MappingFragment>
             </EntityTypeMapping>
