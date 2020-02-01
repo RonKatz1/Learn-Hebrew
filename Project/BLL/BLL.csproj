@@ -115,9 +115,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LearnHebrewEntities\Adult.cs" />
+    <Compile Include="LearnHebrewEntities\Child.cs" />
     <Compile Include="LearnHebrewEntities\Serialization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AdultServices.cs" />
+    <Compile Include="Services\ChildServices.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj">
