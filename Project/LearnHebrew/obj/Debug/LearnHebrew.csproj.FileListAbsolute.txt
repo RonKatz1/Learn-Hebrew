@@ -1,0 +1,2 @@
+C:\Users\tal\Documents\GitHub\Learn-Hebrew\Project\LearnHebrew\obj\Debug\LearnHebrew.csprojAssemblyReference.cache
+C:\Users\tal\Documents\GitHub\Learn-Hebrew\Project\LearnHebrew\obj\Debug\LearnHebrew.csproj.CoreCompileInputs.cache

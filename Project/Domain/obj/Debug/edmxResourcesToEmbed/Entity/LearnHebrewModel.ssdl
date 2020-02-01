@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Adult">
+    <Key>
+      <PropertyRef Name="AdultID" />
+    </Key>
+    <Property Name="AdultID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Password" Type="nvarchar(max)" />
+    <Property Name="Data" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="Child">
+    <Key>
+      <PropertyRef Name="ChildID" />
+    </Key>
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Password" Type="nvarchar(max)" />
+    <Property Name="Color" Type="nvarchar(max)" />
+    <Property Name="Data" Type="nvarchar(max)" />
+    <Property Name="ChildID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ChildToAdult">
+    <Key>
+      <PropertyRef Name="ChildToAdultID" />
+    </Key>
+    <Property Name="ChildToAdultID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ChildID" Type="int" Nullable="false" />
+    <Property Name="AdultID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ChildToGame">
+    <Key>
+      <PropertyRef Name="ChildToGameID" />
+    </Key>
+    <Property Name="ChildToGameID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ChildID" Type="int" Nullable="false" />
+    <Property Name="GameID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ChildToUnseen">
+    <Key>
+      <PropertyRef Name="ChildToUnseenID" />
+    </Key>
+    <Property Name="ChildToUnseenID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ChildID" Type="int" Nullable="false" />
+    <Property Name="UnseenID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Game">
+    <Key>
+      <PropertyRef Name="GameID" />
+    </Key>
+    <Property Name="GameID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Data" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="Unseen">
+    <Key>
+      <PropertyRef Name="UnseenID" />
+    </Key>
+    <Property Name="UnseenID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Data" Type="nvarchar(max)" />
+    <Property Name="AdultID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="ModelStoreContainer">
+    <EntitySet Name="Adult" EntityType="Self.Adult" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Child" EntityType="Self.Child" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ChildToAdult" EntityType="Self.ChildToAdult" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ChildToGame" EntityType="Self.ChildToGame" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ChildToUnseen" EntityType="Self.ChildToUnseen" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Game" EntityType="Self.Game" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Unseen" EntityType="Self.Unseen" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

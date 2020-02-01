@@ -45,7 +45,4 @@ namespace Domain.Repositories
             return this.LearnHebrewDB.Children.Where(a => a.ChildID == ChildID).FirstOrDefault();
         }
     }
-
-
-}
 }
