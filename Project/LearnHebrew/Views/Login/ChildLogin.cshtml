@@ -1,0 +1,23 @@
+﻿
+
+
+
+
+
+<h1>עמוד כניסה של ילד</h1>
+
+
+
+@using (Html.BeginForm("SaveChild", "Login", FormMethod.Post))
+{
+    <div>
+        <label>בחר כינוי</label>
+        <input name="ChildName" />
+    </div>
+    <div>
+        <label>בחר צבע אהוב</label>
+        <input name="ChildColor"/>
+    </div>
+
+    <button type="submit">שמור</button>
+}

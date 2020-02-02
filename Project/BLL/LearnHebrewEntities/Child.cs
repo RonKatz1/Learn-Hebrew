@@ -16,6 +16,11 @@ namespace BLL.LearnHebrewEntities
         public ChildData Data { get; set; }
         public int ChildID { get; set; }
 
+        public Child()
+        {
+            Data = new ChildData();
+        }
+
         [DataContract]
         public class ChildData
         {

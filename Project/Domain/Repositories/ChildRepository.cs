@@ -17,7 +17,6 @@ namespace Domain.Repositories
 
         public int Save(Child Child)
         {
-            //LearnHebrewDbContext db = new LearnHebrewDbContext();
             try
             {
                 Entity.Child temp = this.LearnHebrewDB.Children.FirstOrDefault(x => x.ChildID == Child.ChildID);

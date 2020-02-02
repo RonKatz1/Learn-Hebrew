@@ -152,3 +152,5 @@ C:\Users\tal\Documents\GitHub\Learn-Hebrew\Project\BLL\bin\Debug\EntityFramework
 C:\Users\tal\Documents\GitHub\Learn-Hebrew\Project\BLL\obj\Debug\BLL.csproj.CopyComplete
 C:\Users\tal\Documents\GitHub\Learn-Hebrew\Project\BLL\obj\Debug\BLL.dll
 C:\Users\tal\Documents\GitHub\Learn-Hebrew\Project\BLL\obj\Debug\BLL.pdb
+C:\Users\tal\Documents\GitHub\Learn-Hebrew\Project\BLL\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\tal\Documents\GitHub\Learn-Hebrew\Project\BLL\bin\Debug\EntityFramework.SqlServer.xml
