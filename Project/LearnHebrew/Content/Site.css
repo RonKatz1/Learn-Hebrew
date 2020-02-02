@@ -22,3 +22,13 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+/* Main Page */
+.Child, .Adult {
+    width: 48%;
+    height: 200px;
+    background: green;
+    color: white;
+    display: inline-block;
+}

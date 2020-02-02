@@ -26,5 +26,10 @@ namespace LearnHebrew.Controllers
 
             return View();
         }
+
+        public ActionResult ChildLogin()
+        {
+            return View("~/Views/Login/ChildLogin.cshtml");
+        }
     }
 }

@@ -1,2 +1,34 @@
 ﻿
 
+
+<script>
+
+    function GoToChildLogin() {
+        @*$.post("@Url.Action("ChildLogin", "Home")", function (data) {
+            $("#childchild").html(data);
+        });*@
+
+
+
+        window.location.href = "@(Url.Action("ChildLogin", "Home"))";
+    }
+
+</script>
+
+
+<h3>מי אתה?</h3>
+
+<div class="Child" onclick="GoToChildLogin()">
+    <span>אני ילד</span>
+</div>
+
+<div class="Adult" onclick="GoToAdultLogin()">
+    <span>אני מבוגר</span>
+</div>
+
+<div id="childchild">
+
+</div>
+
+<style>
+</style>
