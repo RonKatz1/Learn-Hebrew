@@ -29,6 +29,7 @@ namespace LearnHebrew.Controllers
                 }
 
                 return Content("save successful");
+                //return View("ChildPassword",child.Password);
             }
             catch(Exception ex)
             {
