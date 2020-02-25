@@ -8,7 +8,7 @@ namespace LearnHebrew.Controllers
 {
     public class ChildController : Controller
     {
-        public ActionResult SaveChild(FormCollection coll)
+        public int SaveChild(FormCollection coll)
         {
             try
             {
@@ -27,12 +27,25 @@ namespace LearnHebrew.Controllers
                     child.Password = childID.ToString();
                 }
 
-                return Content("save successful");
+                return int.Parse(child.Password);
             }
             catch (Exception ex)
             {
-                return Content("fail");
+                return -1;
             }
+        }
+
+        public ActionResult UserPage()
+        {
+            return View("~/Views/User/ChildUser.cshtml");
+        }
+        public ActionResult ChildLetters()
+        {
+            return View("~/Views/User/Letters.cshtml");
+        }
+        public ActionResult RegistrationPage()
+        {
+            return View("~/Views/Registration/ChildRegistration.cshtml");
         }
     }
 }

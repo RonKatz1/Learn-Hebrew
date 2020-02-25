@@ -31,5 +31,9 @@ namespace LearnHebrew.Controllers
         {
             return View("~/Views/Login/ChildLogin.cshtml");
         }
+        public ActionResult SiteIndex()
+        {
+            return View("~/Views/Home/index.cshtml");
+        }
     }
 }
