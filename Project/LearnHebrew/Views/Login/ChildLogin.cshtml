@@ -1,14 +1,47 @@
-﻿
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
+<script>
+    function goToRegistration() {
+          window.location.href = "@(Url.Action("RegistrationPage", "Child"))";
+    }
+    function goToUserPage() {
+        window.location.href = "@(Url.Action("UserPage", "Child"))";
 
+    }
+    function goToUserPageGuest() {
+        window.location.href = "@(Url.Action("UserPage", "Child"))";
+        //missing difference
+    }
+</script>
 
 
 
 <h1>עמוד כניסה של ילד</h1>
 
+<table>
+    <tr><td colspan="2"><p>הכנסת פרטי ילד רשום</p></td></tr>
+    <tr>
+        <td><input maxlength="15"id="childName" /></td>
+        <td><p>כינוי</p></td>
+    </tr>
+    <tr>
+        <td><input type="password" id="childPassword" /></td>
+        <td><p>ססמה</p></td>
+    </tr>
+    <tr><td><input type="button" value="כניסה רשומה"onclick="goToUserPage()" /></td></tr>
+    <tr>
+        <td><input type="button" value="כניסה אורח"onclick="goToUserPageGuest()" /></td>
+        <td><p>משתמש אורח</p></td>
+    </tr>
+    <tr>
+        <td><input type="button" value="הרשמות"onclick="goToRegistration()" /></td>
+        <td><p>משתמש חדש</p></td>
+    </tr>
+</table>
 
-
-@using (Html.BeginForm("SaveChild", "Login", FormMethod.Post))
+@*@using (Html.BeginForm("SaveChild", "Login", FormMethod.Post))
 {
     <div>
         <label>בחר כינוי</label>
@@ -16,8 +49,8 @@
     </div>
     <div>
         <label>בחר צבע אהוב</label>
-        <input name="ChildColor"/>
+        <input name="ChildColor" />registration
     </div>
 
     <button type="submit">שמור</button>
-}
+}*@

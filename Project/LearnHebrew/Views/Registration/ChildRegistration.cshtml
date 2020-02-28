@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function SaveChild() {
+        $.post("@Url.Action("SaveChild", "Child")", function (data) {
+            $("#passwordDiv").show();
+            $("#password").text(data);
+
+    });
+    }
+    function goToUserPage() {
+        window.location.href = "@(Url.Action("UserPage", "Child"))";
+
+    }
+</script>
+
+<h1>עמוד הרשמות של ילד</h1>
+@using (Html.BeginForm("SaveChild", "Child", FormMethod.Post))
+{
+    <div>
+        <label>בחר כינוי</label>
+        <input name="ChildName" />
+    </div>
+    <div>
+        <label>בחר צבע אהוב</label>
+        <input name="ChildColor" />
+    </div>
+
+    <input type="button" value="שמור" onclick="SaveChild()"/>
+}
+<div id="passwordDiv" style="display:none">
+    <p id="password"> </p><p>זוהי סיסמתך</p>
+    <input type="button" value="סיום הרשמה"onclick="goToUserPage()" />
+</div>

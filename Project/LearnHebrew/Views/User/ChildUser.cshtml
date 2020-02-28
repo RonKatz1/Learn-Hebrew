@@ -1,0 +1,28 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function goToIndex() {
+        window.location.href = "@(Url.Action("SiteIndex", "Home"))";
+    }
+</script>
+
+<h1>עמוד משתמש של ילד</h1>
+<div style="display:block">
+    <input type="button" value="התנתקות"onclick="goToIndex()" /><p id="childName"></p><p>שלום</p>
+</div>
+<table>
+    <tr>
+        <td id="tdLetters">
+            <a href="@(Url.Action("ChildLetters", "Child"))">
+            <img src="~/Pictures/questionMark.jpeg" />
+            </a>
+        </td>
+        <td id="tdHelp">
+            <img src="~/Pictures/teacher.jpeg" />
+        </td>
+        <td id="tdTest">
+            <img src="~/Pictures/class.jpeg" />
+        </td>
+    </tr>
+</table>
