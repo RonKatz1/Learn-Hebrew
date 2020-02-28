@@ -35,5 +35,33 @@ namespace LearnHebrew.Controllers
                 return Content("fail");
             }
         }
+
+        public ActionResult AdultLogin(FormCollection coll)
+        {
+            LearnHebrew.Models.AdultModel m = new Models.AdultModel();
+
+            try
+            {
+
+                var name = coll["AdultName"];
+                var password = coll["AdultPassword"];
+
+                var adult = BLL.Services.AdultServices.LoadAdultByNameAndPassword(name, password);
+
+                if (adult == null)
+                {
+                    return Content("fail");
+                }
+
+                m.Adult = adult;
+
+                return View("~/Views/Adult/Index.cshtml", m);
+
+            }
+            catch (Exception ex)
+            {
+                return Content("fail");
+            }
+        }
     }
 }

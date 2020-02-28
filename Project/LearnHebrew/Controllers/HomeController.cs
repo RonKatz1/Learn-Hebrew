@@ -31,5 +31,15 @@ namespace LearnHebrew.Controllers
         {
             return View("~/Views/Login/ChildLogin.cshtml");
         }
+
+        public ActionResult AdultLogin()
+        {
+            return View("~/Views/Login/AdultLogin.cshtml");
+        }
+
+        public ActionResult AdultRegistration()
+        {
+            return View("~/Views/Adult/AdultRegistration.cshtml");
+        }
     }
 }

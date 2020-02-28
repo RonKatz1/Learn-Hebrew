@@ -17,6 +17,14 @@ namespace BLL.Services
             }
         }
 
+        public static Adult LoadAdultByNameAndPassword(string name, string password)
+        {
+            using (Domain.Repositories.AdultRepository repo = new Domain.Repositories.AdultRepository())
+            {
+                return ConvertEntityToBusiness(repo.LoadByNameAndPassword(name, password));
+            }
+        }
+
         public static int Save(Adult adult)
         {
             Domain.Entity.Adult adultEntity = new Domain.Entity.Adult();

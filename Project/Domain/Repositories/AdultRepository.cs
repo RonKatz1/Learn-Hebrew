@@ -44,5 +44,11 @@ namespace Domain.Repositories
         {
             return this.LearnHebrewDB.Adults.Where(a => a.AdultID == AdultID).FirstOrDefault();
         }
+
+        public Adult LoadByNameAndPassword(string Name, string Password)
+        {
+            return this.LearnHebrewDB.Adults.Where(a => a.Name == Name && a.Password == Password).FirstOrDefault();
+
+        }
     }
 }
