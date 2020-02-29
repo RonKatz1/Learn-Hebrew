@@ -28,9 +28,9 @@ namespace Domain.Repositories
                 {
                     this.LearnHebrewDB.Entry(temp).CurrentValues.SetValues(Child);
                 }
-
+                
                 this.LearnHebrewDB.SaveChanges();
-
+                
                 return Child.ChildID;
             }
             catch (Exception ex)
@@ -42,6 +42,11 @@ namespace Domain.Repositories
         public Child LoadByID(int ChildID)
         {
             return this.LearnHebrewDB.Children.Where(a => a.ChildID == ChildID).FirstOrDefault();
+        }
+        public Child LoadChildByNameandPassword(string name,string password)
+        {
+            int passwordInt = Convert.ToInt32(password);
+            return this.LearnHebrewDB.Children.Where(x => x.Name ==name && x.ChildID == passwordInt).FirstOrDefault();
         }
     }
 }

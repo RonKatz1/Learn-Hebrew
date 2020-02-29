@@ -3,33 +3,48 @@
 }
 <script>
     function SaveChild() {
-        $.post("@Url.Action("SaveChild", "Child")", function (data) {
-            $("#passwordDiv").show();
-            $("#password").text(data);
+        var name = $("#ChildName").val();
+        var color = $("#ChildColor").val();
+
+        $.post("@Url.Action("SaveChild", "Child")" + "?Name=" + name + "&Color=" + color, function (data) {
+            if (data != -1) {
+                $("#main").hide();
+                $("#passwordDiv").show();
+                $("#password").text(data);
+            }
+            else {
+                $("#tryagain").show();
+            }
 
     });
     }
-    function goToUserPage() {
-        window.location.href = "@(Url.Action("UserPage", "Child"))";
+    function goToLoginPage() {
+        window.location.href = "@(Url.Action("LoginPage", "Child"))";
 
     }
 </script>
 
 <h1>עמוד הרשמות של ילד</h1>
-@using (Html.BeginForm("SaveChild", "Child", FormMethod.Post))
-{
+@*@using (Html.BeginForm("SaveChild", "Child", FormMethod.Post))*@
+@*{*@
+<div id="main">
     <div>
         <label>בחר כינוי</label>
-        <input name="ChildName" />
+        <input id="ChildName" name="ChildName" />
     </div>
     <div>
         <label>בחר צבע אהוב</label>
-        <input name="ChildColor" />
+        <input id="ChildColor" name="ChildColor" />
+    </div>
+    <input type="button" value="שמור" onclick="SaveChild()" />
+</div>
+    <div id="tryagain" style="display:none">
+    <p>try again</p>
     </div>
 
-    <input type="button" value="שמור" onclick="SaveChild()"/>
-}
+    
+@*}*@
 <div id="passwordDiv" style="display:none">
-    <p id="password"> </p><p>זוהי סיסמתך</p>
-    <input type="button" value="סיום הרשמה"onclick="goToUserPage()" />
+    <p id="password"></p><p>זוהי סיסמתך</p>
+    <input type="button" value="סיום הרשמה"onclick="goToLoginPage()" />
 </div>
