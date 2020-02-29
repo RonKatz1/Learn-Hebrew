@@ -223,6 +223,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\childModel.cs" />
+    <Compile Include="Models\messageModel.cs" />
     <Compile Include="Models\AdultModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

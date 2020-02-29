@@ -44,7 +44,9 @@ namespace LearnHebrew.Controllers
         }
         public ActionResult LoginPage()
         {
-            return View("~/Views/Login/ChildLogin.cshtml");
+            Models.messageModel message = new Models.messageModel();
+            message.message = "";
+            return View("~/Views/Login/ChildLogin.cshtml", message);
         }
         public ActionResult ChildLetters()
         {
