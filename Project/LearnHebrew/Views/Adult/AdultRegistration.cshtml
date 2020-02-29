@@ -1,0 +1,22 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div>
+    @using (Html.BeginForm("SaveAdult", "Adult", FormMethod.Post))
+    {
+        <div>
+            <label>שם משתמש</label>
+            <input name="AdultName" />
+        </div>
+        <div>
+            <label>סיסמא</label>
+            <input name="AdultPassword" />
+        </div>
+
+        <button type="submit">התחבר</button>
+    }
+</div>

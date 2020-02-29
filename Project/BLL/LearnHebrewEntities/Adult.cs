@@ -19,5 +19,10 @@ namespace BLL.LearnHebrewEntities
         {
             public bool IsTeacher { get; set; }
         }
+
+        public Adult()
+        {
+            Data = new AdultData();
+        }
     }
 }

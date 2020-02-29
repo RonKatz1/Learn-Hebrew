@@ -1,0 +1,35 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+    function AdultRegistration() {
+        window.location.href = "@(Url.Action("AdultRegistration", "Home"))";
+    }
+</script>
+
+<div>
+    <h3>מסך כניסת מבוגר</h3>
+</div>
+
+<div>
+    @using (Html.BeginForm("AdultLogin", "Login", FormMethod.Post))
+    {
+        <div>
+            <label>שם משתמש</label>
+            <input name="AdultName" />
+        </div>
+        <div>
+            <label>סיסמא</label>
+            <input name="AdultPassword" />
+        </div>
+
+        <button type="submit">התחבר</button>
+    }
+</div>
+
+<div>
+    <input type="button" value="הרשם" onclick="AdultRegistration()"/>
+</div>
