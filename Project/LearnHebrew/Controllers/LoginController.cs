@@ -40,14 +40,22 @@ namespace LearnHebrew.Controllers
         public ActionResult AdultLogin(FormCollection coll)
         {
             LearnHebrew.Models.AdultModel m = new Models.AdultModel();
+            var adult = new BLL.LearnHebrewEntities.Adult();
 
             try
             {
-
                 var name = coll["AdultName"];
                 var password = coll["AdultPassword"];
 
-                var adult = BLL.Services.AdultServices.LoadAdultByNameAndPassword(name, password);
+                if (Auxiliray.Session.AdultInSession != null && Auxiliray.Session.AdultInSession.Name == name && Auxiliray.Session.AdultInSession.Password == password)
+                {
+                    m.Adult = Auxiliray.Session.AdultInSession;
+                    return View("~/Views/Adult/Index.cshtml", m);
+                }
+                else
+                {
+                    adult = BLL.Services.AdultServices.LoadAdultByNameAndPassword(name, password);
+                }
 
                 if (adult == null)
                 {
@@ -55,7 +63,7 @@ namespace LearnHebrew.Controllers
                 }
 
                 m.Adult = adult;
-
+                Auxiliray.Session.AdultInSession = adult;
                 return View("~/Views/Adult/Index.cshtml", m);
 
             }
