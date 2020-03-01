@@ -16,7 +16,14 @@ namespace BLL.Services
                 return ConvertEntityToBusiness(repo.LoadByID(ChildID));
             }
         }
-
+        public static Child LoadChildByNameandPassword(string NameQuery, string PasswordQuery)
+        {
+            using (Domain.Repositories.ChildRepository repo = new Domain.Repositories.ChildRepository())
+            {
+                return ConvertEntityToBusiness(repo.LoadChildByNameandPassword(NameQuery, PasswordQuery));
+            }
+        }
+        
         public static int Save(Child Child)
         {
             Domain.Entity.Child ChildEntity = new Domain.Entity.Child();
