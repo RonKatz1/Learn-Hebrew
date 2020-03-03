@@ -40,7 +40,7 @@ namespace LearnHebrew.Controllers
 
         public ActionResult UserPage()
         {
-            return View("~/Views/User/ChildUser.cshtml");
+            return View("~/Views/Child/Index.cshtml");
         }
         public ActionResult LoginPage()
         {
@@ -54,7 +54,7 @@ namespace LearnHebrew.Controllers
         }
         public ActionResult RegistrationPage()
         {
-            return View("~/Views/Registration/ChildRegistration.cshtml");
+            return View("~/Views/Child/ChildRegistration.cshtml");
         }
         public ActionResult ChildQuery(FormCollection coll)
         {
@@ -70,7 +70,7 @@ namespace LearnHebrew.Controllers
                 {
                     
                     m.child = child;
-                    return View("~/Views/User/ChildUser.cshtml", m);
+                    return View("~/Views/Child/Index.cshtml", m);
                 }
                 else
                 {
@@ -98,7 +98,7 @@ namespace LearnHebrew.Controllers
                 child.Password = "-1";
                 child.Data = null;
                 m.child = child;
-                return View("~/Views/User/ChildUser.cshtml", m);
+                return View("~/Views/Child/Index.cshtml", m);
             }
             catch (Exception ex) { return Content("error"); }
         }
