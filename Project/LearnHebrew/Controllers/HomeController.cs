@@ -45,6 +45,7 @@ namespace LearnHebrew.Controllers
         }
         public ActionResult SiteIndex()
         {
+            Auxiliray.Session.ChildInSession = null;
             return View("~/Views/Home/index.cshtml");
         }
     }

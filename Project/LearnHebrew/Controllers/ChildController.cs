@@ -56,7 +56,7 @@ namespace LearnHebrew.Controllers
         {
             return View("~/Views/Child/ChildRegistration.cshtml");
         }
-        public ActionResult ChildQuery(FormCollection coll)
+        public ActionResult IndexPage(FormCollection coll)
         {
             
             Models.childModel m = new Models.childModel();
@@ -65,10 +65,21 @@ namespace LearnHebrew.Controllers
             {
                 var name = coll["childName"];
                 var password = coll["childPassword"];
-                BLL.LearnHebrewEntities.Child child = BLL.Services.ChildServices.LoadChildByNameandPassword(name, password);
+                BLL.LearnHebrewEntities.Child child = new BLL.LearnHebrewEntities.Child();
+                if (Auxiliray.Session.ChildInSession!=null && Auxiliray.Session.ChildInSession.ChildID == int.Parse(password))
+                {
+                    child = Auxiliray.Session.ChildInSession;
+
+                }
+                else
+                {
+                    child = BLL.Services.ChildServices.LoadChildByNameandPassword(name, password);
+
+                }
+
                 if (child != null && child.ChildID != 0)
                 {
-                    
+                    Auxiliray.Session.ChildInSession = child;
                     m.child = child;
                     return View("~/Views/Child/Index.cshtml", m);
                 }
@@ -93,14 +104,29 @@ namespace LearnHebrew.Controllers
             try
             {
                 BLL.LearnHebrewEntities.Child child = new BLL.LearnHebrewEntities.Child();
+                
                 child.ChildID = -1;
                 child.Name = "אורח";
                 child.Password = "-1";
                 child.Data = null;
+                Auxiliray.Session.ChildInSession = child;
                 m.child = child;
                 return View("~/Views/Child/Index.cshtml", m);
             }
             catch (Exception ex) { return Content("error"); }
         }
+        public ActionResult ReturnToIndex()
+        {
+            Models.childModel m = new Models.childModel();
+            BLL.LearnHebrewEntities.Child child = new BLL.LearnHebrewEntities.Child();
+            child = Auxiliray.Session.ChildInSession ;
+            m.child = child;
+            return View("~/Views/Child/Index.cshtml", m);
+        }
+        public ActionResult HelpPage()
+        {
+            return View("~/Views/Child/Help.cshtml");
+        }
+
     }
 }
