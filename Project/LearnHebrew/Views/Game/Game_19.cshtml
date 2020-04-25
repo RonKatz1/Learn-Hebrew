@@ -1,0 +1,276 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<style>
+    canvas {
+        width: 70%;
+        height: 70%;
+        background-image: url('../../Pictures/Game_19/background_2.jpg');
+        border: 3px solid black;
+    }
+    body {
+        background-image: url('../../Pictures/Game_19/background.jpg');
+    }
+    #endGameScreen {
+        background-color: aqua;
+        width: 99%;
+        height: 99%;
+    }
+
+
+    table {
+        margin: auto;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    .hidescreen {
+        display: none;
+    }
+    #heartId{
+        width:20%;
+        height:20%;
+    }
+</style>
+
+
+<body>
+    <img id="heartId" src="~/Pictures/Game_19/heart.png" />
+    <canvas id="canvasId"></canvas>
+    <div style="z-index:90" id="endGameScreen" class="hidescreen">
+        <table>
+            <tr>
+                <td><p id="finalScore">0</p></td>
+                <td>ניקוד סופי :</td>
+            </tr>
+            <tr>
+                <td><input type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" /></td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+<script>
+    var $canvas = document.getElementById("canvasId");
+    var directionX = 3, directionY = -3;
+    var $bricks = [];
+    var gameStarted = false;
+    var $ctx = $canvas.getContext("2d");
+    var pongW = 40, pongH = 7, pongX = ($canvas.width - pongW) / 2, pongY = $canvas.height - pongH; //pong coordinators and size
+    var ballR = 2, x = $canvas.width / 2, y = ($canvas.height - pongH) - ballR;//ball coordinators and size 
+    var move = 10;
+    var brickW = 20, brickH = pongH;
+    var counter = 0;
+    var heart=$("#heartId")
+
+        $(document).ready(function () {
+            classic();
+            heart.css({ 'left': ($canvas.width-heart.width) + 'px', 'top': 0 + 'px' });
+            setInterval(draw, 50);
+            $("body").keydown(userKey_Options);
+    })
+    function userKey_Options() {
+        switch (window.event.keyCode) {
+            case (37):// left keyboard was pressed = moving the user one move to the left
+                //if (gameStarted) {
+                    MoveLeft();
+                //}  
+                break;
+            case (39):// right keyboard was pressed = moving the user one move to the right
+                //if (gameStarted) {
+                    MoveRight();
+                //}               
+                break;
+            case (32)://release the ball
+                if (!gameStarted) {
+                    gameStarted = true;
+                    
+                    break;
+                }               
+                break;
+            
+        }
+    }
+    function MoveLeft() {
+        MoveUserAxisX(-1 * move);
+    }
+    function MoveRight() {
+        MoveUserAxisX(move);
+    }
+    function MoveUserAxisX(axisX) {
+        var currentPosition = pongX;//getting current position of user
+        var newPosition = currentPosition + axisX;//calculating new position of user
+
+        if (newPosition >= 0 && newPosition <= ($canvas.width - pongW)) {
+            pongX = newPosition;//moving user to new position
+            if (!gameStarted) {
+                x += axisX;
+            }
+        }
+
+    }
+    
+       
+
+    function drawBall() {
+            $ctx.beginPath();
+            $ctx.arc(x, y, ballR, 0, Math.PI * 2);
+            $ctx.fillStyle = "#00C853";
+            $ctx.fill();
+            $ctx.closePath();
+    }
+    function drawPong() {
+        $ctx.beginPath();
+        $ctx.rect(pongX, pongY, pongW, pongH);
+        $ctx.fillStyle = "#185E20";
+        $ctx.fill();
+        $ctx.closePath();
+    }
+    function classic() {
+        var lookAheadX = 0 + move;
+        //var lookAheady = $canvas.clientHeight - move;
+        var lookAheadY = 2*move;
+        while (lookAheadY< ($canvas.height/2)) {
+            while (lookAheadX < $canvas.width - (4*move)) {
+                $bricks.push({
+                    x: lookAheadX,
+                    y: lookAheadY,
+                    status: 2
+                });
+                lookAheadX = lookAheadX + brickW + move;
+            }
+            lookAheadX = 0 + move;
+            lookAheadY = lookAheadY + brickH + move;
+        }
+    }
+    function drawBricks() {
+        $bricks.forEach(function (brick) {
+            switch (brick.status) {
+                //case 3:
+                //    $ctx.beginPath();
+                //    $ctx.rect(brick.x, brick.y, brickW, brickH);
+                //    $ctx.fillStyle = "#1af8ff";
+                //    $ctx.fill();
+                //    $ctx.closePath();
+                //    break;
+                case 2:
+                    $ctx.beginPath();
+                    
+                    $ctx.fillStyle = "#f08080";
+                    $ctx.lineWidth = "1";
+                    $ctx.strokeStyle = "black";
+                    $ctx.rect(brick.x, brick.y, brickW, brickH);
+                    $ctx.stroke();
+                    $ctx.fill();
+                    
+                    $ctx.closePath();
+                case 1:
+                    return;             
+            }
+        });
+    }
+    function collisionDetection() {
+        $bricks.forEach(function (brick) {
+            var inBrickColumn = x > brick.x && x < brick.x + brickW, inBrickRow = y > brick.y && y < brick.y + brickH;
+            switch (brick.status) {
+                //case 3:
+                //    //var inBrickColumn = x > brick.x && x < brick.x + brickW, inBrickRow = y > brick.y && y < brick.y + brickH;
+                //    if (inBrickColumn && inBrickRow) {
+                //        directionY = -directionY;
+                //        brick.status = 2;
+                //    }               
+                //    break;
+                case 2:
+                    //var inBrickColumn = x > brick.x && x < brick.x + brickW, inBrickRow = y > brick.y && y < brick.y + brickH;
+                    if (inBrickColumn && inBrickRow) {
+                        //alert(directionY);
+                        directionY = -directionY;
+                        //alert(directionY);
+                        brick.status = 1;
+                        counter++;
+                    }
+                    break;
+                case 1:
+                    return;
+            }
+        });
+    }
+    function draw() {
+        $ctx.clearRect(0, 0, $canvas.width, $canvas.height);
+        
+        
+        drawBall();
+        drawPong();
+        drawBricks();
+        collisionDetection();
+        if (counter == $bricks.length)
+            WinnerEndGame();
+        if (HitSideWall()) {
+            directionX = -directionX;
+        }
+        if (HitTop() || HitPong()) {
+            directionY = -directionY;
+        }
+        if (gameOver()) {
+            $("#canvasId").addClass("hidescreen");
+            //$("#tableId").addClass("hidescreen");
+            //$("#finalScore").text($("#score").text());
+            $("#endGameScreen").removeClass("hidescreen");
+        }
+
+        function HitSideWall() {
+            return x + directionX > $canvas.width - ballR || x + directionX < ballR;
+        }
+        function HitTop() {
+            return y + directionY < ballR;
+        }
+        function HitPong() {
+            return HitBottom() && BallOverPong();
+        }
+        function HitBottom() {
+            return y + directionY > $canvas.height - ballR;
+        }
+        function BallOverPong() {
+            return x > pongX && x < pongX + pongW;
+        }
+        function gameOver() {
+            return HitBottom() && !BallOverPong();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        if (gameStarted) {
+            x += directionX;
+            y += directionY;
+        }
+    }
+
+    function WinnerEndGame() {
+        $("#canvasId").addClass("hidescreen");
+        //$("#tableId").addClass("hidescreen");
+        //$("#finalScore").text($("#score").text());
+        $("#endGameScreen").removeClass("hidescreen");
+    }
+    function GoToAlphabet() {
+
+         window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
+
+        }
+
+
+
+</script>
+

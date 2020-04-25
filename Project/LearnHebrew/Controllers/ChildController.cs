@@ -50,7 +50,7 @@ namespace LearnHebrew.Controllers
         }
         public ActionResult ChildLetters()
         {
-            return View("~/Views/User/Letters.cshtml");
+            return View("~/Views/Child/Alphabet.cshtml");
         }
         public ActionResult RegistrationPage()
         {
@@ -123,10 +123,34 @@ namespace LearnHebrew.Controllers
             m.child = child;
             return View("~/Views/Child/Index.cshtml", m);
         }
+        public ActionResult ReturnToAlphabet()
+        {
+            
+            return View("~/Views/Child/Alphabet.cshtml");
+        }
         public ActionResult HelpPage()
         {
             return View("~/Views/Child/Help.cshtml");
         }
-
+        public ActionResult GoToGame_19()
+        {
+            return View("~/Views/Game/Game_19.cshtml");
+        }
+        public ActionResult GoToGame_12()
+        {
+            return View("~/Views/Game/Game_12.cshtml");
+        }
+        public ActionResult GoToGame_6()
+        {
+            return View("~/Views/Game/Game_6.cshtml");
+        }
+        public ActionResult GoToGame_5()
+        {
+            return View("~/Views/Game/Game_5.cshtml");
+        }
+        public ActionResult GoToGame_1()
+        {
+            return View("~/Views/Game/Game_1.cshtml");
+        }
     }
 }
