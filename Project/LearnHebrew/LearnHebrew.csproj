@@ -219,6 +219,7 @@
     <Compile Include="Auxiliray\Session.cs" />
     <Compile Include="Controllers\AdultController.cs" />
     <Compile Include="Controllers\ChildController.cs" />
+    <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
@@ -314,6 +315,8 @@
     <Content Include="Views\Login\AdultLogin.cshtml" />
     <Content Include="Views\Adult\AdultRegistration.cshtml" />
     <Content Include="Views\Adult\Index.cshtml" />
+    <Content Include="Views\Registration\ChildRegistration.cshtml" />
+    <Content Include="Views\User\ChildUser.cshtml" />
     <Content Include="Views\User\Letters.cshtml" />
     <Content Include="Views\Child\ChildRegistration.cshtml" />
     <Content Include="Views\Child\Index.cshtml" />
@@ -327,6 +330,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Child\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

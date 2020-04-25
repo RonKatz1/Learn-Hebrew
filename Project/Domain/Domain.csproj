@@ -71,6 +71,9 @@
     <Compile Include="Entity\ChildToUnseen.cs">
       <DependentUpon>LearnHebrewModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entity\Content.cs">
+      <DependentUpon>LearnHebrewModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entity\Game.cs">
       <DependentUpon>LearnHebrewModel.tt</DependentUpon>
     </Compile>
@@ -95,6 +98,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AdultRepository.cs" />
     <Compile Include="Repositories\ChildRepository.cs" />
+    <Compile Include="Repositories\ContentRepository.cs" />
     <Compile Include="Repositories\Repository.cs" />
   </ItemGroup>
   <ItemGroup>
