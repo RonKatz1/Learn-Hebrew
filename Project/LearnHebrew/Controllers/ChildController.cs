@@ -40,7 +40,7 @@ namespace LearnHebrew.Controllers
 
         public ActionResult UserPage()
         {
-            return View("~/Views/User/ChildUser.cshtml");
+            return View("~/Views/Child/Index.cshtml");
         }
         public ActionResult LoginPage()
         {
@@ -50,13 +50,13 @@ namespace LearnHebrew.Controllers
         }
         public ActionResult ChildLetters()
         {
-            return View("~/Views/User/Letters.cshtml");
+            return View("~/Views/Child/Alphabet.cshtml");
         }
         public ActionResult RegistrationPage()
         {
-            return View("~/Views/Registration/ChildRegistration.cshtml");
+            return View("~/Views/Child/ChildRegistration.cshtml");
         }
-        public ActionResult ChildQuery(FormCollection coll)
+        public ActionResult IndexPage(FormCollection coll)
         {
             
             Models.childModel m = new Models.childModel();
@@ -65,12 +65,23 @@ namespace LearnHebrew.Controllers
             {
                 var name = coll["childName"];
                 var password = coll["childPassword"];
-                BLL.LearnHebrewEntities.Child child = BLL.Services.ChildServices.LoadChildByNameandPassword(name, password);
+                BLL.LearnHebrewEntities.Child child = new BLL.LearnHebrewEntities.Child();
+                if (Auxiliray.Session.ChildInSession!=null && Auxiliray.Session.ChildInSession.ChildID == int.Parse(password))
+                {
+                    child = Auxiliray.Session.ChildInSession;
+
+                }
+                else
+                {
+                    child = BLL.Services.ChildServices.LoadChildByNameandPassword(name, password);
+
+                }
+
                 if (child != null && child.ChildID != 0)
                 {
-                    
+                    Auxiliray.Session.ChildInSession = child;
                     m.child = child;
-                    return View("~/Views/User/ChildUser.cshtml", m);
+                    return View("~/Views/Child/Index.cshtml", m);
                 }
                 else
                 {
@@ -93,14 +104,53 @@ namespace LearnHebrew.Controllers
             try
             {
                 BLL.LearnHebrewEntities.Child child = new BLL.LearnHebrewEntities.Child();
+                
                 child.ChildID = -1;
                 child.Name = "אורח";
                 child.Password = "-1";
                 child.Data = null;
+                Auxiliray.Session.ChildInSession = child;
                 m.child = child;
-                return View("~/Views/User/ChildUser.cshtml", m);
+                return View("~/Views/Child/Index.cshtml", m);
             }
             catch (Exception ex) { return Content("error"); }
+        }
+        public ActionResult ReturnToIndex()
+        {
+            Models.childModel m = new Models.childModel();
+            BLL.LearnHebrewEntities.Child child = new BLL.LearnHebrewEntities.Child();
+            child = Auxiliray.Session.ChildInSession ;
+            m.child = child;
+            return View("~/Views/Child/Index.cshtml", m);
+        }
+        public ActionResult ReturnToAlphabet()
+        {
+            
+            return View("~/Views/Child/Alphabet.cshtml");
+        }
+        public ActionResult HelpPage()
+        {
+            return View("~/Views/Child/Help.cshtml");
+        }
+        public ActionResult GoToGame_19()
+        {
+            return View("~/Views/Game/Game_19.cshtml");
+        }
+        public ActionResult GoToGame_12()
+        {
+            return View("~/Views/Game/Game_12.cshtml");
+        }
+        public ActionResult GoToGame_6()
+        {
+            return View("~/Views/Game/Game_6.cshtml");
+        }
+        public ActionResult GoToGame_5()
+        {
+            return View("~/Views/Game/Game_5.cshtml");
+        }
+        public ActionResult GoToGame_1()
+        {
+            return View("~/Views/Game/Game_1.cshtml");
         }
     }
 }

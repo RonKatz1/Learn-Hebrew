@@ -1,0 +1,114 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function goToIndexPage() {
+         window.location.href = "@(Url.Action("ReturnToIndex", "Child"))";
+    }
+</script>
+<style>
+    img {
+        max-width: 50%;
+        max-height: 50%;
+        border: 1px solid #ddd;
+    }
+
+        img:hover {
+            box-shadow: 0 0 2px 1px rgba(0,140,186,0.5);
+        }
+</style>
+<h1>עמוד לימודי אותיות לילד  </h1>
+<div>
+    <input type="button" value="חזור לעמוד משתמש ילד" onclick="goToIndexPage()" />
+    <p>מלל כלשהו</p>
+</div>
+<table>
+    <tr>
+        <td>
+            <a href="@(Url.Action("GoToGame_6", "Child"))">
+                <img src="~/Pictures/Alphabet/vaav.jpeg" />
+            </a>
+        </td>
+        <td>
+            <a href="@(Url.Action("GoToGame_5", "Child"))">
+                <img src="~/Pictures/Alphabet/haay.jpeg" />
+            </a>
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/daled.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/gimal.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/bet.png" />
+        </td>
+        <td>
+            <a href="@(Url.Action("GoToGame_1", "Child"))">
+                <img src="~/Pictures/Alphabet/alef.png" />
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="@(Url.Action("GoToGame_12", "Child"))">
+                <img src="~/Pictures/Alphabet/lamad.jpeg" />
+            </a>
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/chaaf.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/yuud.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/taat.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/chaat.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/zaain.jpeg" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="~/Pictures/Alphabet/tchadik.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/paay.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/aaiin.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/samach.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/nuun.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/maam.jpeg" />
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td>
+            <img src="~/Pictures/Alphabet/taaf.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/shin.jpeg" />
+        </td>
+        <td>
+            <img src="~/Pictures/Alphabet/raaish.jpeg" />
+        </td>
+        <td>
+            <a href="@(Url.Action("GoToGame_19", "Child"))">
+                <img src="~/Pictures/Alphabet/kuuf.jpeg" />
+            </a>
+        </td>
+        
+    </tr>
+</table>

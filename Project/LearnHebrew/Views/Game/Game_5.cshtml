@@ -1,0 +1,278 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<style>
+    section {
+        width: 36%;
+        height: 54%;
+        border: 1px solid black;
+        position: relative;
+        margin: auto;
+        background-image: url('../../Pictures/Game_5/space.jpg');
+    }
+    body {
+        background-image: url('../../Pictures/Game_5/planet.jpg');
+    }
+    #user {
+        width: 13%;
+        height: 12%;
+        top: 88%;
+        left: 45%;
+        position: absolute;
+    }
+
+    .enemy, .shot {
+        width: 9%;
+        height: 9%;
+        position: absolute;
+    }
+
+    #endGameScreen {
+        background-color: aqua;
+        width: 99%;
+        height: 99%;
+    }
+
+
+    table {
+        margin: auto;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    .hidescreen {
+        display: none;
+    }
+</style>
+<script>
+    var move = 25;//setting moving distance per move for user
+    var $User;//placeholder  for the user in every new game
+    var shotTime = 5000;//5 seconds for shot to clear out
+    var alienTime = 10000;
+    var alienSpawnTime = 1000;//time of spawning enemies
+    var gameoverIndicator;//interval animation of spawning enemies
+    var validLetters;
+    var invalidLetters;
+    $(document).ready(function () {
+        //var parsedTest = ["/Pictures/Game_5/haay1.PNG,/Pictures/Game_5/haay2.PNG,/Pictures/Game_5/haay3.PNG"];
+        //validLetters = JSON.parse(parsedTest);
+        validLetters = ["/Pictures/Game_5/haay1.PNG", "/Pictures/Game_5/haay2.PNG", "/Pictures/Game_5/haay3.PNG"];
+        //$User = $("#user");//linking placeholder to user in current game
+        //$("body").keydown(userKey_Options);
+    })
+    function StartGame() {
+        $User = $("#user");//linking placeholder to user in current game
+        $("body").keydown(userKey_Options);
+        gameoverIndicator = setInterval(createEnemy, alienSpawnTime);
+    }
+    function userKey_Options() {
+        switch (window.event.keyCode) {
+            case (37):// left keyboard was pressed=moving the user one move to the left
+                MoveLeft();
+                break;
+            case (39):// right keyboard was pressed=moving the user one move to the right
+                MoveRight();
+                break;
+            case (38)://up keyboard was pressed=firing a single shot
+                shooting();
+                break;
+        }
+    }
+    function MoveLeft() {
+        MoveUser(-1 * move);
+    }
+    function MoveRight() {
+        MoveUser(move);
+    }
+    function MoveUser(axisX) {
+        var currentPosition = parseInt($User.css("left"));//getting current position of user
+        var newPosition = currentPosition + axisX;//calculating new position of user
+        //alert(parseInt($("#sectionId").css("width")));
+        if (newPosition >= 0 && newPosition <= (parseInt($("#sectionId").css("width")) - parseInt($User.css("width"))))//need to be changed ifsection limits user changes game
+            $User.css("left", newPosition + "px");//moving user to new position
+
+    }
+    function shooting() {
+
+        var $shot = $("<img>");
+        $shot.attr("src", "/Pictures/Game_5/shot.png");
+
+        $shot.addClass("shot");
+        var shotStartingPoint_Yaxis = parseInt($User.css("top")) - parseInt($shot.css("width"));//calculating height of shot
+        var shotStartingPoint_Xaxis = parseInt($User.css("left")) + (parseInt($User.css("width")) / 4);
+        $shot.css("top", shotStartingPoint_Yaxis + "px");
+        $shot.css("left", shotStartingPoint_Xaxis + "px");
+
+        $("section").append($shot);
+
+        $shot.animate({
+            top: "0px"
+
+
+        }, {
+                duration: shotTime,
+                easing: "linear",
+                complete: deleteObject
+
+
+
+            });
+    }
+    function deleteObject() {
+        $(this).remove();
+    }
+    function createEnemy() {
+
+        var $enemy = $("<img>");
+        var enemyType = Math.floor((Math.random() * 10) + 1);
+
+        if (enemyType >= 1 && enemyType <= 7) {
+            var randomNumber = Math.floor((Math.random() * validLetters.length) +0 );
+            $enemy.attr("src", validLetters[randomNumber]);
+
+        }
+
+        else {
+            $enemy.attr("src", "/Pictures/Game_5/nuun.PNG");
+
+        }
+        $enemy.addClass("enemy");
+        var axisX = randomEnemy_Place();
+        $enemy.css("top", 0 + "px");
+        $enemy.css("left", axisX + "px");
+
+        $("section").append($enemy);
+
+        $enemy.animate({
+            top: (parseInt($("section").css("height"))) - (parseInt($enemy.css("height"))) + "px"
+
+
+        }, {
+                duration: alienTime,
+                easing: "linear",
+                progress: collisionCheck,
+                complete: deleteObject
+
+            });
+
+    }
+    function randomEnemy_Place() {
+        var limitLeft = (parseInt($User.css("width")) / 4);//floot
+        var limitRight = parseInt($("section").css("width")) - (parseInt($User.css("width")));
+        return Math.floor((Math.random() * limitRight) + limitLeft);
+    }
+    function collisionCheck() {
+        var $enemy = $(this);//getting the current enemy
+
+
+        $(".shot").each(function () {
+            var $shot = $(this);
+
+            if (checkIntersection($shot, $enemy)) {
+
+                enemyDestroyed($enemy);
+
+                $shot.stop();
+                $shot.remove();
+                $enemy.stop();
+                $enemy.remove();
+
+            }
+
+        });
+
+    }
+    function checkIntersection($x, $y) {
+        if ($x == undefined || $y == undefined) return false;
+        xLeft = parseInt($x.css("left"));
+        xTop = parseInt($x.css("top"));
+        xRight = xLeft + parseInt($x.css("width"));
+        xBottom = xTop + parseInt($x.css("height"));
+
+        yLeft = parseInt($y.css("left"));
+        yTop = parseInt($y.css("top"));
+        yRight = yLeft + parseInt($y.css("width"));
+        yBottom = yTop + parseInt($y.css("height"));
+
+        return ((xLeft >= yLeft && xLeft <= yRight || yLeft >= xLeft && yLeft <= xRight) && (xTop <= yBottom && xTop >= yTop || yTop <= xBottom && yTop >= xTop));
+    }
+    function enemyDestroyed($enemy) {
+        var indicator = false;
+        //alert(validLetters);
+        //alert(jQuery.inArray(($enemy.attr('src'),validLetters)));
+        for (var i = 0; i < validLetters.length; i++) {
+            if ($enemy.attr('src') == validLetters[i]) {
+                $("#score").text(parseInt($("#score").text()) + 1);
+                indicator = true;
+                break;
+            }
+
+
+
+        }
+        if (!indicator) {
+            $("#life").text(parseInt($("#life").text()) - 1);
+        }
+        if ($("#life").text() == '0') {
+            GameOver();
+        }
+        //if (jQuery.inArray(($enemy.attr('src'), validLetters) != -1)) {
+        //    $("#score").text(parseInt($("#score").text()) + 1);
+
+        //}
+        //else {
+        //    $("#life").text(parseInt($("#life").text()) - 1);
+        //    if ($("#life").text() == '0')
+        //        GameOver();
+        //}
+    }
+    function GameOver() {
+        clearInterval(gameoverIndicator);
+        //do popoup here to let the user go back to alphabet
+        $("#sectionId").addClass("hidescreen");
+        $("#tableId").addClass("hidescreen");
+        $("#finalScore").text($("#score").text());
+        $("#endGameScreen").removeClass("hidescreen");
+    }
+    function GoToAlphabet() {
+         window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
+    }
+</script>
+
+<body>
+    <h1> משחק מספר 5 </h1>
+    <h2>כאן יופיע הסבר על המשחק ואולי כפתור לשמיעת ההסבר</h2>
+    <section id="sectionId">
+
+
+        <img id="user" src="~/Pictures/Game_5/ship.png" />
+    </section>
+    <input type="button" value="התחלה" onclick="StartGame()" />
+    <br />
+    <table id="tableId">
+        <tr>
+            <td><p id="score">0</p></td>
+            <td>ניקוד</td>
+        </tr>
+        <tr>
+            <td><p id="life">5</p></td>
+            <td>חיים</td>
+        </tr>
+    </table>
+    <div style="z-index:90" id="endGameScreen" class="hidescreen">
+        <table>
+            <tr>
+                <td><p id="finalScore">0</p></td>
+                <td>ניקוד סופי :</td>
+            </tr>
+            <tr>
+                <td><input type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" /></td>
+            </tr>
+        </table>
+    </div>
+</body>
+

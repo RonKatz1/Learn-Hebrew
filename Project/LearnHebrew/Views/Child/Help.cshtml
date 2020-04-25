@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function goToIndexPage() {
+         window.location.href = "@(Url.Action("ReturnToIndex", "Child"))";
+    }
+</script>
+<h1>עמוד עזרה של ילד</h1>
+<div>
+    <input type="button" value="חזור לעמוד משתמש ילד" onclick="goToIndexPage()" />
+    <p>מלל כלשהו</p>
+</div>

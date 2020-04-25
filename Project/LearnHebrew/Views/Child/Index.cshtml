@@ -9,36 +9,41 @@
     //        $("#tdTest").hide();
     //});
 
-    function goToIndex() {
+    function goToStarterPage() {
         window.location.href = "@(Url.Action("SiteIndex", "Home"))";
     }
 
 
 </script>
 <style>
-    img{
-        max-width:50%;
-        max-height:50%;
+    img {
+        max-width: 50%;
+        max-height: 50%;
         border: 1px solid #ddd;
     }
-    img:hover{
-        box-shadow:0 0 2px 1px rgba(0,140,186,0.5);
-    }
+
+        img:hover {
+            box-shadow: 0 0 2px 1px rgba(0,140,186,0.5);
+        }
 </style>
 
 <h1>עמוד משתמש של ילד</h1>
 <div style="display:block">
-    <input type="button" value="התנתקות"onclick="goToIndex()" /><p id="childName">@Model.child.Name</p><p> שלום</p>
+    <input type="button" value="התנתקות" onclick="goToStarterPage()" /><p id="childName">@Model.child.Name</p><p> שלום</p>
 </div>
 <table>
     <tr>
         <td id="tdLetters">
             <a href="@(Url.Action("ChildLetters", "Child"))">
-            <img src="~/Pictures/questionMark.jpeg" />
+                <img src="~/Pictures/teacher.jpeg" />
             </a>
         </td>
         <td id="tdHelp">
-            <img src="~/Pictures/teacher.jpeg" />
+            <a href="@(Url.Action("HelpPage", "Child"))">
+                <img src="~/Pictures/questionMark.jpeg" />
+            </a>
+            
+            
         </td>
         <td id="tdTest">
             <img src="~/Pictures/class.jpeg" />
