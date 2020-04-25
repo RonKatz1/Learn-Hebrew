@@ -14,15 +14,22 @@ namespace BLL.LearnHebrewEntities
         public string Password { get; set; }
         public AdultData Data { get; set; }
 
+        public Adult()
+        {
+            Data = new AdultData();
+        }
+
         [DataContract]
         public class AdultData
         {
             public bool IsTeacher { get; set; }
-        }
 
-        public Adult()
-        {
-            Data = new AdultData();
+            public List<int> ChildsIDs { get; set; } 
+
+            public AdultData()
+            {
+                this.ChildsIDs = new List<int>();
+            }
         }
     }
 }

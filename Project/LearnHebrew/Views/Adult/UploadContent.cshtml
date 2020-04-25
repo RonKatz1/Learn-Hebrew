@@ -1,0 +1,63 @@
+﻿@model LearnHebrew.Models.AdultModel
+
+@{
+    ViewBag.Title = "UploadContent";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>UploadContent</h2>
+
+<div id="UploadContentFormContainer">
+    @using (Html.BeginForm("SaveContent", "Adult", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div>
+            <input type="hidden" name="AdultID" value="@Model.Adult.AdultID" />
+        </div>
+        <div>
+            <label>הכנס מילה</label>
+            <input type="text" name="Word" required />
+        </div>
+        <div>
+            <label>בחר תמונה</label>
+            <input type="file" name="Photo" />
+        </div>
+        <div>
+            <label>בחר קטע קול</label>
+            <input type="file" name="Voice" />
+        </div>
+
+        <input type="submit" value="שמור תוכן" />
+    }
+</div>
+
+
+<div id="nikodSite">
+
+    <iframe src="http://www.nakdan.com/nakdan.aspx" scrolling="no" frameborder="0" ></iframe>
+
+</div>
+
+
+<style>
+    #UploadContentFormContainer {
+        width: 47%;
+        display: inline-block;
+        float: left;
+    }
+
+    #nikodSite {
+        width: 47%;
+        border: 1px solid;
+        height: 500px;
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+    }
+
+    iframe {
+        position: absolute;
+        height: 2000px;
+        width: 100%;
+        top: -420px;
+    }
+</style>

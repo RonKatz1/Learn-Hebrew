@@ -37,5 +37,13 @@ namespace LearnHebrew.Auxiliray
                 HttpContext.Current.Session["AdultInSession"] = value;
             }
         }
+
+        //public static string ContentPhotoPath
+        //{
+        //    get {
+        //        var str = "C:\Users\tal\Documents\GitHub\Learn-Hebrew\Project\Photos";
+        //        return str;
+        //    }
+        //}
     }
 }

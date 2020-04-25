@@ -1,0 +1,27 @@
+﻿@model LearnHebrew.Models.AdultModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ConnectToChild</h2>
+
+
+<div id="ConnectToChildFormContainer">
+    @using (Html.BeginForm("SaveChildConnection", "Adult", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div>
+            <input type="hidden" name="AdultID" value="@Model.Adult.AdultID" />
+        </div>
+        <div>
+            <label>הכנס את שם הילד בעת הרישום שלו</label>
+            <input type="text" name="ChildName" required />
+        </div>
+        <div>
+            <label>הכנס את הסיסמה שהילד קיבל בעת הרישום שלו</label>
+            <input type="text" name="ChildPassword" />
+        </div>
+
+        <input type="submit" value="שמור" />
+    }
+</div>

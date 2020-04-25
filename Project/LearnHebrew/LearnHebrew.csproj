@@ -219,6 +219,7 @@
     <Compile Include="Auxiliray\Session.cs" />
     <Compile Include="Controllers\AdultController.cs" />
     <Compile Include="Controllers\ChildController.cs" />
+    <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
@@ -275,6 +276,9 @@
     <Content Include="Views\Registration\ChildRegistration.cshtml" />
     <Content Include="Views\User\ChildUser.cshtml" />
     <Content Include="Views\User\Letters.cshtml" />
+    <Content Include="Views\Adult\UploadContent.cshtml" />
+    <Content Include="Views\Adult\ConfirmContents.cshtml" />
+    <Content Include="Views\Adult\ConnectToChild.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

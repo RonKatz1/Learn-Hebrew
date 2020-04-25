@@ -1,0 +1,31 @@
+﻿@model LearnHebrew.Models.AdultModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ConfirmContents</h2>
+
+@if(Model.Contents != null && Model.Contents.Count() > 0)
+{
+    foreach(var c in Model.Contents)
+    {
+        <div>
+            <h1>@c.Word</h1>
+        </div>
+        <div>
+            <a target="_blank" href="@(Model.Path + "/" + c.Data.PhotoFile.Code + "." + c.Data.PhotoFile.Extention)">
+                <img height="50px" alt="" src="@(Model.Path + "/" + c.Data.PhotoFile.Code + "." + c.Data.PhotoFile.Extention)" />
+            </a>        
+        </div>
+        <div>
+            <a target="_blank" href="@(Model.Path + "/" + c.Data.VoiceFile.Code + "." + c.Data.VoiceFile.Extention)">
+                <audio alt="" src="@(Model.Path + "/" + c.Data.VoiceFile.Code + "." + c.Data.VoiceFile.Extention)" />
+            </a>
+        </div>
+    }
+}
+else
+{
+    <h2>אין תכנים לאישור</h2>
+}

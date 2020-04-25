@@ -48,6 +48,15 @@
           <Property Name="ChildID" Type="int" Nullable="false" />
           <Property Name="UnseenID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Content">
+          <Key>
+            <PropertyRef Name="ContentID" />
+          </Key>
+          <Property Name="ContentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AdultID" Type="int" Nullable="false" />
+          <Property Name="Word" Type="nvarchar(max)" />
+          <Property Name="Data" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="Game">
           <Key>
             <PropertyRef Name="GameID" />
@@ -70,6 +79,7 @@
           <EntitySet Name="ChildToAdult" EntityType="Self.ChildToAdult" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChildToGame" EntityType="Self.ChildToGame" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChildToUnseen" EntityType="Self.ChildToUnseen" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Content" EntityType="Self.Content" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Game" EntityType="Self.Game" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Unseen" EntityType="Self.Unseen" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
@@ -144,7 +154,17 @@
           <EntitySet Name="ChildToUnseens" EntityType="Self.ChildToUnseen" />
           <EntitySet Name="Games" EntityType="Self.Game" />
           <EntitySet Name="Unseens" EntityType="Self.Unseen" />
+          <EntitySet Name="Contents" EntityType="Model.Content" />
         </EntityContainer>
+        <EntityType Name="Content">
+          <Key>
+            <PropertyRef Name="ContentID" />
+          </Key>
+          <Property Name="ContentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdultID" Type="Int32" Nullable="false" />
+          <Property Name="Word" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -214,6 +234,16 @@
                 <ScalarProperty Name="Data" ColumnName="Data" />
                 <ScalarProperty Name="UnseenID" ColumnName="UnseenID" />
                 <ScalarProperty Name="AdultID" ColumnName="AdultID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contents">
+            <EntityTypeMapping TypeName="Model.Content">
+              <MappingFragment StoreEntitySet="Content">
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="Word" ColumnName="Word" />
+                <ScalarProperty Name="AdultID" ColumnName="AdultID" />
+                <ScalarProperty Name="ContentID" ColumnName="ContentID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
