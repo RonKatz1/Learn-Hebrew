@@ -140,6 +140,10 @@ namespace LearnHebrew.Controllers
         {
             return View("~/Views/Game/Game_12.cshtml");
         }
+        public ActionResult GoToGame_8()
+        {
+            return View("~/Views/Game/Game_8.cshtml");
+        }
         public ActionResult GoToGame_6()
         {
             return View("~/Views/Game/Game_6.cshtml");

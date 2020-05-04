@@ -1,0 +1,234 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<style>
+
+
+    body {
+        background-image: url('../../Pictures/Game_8/cartoon_grass.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        
+        cursor: url('../../Pictures/Game_8/target.png'),auto;
+    }
+    section {
+        
+        position: absolute;
+        width: 100%;
+        height: 35%;
+        
+        bottom:0;
+        
+    }
+    #endGameScreen {
+        width: 50%;
+        height: 50%;
+    }
+  
+    .hidescreen {
+        display: none;
+    }
+
+    
+    .hole{
+        
+       display:block;
+       width:300px;
+
+    }
+    .letter {
+        width:50px;
+           
+    }
+    #reverse {
+        
+        position: relative;
+        margin: auto;
+        
+    }
+
+    .slideUp {
+        position: absolute;
+        bottom: 0;
+    }
+   
+    .holeClass {
+        display:block;
+        background-image: url('../../Pictures/Game_8/dirt.png');
+        background-size:contain;
+        content:'';
+        width:100%;
+        height:100%;
+        position:absolute;
+        z-index:2;
+        bottom:-30px;
+        top:0;
+    }
+    .moleClass {
+        background-image: url('../../Pictures/Game_8/chaat1.png');
+        background-size: 60%;
+        position: absolute;
+        top: 100%;
+        width: 100%;
+        height: 100%;
+    }
+    #imageId{
+        width:100px;
+        height:100px;
+    }
+</style>
+<script>      
+    var gameoverIndicator;//interval animation of spawning enemies
+    var validLetters;
+    var invalidLetters;
+    var gameoverIndicator;//interval animation of spawning enemies
+    $(document).ready(function () {
+
+        validLetters = ["/Pictures/Game_8/chaat1.png", "/Pictures/Game_8/chaat2.png", "/Pictures/Game_8/chaat3.png", "/Pictures/Game_8/tempimg.jpeg"];
+        $("#imageId").click(function () {
+            $("#imageId").slideUp();
+            setTimeout(function () {
+                $("#imageId").slideDown(1000);
+            },2000)
+        });
+    })
+    function StartGame() {
+        gameoverIndicator = setInterval(CreateHole, 500);
+        $("#buttonId").addClass("hidescreen");
+    }
+    function CreateHole() {
+        var imageType = Math.floor((Math.random() * 2) + 1);
+        var $sign = $("<img>");
+        $sign.attr('id', "imageId");
+        $sign.addClass("slideUp");
+        var x = Math.floor((Math.random() * (parseInt($("#reverse").css("width")) - 100) + 1));//100 is image size so need to be dinamic later
+        var y = Math.floor((Math.random() * (parseInt($("#reverse").css("height")) - 100) + 1));
+        $sign.css("top", y + "px");
+        $sign.css("left", x + "px");
+        $sign.css("bottom", 0 + "px");
+        $("#reverse").append($sign);
+        if (imageType == 1) {
+            var imagesrc = Math.floor((Math.random() * 2) + 1);
+            if (imagesrc == 1) {
+                $sign.attr("src", "/Pictures/Game_8/chaat1.png");
+            }
+            else {
+                $sign.attr("src", "/Pictures/Game_8/cheese.png");
+            }
+            $sign.animate({
+                top: (parseInt($sign.css("height"))) + "px"
+
+
+            }, {
+                    duration: 1500,
+                    easing: "linear",
+                    progress: Clicked,
+                    complete: deleteObject
+
+                });
+        }
+        else {
+            $sign.attr("src", "/Pictures/Game_8/tempimg.jpeg");
+            //$sign.addClass("hidescreen");
+            //$sign.slideUp();
+            $sign.unbind().click(function () {
+                var indicator = false;
+                for (var i = 0; i < validLetters.length; i++) {
+                    if ($(this).attr('src') == validLetters[i]) {
+                        var temp = parseInt($("#scoreId").text()) + 1;
+                        $("#scoreId").text(temp);
+                        indicator = true;
+                        break;
+                    }
+
+                }
+                if (!indicator) {
+                    $("#lifeId").text(parseInt($("#lifeId").text()) - 1);
+                }
+                if ($("#lifeId").text() == '0') {
+                    GameOver();
+                }
+                $(this).remove();
+            })
+            setTimeout(function () {
+                //$sign.removeClass("hidescreen");
+                $sign.slideUp(1500);
+            }, 500)
+        }
+        
+      
+        
+    }
+    function Clicked() {
+        var indicator = false;
+        $(this).unbind().click(function () {       
+            for (var i = 0; i < validLetters.length; i++) {
+                if ($(this).attr('src') == validLetters[i]) {                
+                    var temp = parseInt($("#scoreId").text()) + 1;                   
+                    $("#scoreId").text(temp);                                 
+                    indicator = true;
+                    break;
+                }
+
+            }
+            if (!indicator) {
+                $("#lifeId").text(parseInt($("#lifeId").text()) - 1);
+            }
+            if ($("#lifeId").text() == '0') {
+                GameOver();
+            }
+            $(this).remove();
+        });
+
+    }
+    function deleteObject() {
+        $(this).remove();
+    }
+    function GoToAlphabet() {
+         window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
+    }
+
+    function GameOver() {
+        //clearInterval(gameoverIndicator);
+        //do popoup here to let the user go back to alphabet
+        $("#reverse").addClass("hidescreen");
+        $("#buttonId").addClass("hidescreen");
+        
+        $("#finalScore").text($("#scoreId").text());
+        $("#endGameScreen").removeClass("hidescreen");
+    }
+   
+    
+   
+
+</script>
+<body>
+    <div style="text-align:center">
+        <h1 style="color:gold"> פגיעת אותיות מהאדמה </h1>
+        <h2 style="color:gold">עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה</h2>
+        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+        <br />
+        <br />
+        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+    </div>
+    <div id="info" style="text-align:center;padding-bottom:12%">
+        <h3>ניקוד: <span id="scoreId">0</span></h3>
+        <h3>חיים: <span id="lifeId">5</span> </h3>
+    </div>
+    <section id="reverse">
+        <img class="slideUp" id="imageId" src="~/Pictures/Game_8/tempimg.jpeg" />
+    </section>
+    <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
+       
+        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+
+    </div>
+
+
+
+</body>

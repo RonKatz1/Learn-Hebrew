@@ -7,7 +7,7 @@
 
 <style>
     section {
-        width: 36%;
+        width: 50%;
         height: 54%;
         border: 1px solid black;
         position: relative;
@@ -21,7 +21,7 @@
         background-size:cover;
     }
     #user {
-        width: 13%;
+        width: 10%;
         height: 12%;
         top: 88%;
         left: 45%;
@@ -29,15 +29,15 @@
     }
 
     .enemy, .shot {
-        width: 9%;
+        width: 6%;
         height: 9%;
         position: absolute;
     }
 
     #endGameScreen {
-        background-color: aqua;
-        width: 99%;
-        height: 99%;
+        
+        width: 50%;
+        height: 50%;
     }
 
 
@@ -50,6 +50,48 @@
     .hidescreen {
         display: none;
     }
+    #heartId {
+        opacity: 0.7;
+        width: 8%;
+        height: 10%;
+        top: 2%;
+        left: 90%;
+        position: absolute;
+    }
+    #lifeId {
+        top: 0%;
+        left: 93%;
+        position: absolute;
+        font-size: medium;
+        color:gold;
+       
+    }
+    #scoreId {
+        top: 0%;
+        left: 7%;
+        position: absolute;
+        font-size: x-large;
+        color: gold;
+    }
+    .buttonClass {
+        position: absolute;
+        left: 48%;
+        border-radius:12px;
+        color:gold;
+        font-size:large;
+        background-color:hotpink
+       
+    }
+    .pCalss {
+        position: absolute;
+        left: 48%;
+        color: gold;
+        font-size: xx-large;
+        padding-left:20px;
+    }
+    .audios {
+        display: none;
+    }
 </style>
 <script>
     var move = 25;//setting moving distance per move for user
@@ -60,12 +102,22 @@
     var gameoverIndicator;//interval animation of spawning enemies
     var validLetters;
     var invalidLetters;
-    $(document).ready(function () {
-        //var parsedTest = ["/Pictures/Game_5/haay1.PNG,/Pictures/Game_5/haay2.PNG,/Pictures/Game_5/haay3.PNG"];
-        //validLetters = JSON.parse(parsedTest);
-        validLetters = ["/Pictures/Game_5/haay1.PNG", "/Pictures/Game_5/haay2.PNG", "/Pictures/Game_5/haay3.PNG"];
-        //$User = $("#user");//linking placeholder to user in current game
-        //$("body").keydown(userKey_Options);
+    
+    $(document).ready(function () {       
+        validLetters = ["/Pictures/Game_5/haay1.png", "/Pictures/Game_5/haay2.png", "/Pictures/Game_5/haay3.png"];
+        invalidLetters = ["/Pictures/Game_5/lamad1.png", "/Pictures/Game_5/kuuf1.png", "/Pictures/Game_5/raaish1.png"];
+        
+        var obj = document.createElement("audio");
+        obj.src = "/Audio/Game_5/game_explanation.mp3";
+        obj.volume = 0.3;
+        obj.autoPlay = false;
+        obj.preLoad = true;
+        obj.controls = true;
+
+        $("#explanationId").click(function () {
+            obj.play();
+            // obj.pause();
+        });
     })
     function StartGame() {
         $User = $("#user");//linking placeholder to user in current game
@@ -140,7 +192,8 @@
         }
 
         else {
-            $enemy.attr("src", "/Pictures/Game_5/nuun.PNG");
+            var randomNumber = Math.floor((Math.random() * invalidLetters.length) + 0);
+            $enemy.attr("src", invalidLetters[randomNumber]);
 
         }
         $enemy.addClass("enemy");
@@ -205,11 +258,11 @@
     }
     function enemyDestroyed($enemy) {
         var indicator = false;
-        //alert(validLetters);
-        //alert(jQuery.inArray(($enemy.attr('src'),validLetters)));
+        var sound = $("#yes-audio")[0];
+        sound.play();
         for (var i = 0; i < validLetters.length; i++) {
             if ($enemy.attr('src') == validLetters[i]) {
-                $("#score").text(parseInt($("#score").text()) + 1);
+                $("#scoreId").text(parseInt($("#scoreId").text()) + 1);
                 indicator = true;
                 break;
             }
@@ -218,9 +271,9 @@
 
         }
         if (!indicator) {
-            $("#life").text(parseInt($("#life").text()) - 1);
+            $("#lifeId").text(parseInt($("#lifeId").text()) - 1);
         }
-        if ($("#life").text() == '0') {
+        if ($("#lifeId").text() == '0') {
             GameOver();
         }
         //if (jQuery.inArray(($enemy.attr('src'), validLetters) != -1)) {
@@ -238,44 +291,64 @@
         //do popoup here to let the user go back to alphabet
         $("#sectionId").addClass("hidescreen");
         $("#tableId").addClass("hidescreen");
-        $("#finalScore").text($("#score").text());
+        $("#buttonId").addClass("hidescreen");
+        $("#finalScore").text($("#scoreId").text());
         $("#endGameScreen").removeClass("hidescreen");
     }
     function GoToAlphabet() {
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
     }
+    //function GameExplanation() {
+    //    //<audio id="soundEx"  controls="controls">
+    //    //    <source src="~/Audio/Game_5/game_explanation.mp3" type="audio/mpeg" />
+    //    //</audio>
+    //    var obj = $("<audio>");
+    //    obj.css("src", "/Audio/Game_5/game_explanation.mp3");
+    //    //a.css("type", "audio/mpeg");
+    //    obj.attr("id", "soundEx");
+    //    obj.volume = 0.1;
+    //    obj.autoPlay = false;
+    //    obj.preLoad = true;
+    //    obj.controls = true;
+    //    obj.play();
+    //    //var sound = $("#soundEx")[0];
+    //    //sound.play();
+    //}
 </script>
 
 <body>
-    <h1> משחק מספר 5 </h1>
-    <h2>כאן יופיע הסבר על המשחק ואולי כפתור לשמיעת ההסבר</h2>
+    <div style="text-align:center">
+        <h1 style="color:gold"> חללית חלל </h1>
+        <h2 style="color:gold">עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה</h2>
+        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+    </div>
+    <br />
     <section id="sectionId">
-
-
+        <p id="scoreId">0</p>
+        <p id="lifeId">5</p>
+        <img id="heartId" src="~/Pictures/Game_5/heart.png" />
         <img id="user" src="~/Pictures/Game_5/ship.png" />
     </section>
-    <input type="button" value="התחלה" onclick="StartGame()" />
-    <br />
-    <table id="tableId">
-        <tr>
-            <td><p id="score">0</p></td>
-            <td>ניקוד</td>
-        </tr>
-        <tr>
-            <td><p id="life">5</p></td>
-            <td>חיים</td>
-        </tr>
-    </table>
-    <div style="z-index:90" id="endGameScreen" class="hidescreen">
-        <table>
-            <tr>
-                <td><p id="finalScore">0</p></td>
-                <td>ניקוד סופי :</td>
-            </tr>
-            <tr>
-                <td><input type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" /></td>
-            </tr>
-        </table>
+    <div style="text-align:center;padding-top:5px">
+        <input id="buttonId" class="buttonClass" type="button" value="התחלה" onclick="StartGame()" />
     </div>
+
+    <br />
+
+    <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
+        <p style="left:45%" class="pCalss" id="finalScore"></p><p style="left:50%" class="pCalss">   ניקוד סופי  </p>
+        <br />
+        <br />
+        <br />
+        <br />
+        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+
+    </div>
+
+    <audio class="audios" controls="controls" id="yes-audio">
+        <source src="/Audio/Game_5/explosion.mp3" type="audio/mpeg" />
+    </audio>
+
+    
 </body>
 
