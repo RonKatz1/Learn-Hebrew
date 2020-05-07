@@ -7,24 +7,24 @@
 
 <style>
     section {
-        width: 36%;
-        height: 54%;
-        border: 1px solid black;
+        width: 58%;
+        height: 68%;
+        
         position: relative;
         margin: auto;
     }
 
     #user {
-        width: 13%;
-        height: 12%;
+        width: 7%;
+        height: 9%;
         top: 88%;
         left: 45%;
         position: absolute;
     }
 
     .enemy {
-        width: 9%;
-        height: 9%;
+        width: 6%;
+        height: 6%;
         position: absolute;
     }
 
@@ -43,6 +43,12 @@
 
     .hidescreen {
         display: none;
+    }
+    body {
+        background-image: url('../../Pictures/Game_12/chef_kitchen.PNG');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 </style>
 <script>
@@ -164,28 +170,17 @@
         var $enemy = $(this);//getting the current enemy
         if (checkIntersection($User, $enemy)) {
             enemyDestroyed($enemy);
-
+            MouthAnimation();
             
             $enemy.stop();
             $enemy.remove();
         }
-
-        //$(".shot").each(function () {
-        //    var $shot = $(this);
-
-        //    if (checkIntersection($shot, $enemy)) {
-
-        //        enemyDestroyed($enemy);
-
-        //        $shot.stop();
-        //        $shot.remove();
-        //        $enemy.stop();
-        //        $enemy.remove();
-
-        //    }
-
-        //});
-
+    }
+    function MouthAnimation() {
+        $User.attr("src", "/Pictures/Game_12/mouth_closed.png");
+        setTimeout(function () { $User.attr("src", "/Pictures/Game_12/mouth.png"); }, 1000);
+        //put sound eating here
+            
     }
     function checkIntersection($x, $y) {
         if ($x == undefined || $y == undefined) return false;
@@ -244,33 +239,39 @@
     }
 </script>
 
+<body>
+    <div style="text-align:center">
+        <h1 style="color:gold"> אכילת אותיות </h1>
+        <h2 style="color:gold">עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה</h2>
+        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+    </div>
+    <br />
+    <section id="sectionId">
 
 
-<section id="sectionId">
-
-    
-    <img id="user" src="~/Pictures/Game_12/mouth.png" />
-</section>
-<input type="button" value="התחלה" onclick="StartGame()" />
-<br />
-<table id="tableId">
-    <tr>
-        <td><p id="score">0</p></td>
-        <td>ניקוד</td>
-    </tr>
-    <tr>
-        <td><p id="life">5</p></td>
-        <td>חיים</td>
-    </tr>
-</table>
-<div style="z-index:90" id="endGameScreen" class="hidescreen">
-    <table>
+        <img id="user" src="~/Pictures/Game_12/mouth.png" />
+    </section>
+    <input type="button" value="התחלה" onclick="StartGame()" />
+    <br />
+    <table id="tableId">
         <tr>
-            <td><p id="finalScore">0</p></td>
-            <td>ניקוד סופי :</td>
+            <td><p id="score">0</p></td>
+            <td>ניקוד</td>
         </tr>
         <tr>
-            <td><input type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" /></td>
+            <td><p id="life">5</p></td>
+            <td>חיים</td>
         </tr>
     </table>
-</div>
+    <div style="z-index:90" id="endGameScreen" class="hidescreen">
+        <table>
+            <tr>
+                <td><p id="finalScore">0</p></td>
+                <td>ניקוד סופי :</td>
+            </tr>
+            <tr>
+                <td><input type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" /></td>
+            </tr>
+        </table>
+    </div>
+</body>

@@ -231,6 +231,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Audio\Game_5\explosion.mp3" />
+    <Content Include="Audio\Game_5\game_explanation.mp3" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -268,26 +270,45 @@
     <Content Include="Pictures\Alphabet\yuud.jpeg" />
     <Content Include="Pictures\Alphabet\zaain.jpeg" />
     <Content Include="Pictures\class.jpeg" />
+    <Content Include="Pictures\Game_12\chef_kitchen.PNG" />
     <Content Include="Pictures\Game_12\lamad1.png" />
     <Content Include="Pictures\Game_12\lamad2.png" />
     <Content Include="Pictures\Game_12\lamad3.png" />
     <Content Include="Pictures\Game_12\mouth.png" />
+    <Content Include="Pictures\Game_12\mouth_closed.png" />
     <Content Include="Pictures\Game_19\background.jpg" />
     <Content Include="Pictures\Game_19\background_2.jpg" />
     <Content Include="Pictures\Game_19\heart.png" />
+    <Content Include="Pictures\Game_19\kuuf1.png" />
+    <Content Include="Pictures\Game_19\kuuf2.png" />
+    <Content Include="Pictures\Game_19\kuuf3.png" />
     <Content Include="Pictures\Game_1\closet.jpeg" />
     <Content Include="Pictures\Game_1\ear.jpeg" />
     <Content Include="Pictures\Game_1\hidden.jpeg" />
     <Content Include="Pictures\Game_1\rock.jpeg" />
     <Content Include="Pictures\Game_1\watermallon.jpeg" />
-    <Content Include="Pictures\Game_5\haay1.PNG" />
-    <Content Include="Pictures\Game_5\haay2.PNG" />
-    <Content Include="Pictures\Game_5\haay3.PNG" />
+    <Content Include="Pictures\Game_5\haay1.png" />
+    <Content Include="Pictures\Game_5\haay2.png" />
+    <Content Include="Pictures\Game_5\haay3.png" />
+    <Content Include="Pictures\Game_5\heart.png" />
+    <Content Include="Pictures\Game_5\kuuf1.png" />
+    <Content Include="Pictures\Game_5\lamad1.png" />
     <Content Include="Pictures\Game_5\nuun.PNG" />
     <Content Include="Pictures\Game_5\planet.jpg" />
+    <Content Include="Pictures\Game_5\raaish1.png" />
     <Content Include="Pictures\Game_5\ship.png" />
     <Content Include="Pictures\Game_5\shot.png" />
     <Content Include="Pictures\Game_5\space.jpg" />
+    <Content Include="Pictures\Game_8\black_hole.png" />
+    <Content Include="Pictures\Game_8\cartoon_grass.png" />
+    <Content Include="Pictures\Game_8\chaat1.png" />
+    <Content Include="Pictures\Game_8\chaat2.png" />
+    <Content Include="Pictures\Game_8\chaat3.png" />
+    <Content Include="Pictures\Game_8\cheese.png" />
+    <Content Include="Pictures\Game_8\crosshair.png" />
+    <Content Include="Pictures\Game_8\dirt.png" />
+    <Content Include="Pictures\Game_8\target.png" />
+    <Content Include="Pictures\Game_8\tempimg.jpeg" />
     <Content Include="Pictures\questionMark.jpeg" />
     <Content Include="Pictures\teacher.jpeg" />
     <Content Include="Scripts\bootstrap.js" />
@@ -346,6 +367,7 @@
     <Content Include="Views\Adult\ConfirmContents.cshtml" />
     <Content Include="Views\Adult\ConnectToChild.cshtml" />
     <Content Include="Views\Adult\UploadContent.cshtml" />
+    <Content Include="Views\Game\Game_8.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

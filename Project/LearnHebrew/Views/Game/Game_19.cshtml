@@ -7,10 +7,21 @@
 
 <style>
     canvas {
-        width: 70%;
-        height: 70%;
+        width: 95%;
+        height: 80%;
         background-image: url('../../Pictures/Game_19/background_2.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
         border: 3px solid black;
+        z-index: 1;
+        position: relative;
+        padding-left: 0;
+        padding-right: 0;
+        
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
     }
     body {
         background-image: url('../../Pictures/Game_19/background.jpg');
@@ -31,15 +42,28 @@
     .hidescreen {
         display: none;
     }
-    #heartId{
-        width:20%;
-        height:20%;
+    #heartId {
+        width: 5%;
+        height: 8%;
+        z-index: 5;
+        
+        position: absolute;
+    }
+    .dropper {
+        width: 6%;
+        height: 9%;
+        position: absolute;
+        z-index:9;
     }
 </style>
 
 
 <body>
-    <img id="heartId" src="~/Pictures/Game_19/heart.png" />
+    <div style="text-align:center">
+        <h1 style="color:gold"> שבירת לבנים </h1>
+        <h2 style="color:gold">עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור אנטר</h2>
+        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+    </div>
     <canvas id="canvasId"></canvas>
     <div style="z-index:90" id="endGameScreen" class="hidescreen">
         <table>
@@ -63,15 +87,28 @@
     var pongW = 40, pongH = 7, pongX = ($canvas.width - pongW) / 2, pongY = $canvas.height - pongH; //pong coordinators and size
     var ballR = 2, x = $canvas.width / 2, y = ($canvas.height - pongH) - ballR;//ball coordinators and size 
     var move = 10;
-    var brickW = 20, brickH = pongH;
+    var brickW = 11, brickH = 5;
     var counter = 0;
-    var heart=$("#heartId")
+    var heart;
+    var validLetters;
+    var destoyedBrickY, destoyedBrickX;
 
-        $(document).ready(function () {
-            classic();
-            heart.css({ 'left': ($canvas.width-heart.width) + 'px', 'top': 0 + 'px' });
-            setInterval(draw, 50);
-            $("body").keydown(userKey_Options);
+
+    $(document).ready(function () {
+        //ClassicMode();
+        //CreativeMode();
+        SilverMode();
+        heart = $("<img>");
+        heart.attr("src", "/Pictures/Game_19/heart.png");
+        heart.attr("id", "heartId");
+
+        validLetters = ["/Pictures/Game_19/kuuf1.PNG", "/Pictures/Game_19/kuuf2.PNG", "/Pictures/Game_19/kuuf3.PNG"];
+
+        setInterval(draw, 50);
+        heart.css("left", $canvas.width + "px");
+        heart.css("top", 5 + "px");
+        $("body").append(heart);
+        $("body").keydown(userKey_Options);
     })
     function userKey_Options() {
         switch (window.event.keyCode) {
@@ -130,12 +167,11 @@
         $ctx.fill();
         $ctx.closePath();
     }
-    function classic() {
-        var lookAheadX = 0 + move;
-        //var lookAheady = $canvas.clientHeight - move;
+    function ClassicMode() {
+        var lookAheadX = -2 + move;
         var lookAheadY = 2*move;
         while (lookAheadY< ($canvas.height/2)) {
-            while (lookAheadX < $canvas.width - (4*move)) {
+            while (lookAheadX < $canvas.width - (1*move)) {
                 $bricks.push({
                     x: lookAheadX,
                     y: lookAheadY,
@@ -143,20 +179,82 @@
                 });
                 lookAheadX = lookAheadX + brickW + move;
             }
-            lookAheadX = 0 + move;
+            lookAheadX = -2 + move;
             lookAheadY = lookAheadY + brickH + move;
+        }
+    }
+    function CreativeMode() {
+        var lookAheadX = -5 + move;
+        var lookAheadY = 2 * move;
+        var temp = 0;
+        while (lookAheadY < ($canvas.height / 2)) {
+            while (lookAheadX < $canvas.width - (1 * move)) {
+                $bricks.push({
+                    x: lookAheadX,
+                    y: lookAheadY,
+                    status: 2
+                });
+                if (temp < 3) {
+                    lookAheadX = lookAheadX + brickW;
+                    temp++;
+                }
+                if (temp == 3) {
+                    lookAheadX = lookAheadX + brickW + (2 * move);
+                    temp = 0;
+                }
+                //lookAheadX = lookAheadX + brickW + move;
+            }
+            lookAheadX = -5 + move;
+            lookAheadY = lookAheadY  + move;
+        }
+
+    }
+    function SilverMode() {
+        var lookAheadX = -5 + move;
+        var lookAheadY = 2 * move;
+        var temp = false;
+        while (lookAheadY < ($canvas.height / 2)) {
+            while (lookAheadX < $canvas.width - (1 * move)) {
+                if (!temp) {
+                    $bricks.push({
+                        x: lookAheadX,
+                        y: lookAheadY,
+                        status: 2
+                    });
+                }
+                else {
+                    $bricks.push({
+                        x: lookAheadX,
+                        y: lookAheadY,
+                        status: 3
+                    });
+                }
+                
+                if (!temp) {
+                    lookAheadX = lookAheadX + brickW;
+                    temp = true;
+                }
+                else
+                    if (temp) {
+                    lookAheadX = lookAheadX + brickW + (2 * move);
+                    temp = false;
+                }
+                //lookAheadX = lookAheadX + brickW + move;
+            }
+            lookAheadX = -5 + move;
+            lookAheadY = lookAheadY + move;
         }
     }
     function drawBricks() {
         $bricks.forEach(function (brick) {
             switch (brick.status) {
-                //case 3:
-                //    $ctx.beginPath();
-                //    $ctx.rect(brick.x, brick.y, brickW, brickH);
-                //    $ctx.fillStyle = "#1af8ff";
-                //    $ctx.fill();
-                //    $ctx.closePath();
-                //    break;
+                case 3:
+                    $ctx.beginPath();
+                    $ctx.rect(brick.x, brick.y, brickW, brickH);
+                    $ctx.fillStyle = "#b7c7c7";
+                    $ctx.fill();
+                    $ctx.closePath();
+                    break;
                 case 2:
                     $ctx.beginPath();
                     
@@ -177,13 +275,12 @@
         $bricks.forEach(function (brick) {
             var inBrickColumn = x > brick.x && x < brick.x + brickW, inBrickRow = y > brick.y && y < brick.y + brickH;
             switch (brick.status) {
-                //case 3:
-                //    //var inBrickColumn = x > brick.x && x < brick.x + brickW, inBrickRow = y > brick.y && y < brick.y + brickH;
-                //    if (inBrickColumn && inBrickRow) {
-                //        directionY = -directionY;
-                //        brick.status = 2;
-                //    }               
-                //    break;
+                case 3:
+                    if (inBrickColumn && inBrickRow) {
+                        directionY = -directionY;
+                        
+                    }               
+                    break;
                 case 2:
                     //var inBrickColumn = x > brick.x && x < brick.x + brickW, inBrickRow = y > brick.y && y < brick.y + brickH;
                     if (inBrickColumn && inBrickRow) {
@@ -192,6 +289,9 @@
                         //alert(directionY);
                         brick.status = 1;
                         counter++;
+                        destoyedBrickY = brick.y;
+                        destoyedBrickX = brick.x;
+                        CreatDropper();
                     }
                     break;
                 case 1:
@@ -201,8 +301,11 @@
     }
     function draw() {
         $ctx.clearRect(0, 0, $canvas.width, $canvas.height);
-        
-        
+        //alert($canvas.width);
+        //alert(heart.width);
+        //heart.css("left", 1350 + "px");
+        //heart.css("left", $canvas.height  + "px");
+        //heart.css("top", 5 + "px");
         drawBall();
         drawPong();
         drawBricks();
@@ -270,7 +373,38 @@
 
         }
 
+    function CreatDropper() {
+        var randomNumber = Math.floor((Math.random() * 10) + 1);
+        if (randomNumber <= 9) {
+            
+            var pickedImg = Math.floor((Math.random() * validLetters.length) + 0);
+            var $dropper = $("<img>");
+            $dropper.attr("src", validLetters[pickedImg]);
+            $dropper.addClass("dropper");
+            
+            $dropper.css("top", destoyedBrickY + "px");
+            $dropper.css("left", destoyedBrickX + "px");
+            //$ctx.drawImage($dropper, destoyedBrickX, destoyedBrickY);
+            $("body").append($dropper);
+            $dropper.animate({
+                top: $canvas.height
 
+
+            }, {
+                    duration: 2000,
+                    easing: "linear",
+                    complete: deleteObject
+
+
+
+                });
+        }
+
+        
+    }
+    function deleteObject() {
+        $(this).remove();
+    }
 
 </script>
 
