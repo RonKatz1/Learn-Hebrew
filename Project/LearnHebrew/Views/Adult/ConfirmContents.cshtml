@@ -4,28 +4,89 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>ConfirmContents</h2>
+<script>
+    $(document).ready(function () {
+        $('.content-slick-carousel').slick({
+            @*slidesToShow: @(Model.QuoteItems.Count() > 1 ? Model.QuoteItems.Count() > 7 ? 7 : Model.QuoteItems.Count() - 1: 1),*@
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            dots: false,
+            centerMode: true,
+            focusOnSelect: false,
+            centerPadding: 0,
+            draggable: false,
+            arrows: false,
+            rtl: false,
+            infinite: false,
+            //nextArrow: '<div class="slick-prev"></div>',
+            //prevArrow: '<div class="slick-next"></div>',
+            //variableWidth: true,
+        });
+    });
 
-@if(Model.Contents != null && Model.Contents.Count() > 0)
-{
-    foreach(var c in Model.Contents)
-    {
-        <div>
-            <h1>@c.Word</h1>
-        </div>
-        <div>
-            <a target="_blank" href="@(Model.Path + "/" + c.Data.PhotoFile.Code + "." + c.Data.PhotoFile.Extention)">
-                <img height="50px" alt="" src="@(Model.Path + "/" + c.Data.PhotoFile.Code + "." + c.Data.PhotoFile.Extention)" />
-            </a>        
-        </div>
-        <div>
-            <a target="_blank" href="@(Model.Path + "/" + c.Data.VoiceFile.Code + "." + c.Data.VoiceFile.Extention)">
-                <audio alt="" src="@(Model.Path + "/" + c.Data.VoiceFile.Code + "." + c.Data.VoiceFile.Extention)" />
-            </a>
-        </div>
+
+    function ConfirmContent(ContentID, IsConfirmed) {
+        $.post("@Url.Action("SaveConfirmedContent", "Adult")" + "?ContentID=" + ContentID + "&IsConfirmed=" + IsConfirmed, function (data) {
+            if (data == "OK") {
+                $('.content-slick-carousel').slick('slickNext');
+            }
+        });
     }
+</script>
+
+
+@if (Model.Contents != null && Model.Contents.Count() > 0)
+{
+    <div id="ConfirmContentsContainer">
+        <div class="content-slick-carousel">
+            @foreach (var c in Model.Contents)
+            {
+            <div class="contentToDisplay">
+                <div>
+                    <h3>@c.Word</h3>
+                </div>
+                <div class="ContentPhoto" style="width:100px; height:100px; background-image:url('@(BLL.Services.ContentServices.GetFilePath(c.Data.PhotoFile))')">
+
+                </div>
+                <div>
+                    <audio controls>
+                        <source src="@Url.Content(BLL.Services.ContentServices.GetFilePath(c.Data.VoiceFile))" type="audio/ogg">
+                    </audio>
+                </div>
+
+
+                <button class="confirmBtn slick-next" onclick="ConfirmContent(@c.ContentID, true)">אשר</button>
+                <button class="confirmBtn slick-prev" onclick="ConfirmContent(@c.ContentID, false)">דחה</button>
+
+            </div>
+            }
+        </div>
+    </div>
 }
 else
 {
-    <h2>אין תכנים לאישור</h2>
+    <h3>אין תכנים לאישור</h3>
 }
+
+
+<style>
+    .ContentPhoto {
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    #ConfirmContentsContainer {
+        width: 80%;
+        margin: auto;
+        text-align: center;
+    }
+
+    .ContentPhoto {
+        margin: auto;
+    }
+
+    .contentToDisplay {
+        width: 100%;
+    }
+</style>
