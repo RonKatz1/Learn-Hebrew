@@ -26,6 +26,8 @@ namespace BLL.LearnHebrewEntities
 
             public List<int> ChildsIDs { get; set; } 
 
+            public List<int> ContentIDsConfermed { get; set; }
+
             public AdultData()
             {
                 this.ChildsIDs = new List<int>();

@@ -24,11 +24,14 @@ namespace BLL.LearnHebrewEntities
     [DataContract]
     public class ContentData
     {
-        //[DataMember]
-        //public Photo Photo { get; set; }
-
-        //[DataMember]
-        //public VoiceFile VoiceFile { get; set; }
+        [DataMember]
+        public DateTime DateCreated { get; set; }
+        [DataMember]
+        public bool IsApproved { get; set; }
+        [DataMember]
+        public int ApprovedCount { get; set; }
+        [DataMember]
+        public int DisApprovedCount { get; set; }
 
         [DataMember]
         public ContentFile PhotoFile { get; set; }
@@ -37,11 +40,9 @@ namespace BLL.LearnHebrewEntities
 
         public ContentData()
         {
-            //this.Photo = new Photo();
-            //this.VoiceFile = new VoiceFile();
-
             this.PhotoFile = new ContentFile();
             this.VoiceFile = new ContentFile();
+            this.DateCreated = DateTime.MinValue;
         }
     }
 
@@ -55,27 +56,4 @@ namespace BLL.LearnHebrewEntities
         [DataMember]
         public string Extention { get; set; }
     }
-
-    //[DataContract]
-    //public class Photo
-    //{
-    //    [DataMember]
-    //    public string Name { get; set; }
-    //    [DataMember]
-    //    public string Code { get; set; }
-    //    [DataMember]
-    //    public string Extention { get; set; }
-
-    //}
-
-    //[DataContract]
-    //public class VoiceFile
-    //{
-    //    [DataMember]
-    //    public string Name { get; set; }
-    //    [DataMember]
-    //    public string Code { get; set; }
-    //    [DataMember]
-    //    public string Extention { get; set; }
-    //}
 }

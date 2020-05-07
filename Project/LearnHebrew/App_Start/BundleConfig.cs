@@ -22,8 +22,12 @@ namespace LearnHebrew
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/slick").Include(
+                     "~/Scripts/slick/slick.min.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/slick/slick.css",
                       "~/Content/site.css"));
         }
     }

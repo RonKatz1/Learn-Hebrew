@@ -12,7 +12,8 @@ namespace LearnHebrew.Controllers
         //private string ContentPhotoPath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/Photos";
         //private string ContentVoicePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/Voice";
 
-        private string ContentFilePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/ContentFiles";
+        //private string ContentFilePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/ContentFiles";
+        private string ContentFilePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/LearnHebrew/ContentFiles";
 
         public ActionResult Index()
         {
@@ -81,34 +82,11 @@ namespace LearnHebrew.Controllers
                 var word = col["Word"];
                 content.AdultID = AdultID;
                 content.Word = word;
+                content.Data.DateCreated = DateTime.Now;
 
                 if(Photo != null)
                 {
                     content.Data.PhotoFile = CreateFile(Photo, word);
-
-                    //var photo = new BLL.LearnHebrewEntities.ContentFile();
-                    //photo.Code = Guid.NewGuid().ToString();
-                    //photo.Name = word;
-
-                    //string fileExtention = "";
-                    //if (Photo.ContentLength > 0 && !string.IsNullOrEmpty(Photo.FileName))
-                    //{
-                    //    fileExtention = Path.GetExtension(Photo.FileName).Split('.')[Path.GetExtension(Photo.FileName).Split('.').Length - 1];
-                    //    photo.Extention = fileExtention;
-                    //}
-                    //if (Photo.ContentLength > 0 && !string.IsNullOrEmpty(photo.Extention))
-                    //{
-                    //    // get a stream
-                    //    var stream = Photo.InputStream;
-                    //    // and optionally write the file to disk
-                    //    //var fileName = Path.GetFileName(Photo.FileName);
-                    //    var filename = word;
-                    //    var path = Path.Combine(ContentPhotoPath, photo.Code + "." + photo.Extention);
-                    //    using (var fileStream = System.IO.File.Create(path))
-                    //    {
-                    //        stream.CopyTo(fileStream);
-                    //    }
-                    //}  
                 }
 
                 if(Voice != null)
@@ -136,7 +114,6 @@ namespace LearnHebrew.Controllers
 
         public ActionResult ConfirmContents()
         {
-
             Models.AdultModel m = new Models.AdultModel();
 
             try
@@ -148,7 +125,11 @@ namespace LearnHebrew.Controllers
                 var allContents = BLL.Services.ContentServices.LoadAllContents();
                 if(allContents != null && allContents.Count() > 0)
                 {
-                    m.Contents = allContents.Where(c=>c.AdultID != m.Adult.AdultID).ToList();
+                    if (m.Adult.Data.ContentIDsConfermed == null)
+                        m.Adult.Data.ContentIDsConfermed = new List<int>();
+
+                    m.Contents = allContents.Where(c=>c.AdultID != m.Adult.AdultID && !c.Data.IsApproved && !m.Adult.Data.ContentIDsConfermed.Contains(c.ContentID)).ToList();
+                    m.Contents = m.Contents != null && m.Contents.Count() > 0 ? m.Contents.OrderBy(c => c.Data.DateCreated).ToList() : new List<BLL.LearnHebrewEntities.Content>();
                     m.Path = ContentFilePath;
                 }
                 else
@@ -164,6 +145,51 @@ namespace LearnHebrew.Controllers
             {
                 return Content(ex.Message + " -- " + ex.StackTrace);
             }
+        }
+
+        [HttpPost]
+        public ActionResult SaveConfirmedContent(int ContentID, bool IsConfirmed)
+        {
+            BLL.LearnHebrewEntities.Content content = new BLL.LearnHebrewEntities.Content();
+            BLL.LearnHebrewEntities.Adult adult = new BLL.LearnHebrewEntities.Adult();
+            try
+            {
+                content = BLL.Services.ContentServices.LoadByID(ContentID);
+                adult = Auxiliray.Session.AdultInSession;
+
+                if(content == null)
+                    return Content("fail");
+                if(adult == null)
+                    return Content("fail");
+
+                if (IsConfirmed)
+                    content.Data.ApprovedCount += 1;
+                else
+                    content.Data.DisApprovedCount += 1;
+
+                if (content.Data.ApprovedCount >= 5)
+                    content.Data.IsApproved = true;
+
+                if (content.Data.DisApprovedCount >= 3)
+                {
+                    //delete content from contents
+                    //delete content from adult content list
+                }
+
+                adult.Data.ContentIDsConfermed.Add(ContentID);
+
+                BLL.Services.AdultServices.Save(adult);
+                BLL.Services.ContentServices.Save(content);
+
+                Auxiliray.Session.AdultInSession = adult;
+
+            }
+            catch (Exception ex)
+            {
+                return Content("fail");
+            }
+
+            return Content("OK");
         }
 
         private BLL.LearnHebrewEntities.ContentFile CreateFile(HttpPostedFileBase file, string word)
