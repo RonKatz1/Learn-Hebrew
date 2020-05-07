@@ -12,8 +12,8 @@ namespace LearnHebrew.Controllers
         //private string ContentPhotoPath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/Photos";
         //private string ContentVoicePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/Voice";
 
-        //private string ContentFilePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/ContentFiles";
-        private string ContentFilePath = "C:/Users/ron katz/Documents/GitHub/Learn-Hebrew/ContentFiles";
+        private string ContentFilePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/ContentFiles";
+
         public ActionResult Index()
         {
             return View();
