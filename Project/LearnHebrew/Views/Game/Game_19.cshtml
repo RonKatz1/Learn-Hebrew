@@ -27,9 +27,8 @@
         background-image: url('../../Pictures/Game_19/background.jpg');
     }
     #endGameScreen {
-        background-color: aqua;
-        width: 99%;
-        height: 99%;
+        
+        height: 50%;
     }
 
 
@@ -65,16 +64,13 @@
         <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
     </div>
     <canvas id="canvasId"></canvas>
-    <div style="z-index:90" id="endGameScreen" class="hidescreen">
-        <table>
-            <tr>
-                <td><p id="finalScore">0</p></td>
-                <td>ניקוד סופי :</td>
-            </tr>
-            <tr>
-                <td><input type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" /></td>
-            </tr>
-        </table>
+    <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
+        <p style="left:45%"></p><p style="left:50%" >   ניקוד סופי  </p><p id="finalScore">0</p>
+        <br />
+        <br />
+        <br />
+        <br />
+        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
 </body>
 
@@ -92,7 +88,7 @@
     var heart;
     var validLetters;
     var destoyedBrickY, destoyedBrickX;
-
+    var lives = 1;
 
     $(document).ready(function () {
         //ClassicMode();
@@ -319,11 +315,21 @@
             directionY = -directionY;
         }
         if (gameOver()) {
-            $("#canvasId").addClass("hidescreen");
-            //$("#tableId").addClass("hidescreen");
-            //$("#finalScore").text($("#score").text());
-            $("#endGameScreen").removeClass("hidescreen");
+            if (lives == 0) {
+                $("#finalScore").text(counter);
+                $("#canvasId").addClass("hidescreen");
+                //$("#tableId").addClass("hidescreen");
+                //$("#finalScore").text($("#score").text());
+                $("#endGameScreen").removeClass("hidescreen");
+            }
+            lives--;
+            gameStarted = false;
+            pongX = ($canvas.width - pongW) / 2;
+            pongY = $canvas.height - pongH;
+            x = $canvas.width / 2;
+            y = ($canvas.height - pongH) - ballR;
         }
+        
 
         function HitSideWall() {
             return x + directionX > $canvas.width - ballR || x + directionX < ballR;
@@ -341,6 +347,7 @@
             return x > pongX && x < pongX + pongW;
         }
         function gameOver() {
+            
             return HitBottom() && !BallOverPong();
         }
 
@@ -381,9 +388,10 @@
             var $dropper = $("<img>");
             $dropper.attr("src", validLetters[pickedImg]);
             $dropper.addClass("dropper");
-            
-            $dropper.css("top", destoyedBrickY + "px");
-            $dropper.css("left", destoyedBrickX + "px");
+
+            var randomX = Math.floor((Math.random() * ($("body").width() - $dropper.width())) + $dropper.width());
+            $dropper.css("top", 0 + "px");
+            $dropper.css("left", randomX + "px");
             //$ctx.drawImage($dropper, destoyedBrickX, destoyedBrickY);
             $("body").append($dropper);
             $dropper.animate({
