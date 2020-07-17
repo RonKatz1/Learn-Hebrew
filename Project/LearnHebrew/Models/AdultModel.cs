@@ -12,6 +12,8 @@ namespace LearnHebrew.Models
         public List<BLL.LearnHebrewEntities.Content> Contents { get; set; }
 
         public BLL.LearnHebrewEntities.Content ContentChosen { get; set; }
+        
+        public List<BLL.LearnHebrewEntities.Child> AdultChilds { get; set; }
 
         public string Path { get; set; }
     }

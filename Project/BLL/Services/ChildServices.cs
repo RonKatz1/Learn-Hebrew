@@ -23,7 +23,29 @@ namespace BLL.Services
                 return ConvertEntityToBusiness(repo.LoadChildByNameandPassword(NameQuery, PasswordQuery));
             }
         }
-        
+
+        public static List<Child> LoadAllChildsByIds(List<int> ChildsIDs)
+        {
+            try
+            {
+                var entityChilds = new List<Domain.Entity.Child>();
+                var childs = new List<Child>();
+                using (Domain.Repositories.ChildRepository repo = new Domain.Repositories.ChildRepository())
+                {
+                    entityChilds = repo.LoadAllChildsByIds(ChildsIDs);
+                }
+                foreach (var child in entityChilds)
+                {
+                    childs.Add(ConvertEntityToBusiness(child));
+                }
+                return childs;
+            }
+            catch (Exception ex)
+            {
+                return new List<Child>();
+            }
+        }
+
         public static int Save(Child Child)
         {
             Domain.Entity.Child ChildEntity = new Domain.Entity.Child();
