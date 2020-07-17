@@ -184,5 +184,9 @@ namespace LearnHebrew.Controllers
         {
             return View("~/Views/Game/Game_1.cshtml");
         }
+        public ActionResult GoToGame_7_Hangman()
+        {
+            return View("~/Views/Game/Game_7_Hangman.cshtml");
+        }
     }
 }

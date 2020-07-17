@@ -465,6 +465,7 @@
     <Content Include="Views\Game\Game_16.cshtml" />
     <Content Include="Views\Game\Game_13.cshtml" />
     <Content Include="Views\Game\Game_9.cshtml" />
+    <Content Include="Views\Game\Game_7_Hangman.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
