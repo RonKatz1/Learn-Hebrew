@@ -26,7 +26,7 @@
         
     }
     #endGameScreen {
-        width: 50%;
+        
         height: 50%;
     }
   
@@ -89,7 +89,8 @@
     var gameoverIndicator;//interval animation of spawning enemies
     $(document).ready(function () {
 
-        validLetters = ["/Pictures/Game_8/chaat1.png", "/Pictures/Game_8/chaat2.png", "/Pictures/Game_8/chaat3.png", "/Pictures/Game_8/tempimg.jpeg"];
+        validLetters = ["/Pictures/Game_8/chaat1.png", "/Pictures/Game_8/chaat2.png", "/Pictures/Game_8/chaat3.png", "/Pictures/Game_8/tempimg.jpeg", "/Pictures/Game_8/chaat1board.png"];
+        LoadSoundAndPicture();
         $("#imageId").click(function () {
             $("#imageId").slideUp();
             setTimeout(function () {
@@ -97,6 +98,14 @@
             },2000)
         });
     })
+    function LoadSoundAndPicture() {
+        //new Audio("/Audio/Game_8/gun_fire.mp3").load();
+        
+        //this may need to be changes once games become dynamic letter based
+        for (let i = 0; i < validLetters.length; i++) {
+            fetch(validLetters[i]);
+        }
+    }
     function StartGame() {
         gameoverIndicator = setInterval(CreateHole, 500);
         $("#buttonId").addClass("hidescreen");
@@ -133,10 +142,11 @@
                 });
         }
         else {
-            $sign.attr("src", "/Pictures/Game_8/tempimg.jpeg");
+            $sign.attr("src", "/Pictures/Game_8/chaat1board.png");
             //$sign.addClass("hidescreen");
             //$sign.slideUp();
             $sign.unbind().click(function () {
+                CreateSound();
                 var indicator = false;
                 for (var i = 0; i < validLetters.length; i++) {
                     if ($(this).attr('src') == validLetters[i]) {
@@ -166,7 +176,9 @@
     }
     function Clicked() {
         var indicator = false;
-        $(this).unbind().click(function () {       
+        
+        $(this).unbind().click(function () {
+            CreateSound();
             for (var i = 0; i < validLetters.length; i++) {
                 if ($(this).attr('src') == validLetters[i]) {                
                     var temp = parseInt($("#scoreId").text()) + 1;                   
@@ -192,7 +204,12 @@
     function GoToAlphabet() {
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
     }
+    function CreateSound() {
+        let $sound = $("<audio>");
+        $sound.attr("src", "/Audio/Game_8/gun_fire.mp3");
 
+        $sound[0].play();
+    }
     function GameOver() {
         //clearInterval(gameoverIndicator);
         //do popoup here to let the user go back to alphabet
@@ -221,7 +238,7 @@
         <h3>חיים: <span id="lifeId">5</span> </h3>
     </div>
     <section id="reverse">
-        <img class="slideUp" id="imageId" src="~/Pictures/Game_8/tempimg.jpeg" />
+        
     </section>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
        

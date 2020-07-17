@@ -59,9 +59,9 @@
 
 <body>
     <div style="text-align:center">
-        <h1 style="color:gold"> שבירת לבנים </h1>
-        <h2 style="color:gold">עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור אנטר</h2>
-        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+        <h1> שבירת לבנים </h1>
+        <h2>עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור אנטר</h2>
+        <i id="explanationId"  class="fa fa-volume-up"></i>
     </div>
     <canvas id="canvasId"></canvas>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
@@ -88,24 +88,52 @@
     var heart;
     var validLetters;
     var destoyedBrickY, destoyedBrickX;
-    var lives = 1;
+    var lives = 99;
 
     $(document).ready(function () {
         //ClassicMode();
         //CreativeMode();
-        SilverMode();
+        //SilverMode();
+        
+        ChooseMode();
         heart = $("<img>");
         heart.attr("src", "/Pictures/Game_19/heart.png");
         heart.attr("id", "heartId");
 
         validLetters = ["/Pictures/Game_19/kuuf1.PNG", "/Pictures/Game_19/kuuf2.PNG", "/Pictures/Game_19/kuuf3.PNG"];
 
+        LoadSoundAndPicture();
+
         setInterval(draw, 50);
         heart.css("left", $canvas.width + "px");
         heart.css("top", 5 + "px");
-        $("body").append(heart);
+        //$("body").append(heart);
         $("body").keydown(userKey_Options);
     })
+    function ChooseMode() {
+        var randNum = Math.floor((Math.random() * 3) + 1);
+        switch (randNum) {
+            case 3:
+                ClassicMode();
+                break;
+            case 2:
+                CreativeMode();
+                break;
+            case 1:
+                SilverMode();
+                break;
+
+        }
+    }
+    function LoadSoundAndPicture() {
+        new Audio("/Audio/Game_19/silver_bounce.mp3").load();
+        new Audio("/Audio/Game_19/bounce.mp3").load();
+        //this may need to be changes once games become dynamic letter based
+        for (let i = 0; i < validLetters.length; i++) {
+            fetch(validLetters[i]);
+        }
+        
+    }
     function userKey_Options() {
         switch (window.event.keyCode) {
             case (37):// left keyboard was pressed = moving the user one move to the left
@@ -152,14 +180,14 @@
     function drawBall() {
             $ctx.beginPath();
             $ctx.arc(x, y, ballR, 0, Math.PI * 2);
-            $ctx.fillStyle = "#00C853";
+            $ctx.fillStyle = "#250517";
             $ctx.fill();
             $ctx.closePath();
     }
     function drawPong() {
         $ctx.beginPath();
         $ctx.rect(pongX, pongY, pongW, pongH);
-        $ctx.fillStyle = "#185E20";
+        $ctx.fillStyle = "#4E387E";
         $ctx.fill();
         $ctx.closePath();
     }
@@ -208,6 +236,7 @@
     function SilverMode() {
         var lookAheadX = -5 + move;
         var lookAheadY = 2 * move;
+        counter = 0;
         var temp = false;
         while (lookAheadY < ($canvas.height / 2)) {
             while (lookAheadX < $canvas.width - (1 * move)) {
@@ -215,14 +244,17 @@
                     $bricks.push({
                         x: lookAheadX,
                         y: lookAheadY,
-                        status: 2
+                        status: 2,
+                        breakBar:0
                     });
                 }
                 else {
+                    counter++;
                     $bricks.push({
                         x: lookAheadX,
                         y: lookAheadY,
-                        status: 3
+                        status: 3,
+                        breakBar: 3
                     });
                 }
                 
@@ -273,14 +305,22 @@
             switch (brick.status) {
                 case 3:
                     if (inBrickColumn && inBrickRow) {
-                        directionY = -directionY;
+                        CreateSound(brick.status);
+                        if (brick.breakBar != 0) {
+                            directionY = -directionY;
+                            brick.breakBar = 0;
+                        }
+                        else {
+                            directionY = -directionY;
+                            brick.status = 1;
+                        }
                         
                     }               
                     break;
                 case 2:
                     //var inBrickColumn = x > brick.x && x < brick.x + brickW, inBrickRow = y > brick.y && y < brick.y + brickH;
                     if (inBrickColumn && inBrickRow) {
-                        //alert(directionY);
+                        CreateSound(brick.status);
                         directionY = -directionY;
                         //alert(directionY);
                         brick.status = 1;
@@ -309,9 +349,11 @@
         if (counter == $bricks.length)
             WinnerEndGame();
         if (HitSideWall()) {
+            CreateSound(1);
             directionX = -directionX;
         }
         if (HitTop() || HitPong()) {
+            CreateSound(1);
             directionY = -directionY;
         }
         if (gameOver()) {
@@ -328,6 +370,7 @@
             pongY = $canvas.height - pongH;
             x = $canvas.width / 2;
             y = ($canvas.height - pongH) - ballR;
+            directionY = -directionY;//check
         }
         
 
@@ -341,6 +384,7 @@
             return HitBottom() && BallOverPong();
         }
         function HitBottom() {
+
             return y + directionY > $canvas.height - ballR;
         }
         function BallOverPong() {
@@ -370,8 +414,7 @@
 
     function WinnerEndGame() {
         $("#canvasId").addClass("hidescreen");
-        //$("#tableId").addClass("hidescreen");
-        //$("#finalScore").text($("#score").text());
+        $("#finalScore").text(counter);
         $("#endGameScreen").removeClass("hidescreen");
     }
     function GoToAlphabet() {
@@ -389,9 +432,10 @@
             $dropper.attr("src", validLetters[pickedImg]);
             $dropper.addClass("dropper");
 
-            var randomX = Math.floor((Math.random() * ($("body").width() - $dropper.width())) + $dropper.width());
+            //var randomX = Math.floor((Math.random() * ($("body").width() - $dropper.width())) + $dropper.width());
+            let axisX = random_PlaceX();
             $dropper.css("top", 0 + "px");
-            $dropper.css("left", randomX + "px");
+            $dropper.css("left", axisX + "px");
             //$ctx.drawImage($dropper, destoyedBrickX, destoyedBrickY);
             $("body").append($dropper);
             $dropper.animate({
@@ -410,9 +454,23 @@
 
         
     }
+    function random_PlaceX() {
+        var limitLeft = pongW * 8;
+        var limitRight = pongW * 20;
+        return Math.floor((Math.random() * limitRight) + limitLeft);
+    }
     function deleteObject() {
         $(this).remove();
     }
-
+    function CreateSound(number) {
+        let $sound;
+        if (number == 3) {
+            $sound = new Audio("/Audio/Game_19/silver_bounce.mp3");
+        }
+        else {
+            $sound = new Audio("/Audio/Game_19/bounce.mp3");
+        }
+        $sound.play();
+    }
 </script>
 

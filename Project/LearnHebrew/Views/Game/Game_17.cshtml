@@ -1,0 +1,353 @@
+﻿@{
+    Layout = null;
+}
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+<style>
+    body {
+        background-image: url('../../Pictures/Game_17/ballon_background.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    section {
+        position: relative;
+        width: 95%;
+        height: 75%;
+        margin: auto;
+        cursor: url('../../Pictures/Game_8/target.png'),auto;
+    }  
+    .enemy {
+        width: 4%;
+        height: 6%;
+        position: absolute;
+    }
+    #endGameScreen {
+        height: 50%;
+    }
+    .hidescreen {
+        display: none;
+    } 
+    .balloon{
+        position:absolute;
+        border-radius:50%;
+        background-color:red;
+        width:50px;
+        height:50px;
+    }
+    .exploded {
+        width: 20%;
+        height: 20%;
+        position: absolute;
+    }
+    .firework {
+        width: 3%;
+        height: 15%;
+        position: absolute;
+    }
+</style>
+
+<script>
+    var validLetters;
+    var invalidLetters;
+    var timeout;//interval for fireball creation
+    var gameoverIndicator; //interval for spawning enemies until game is over
+    var spawnTimer = 700;//the time it takes for a letter to spawn
+    var removeLetterTimer = 3500;//the time it takes for a spawned letter to disappear
+    let poppingSize = 500;//the max size a ballon can get
+    var gameStarted = false; //indicator for game started for not letting pressed enter
+    var ballonReduction = 5;//the size of the balloon reduction per enemy spawned
+    var ballonEnlarge = 35;//the size of the balloon enlarges per using this var
+    var balloonPopped = false;
+    let fireworksInterval;
+    $(document).ready(function () {
+
+        validLetters = ["/Pictures/Game_17/paay1.png","/Pictures/Game_17/paay2.png"];
+        //$("body").keydown(userKey_Options);
+        var ballon = $("#balloonId");
+        var section = $("#sectionId");
+        ballon.css("left", (section.width() / 2) - ballon.width() / 2);
+        ballon.css("top", (section.height() / 2) - ballon.height() / 2);
+
+        //var imge = $("<img>");
+        //imge.attr("src", "/Pictures/Game_17/paay1.png");
+        //imge.addClass("letter");
+        //imge.css("left", ballon.width() / 2);
+        //imge.css("top", ballon.height() / 2);
+        //ballon.append(imge);
+        
+        
+    })
+    function EnlargeBalloon() {
+        var ballon = $("#balloonId");
+        
+        ballon.width(ballon.width() + ballonEnlarge);
+        ballon.height(ballon.height() + ballonEnlarge);
+        RealignBalloon();
+        
+    }
+    function RealignBalloon() {
+        var ballon = $("#balloonId");
+        var section = $("#sectionId");
+        ballon.css("left", (section.width() / 2) - ballon.width() / 2);
+        ballon.css("top", (section.height() / 2) - ballon.height() / 2);
+        if (ballon.width() > poppingSize) {
+            balloonPopped = true;
+            GameOver();
+        }
+        if (ballon.width() < 20) {
+            GameOver();
+        }
+    }
+    function StartGame() {
+        gameStarted = true;
+        $("#buttonId").addClass("hidescreen");
+        $("#buttonRet").removeClass("hidescreen");
+        
+        gameoverIndicator = setInterval(createEnemy, spawnTimer);
+    }
+    function createEnemy() {
+        ReduceBalloon();//reducing the current size of the balloon
+        var $enemy = $("<img>");
+        var enemyType = Math.floor((Math.random() * 10) + 1);
+        if (enemyType > 3) {//enemy will be a valid letter
+            var randomNumber = Math.floor((Math.random() * validLetters.length) + 0);
+            $enemy.attr("src", validLetters[randomNumber]);
+        }
+        else {//enemy will be an invalid letter
+            $enemy.attr("src", "/Pictures/Game_17/raaish1.png");
+        }
+        $enemy.addClass("enemy");
+
+        var limitLeft = 0;//the next 6 lines determine random axis X and Y of enemy spawn
+        var limitRight = $("#sectionId").width() - $enemy.width();
+        var axisX = Math.floor((Math.random() * limitRight) + limitLeft);
+        var limitUp = 0;
+        var limitDown = $("#sectionId").height();
+        var axisY = Math.floor((Math.random() * limitDown) + limitUp);
+
+        $enemy.css("top", axisY + "px");
+        $enemy.css("left", axisX + "px");
+
+        $("section").append($enemy);
+
+        var animationType = Math.floor((Math.random() * 2) + 1);
+        if (animationType == 1) {//falling down animation
+            $enemy.animate({
+                top: (parseInt($("section").css("height"))) - (parseInt($enemy.css("height"))) + "px"
+
+
+            }, {
+                    step: function (now, fx) {
+                        $(this).css('transform', 'rotate(' + now + 'deg)');
+                    },
+                    duration: removeLetterTimer,
+                    easing: "linear",
+                    progress: Clicked,
+                    complete: deleteObject
+
+                });
+        }
+        else {//disappearing animation
+            $enemy.animate({
+                opacity: 0.4
+
+
+            }, {
+                    
+                    duration: removeLetterTimer,
+                    easing: "linear",
+                    progress: Clicked,
+                    complete: deleteObject
+
+                });
+        } 
+    }
+    function Clicked() {
+        var indicator = false;//indicator for realizing the enemy was a valid letter
+        $(this).unbind().click(function () {
+            for (var i = 0; i < validLetters.length; i++) {
+                if ($(this).attr('src') == validLetters[i]) {
+                    indicator = true;
+                    EnlargeBalloon();
+                    var $checkMark = $("<img>");
+                    $checkMark.addClass("enemy");
+                    $checkMark.attr("src", "/Pictures/Game_17/checkmark.png");
+                    $checkMark.css("left", $(this).css("left"));
+                    $checkMark.css("top", $(this).css("top"));
+                    $("#sectionId").append($checkMark);
+
+                    $checkMark.animate({
+                        opacity: 0.4
+                    }, {
+                            duration: spawnTimer,
+                            easing: "linear",
+                            complete: deleteObject
+                        });
+                    $(this).finish();
+                    break;
+                }
+            }
+            if (!indicator) {//enemy was an invalid letter             
+                var $error = $("<img>");
+                $error.addClass("enemy");
+                $error.attr("src", "/Pictures/Game_17/error.png");
+                $error.css("left", $(this).css("left"));
+                $error.css("top", $(this).css("top"));
+                $("#sectionId").append($error);
+               
+                $error.animate({
+                    opacity: 0.4
+
+
+                }, {
+
+                        duration: spawnTimer,
+                        easing: "linear",
+                        complete: deleteObject
+
+                    });
+                $(this).finish();
+
+            }
+            
+        });
+    }
+    function ReduceBalloon() {
+        var ballon = $("#balloonId");
+        ballon.width(ballon.width() - ballonReduction);
+        ballon.height(ballon.height() - ballonReduction);
+
+        RealignBalloon();
+        
+    }
+    function CreateEndingSound() {
+        let $sound = $("<audio>");
+        if (balloonPopped == false) {
+            $sound.attr("src", "/Audio/Game_17/ballon_bad.mp3");
+        }
+        else {
+            $sound.attr("src", "/Audio/Game_17/ballon_good.mp3");
+        }
+        $sound[0].play();
+    }
+    function CreateFirework() {
+        let $firework = $("<img>");
+        $firework.addClass("firework");
+        $firework.attr("src", "/Pictures/Game_17/firework.png");
+        let axisX = randomEnemy_PlaceX($firework);
+        $firework.css("left", axisX);
+        let temp = Math.floor(parseInt($("#sectionId").css("height")) / 5);
+        $firework.css("top", (parseInt($("body").css("height"))) - temp + "px");
+        $("body").append($firework);
+
+        $firework.animate({
+            top: Math.floor(parseInt($("#sectionId").css("height")) / 2) + "px"
+
+
+        }, {
+
+                duration: 500,
+                easing: "linear",
+                complete: FireworkExploded
+
+            });
+    }
+    function CreateFireworkSound() {
+        let $sound = $("<audio>");
+        let ExplodedSound = Math.floor((Math.random() * 4) + 1);
+        switch (ExplodedSound) {
+            case (1):
+                $sound.attr("src", "/Audio/Game_17/bang1.mp3");
+                break;
+            case (2):
+                $sound.attr("src", "/Audio/Game_17/bang2.mp3");
+                break;
+            case (3):
+                $sound.attr("src", "/Audio/Game_17/bang3.mp3");
+                break;
+            case (4):
+                $sound.attr("src", "/Audio/Game_17/bang4.mp3");
+                break;
+        }
+        $sound[0].play();
+    }
+    function FireworkExploded() {
+        let $exploded = $(this);
+        CreateFireworkSound();
+        $exploded.removeClass("firework");
+        $exploded.addClass("exploded");
+        $exploded.attr("src", "/Pictures/Game_17/firework_explotion.png");
+        $exploded.animate({
+            opacity: 0.4
+
+
+        }, {
+
+                duration: 500,
+                easing: "linear",
+                complete: deleteObject
+
+            });
+
+    }
+    function randomEnemy_PlaceX(element) {
+        var limitLeft = 0;
+        var limitRight = parseInt($("#sectionId").css("width")) - ((parseInt(element.css("height"))) * 2);
+        return Math.floor((Math.random() * limitRight) + limitLeft);
+    }
+    function GameOver() {
+        clearInterval(gameoverIndicator);
+        //do popoup here to let the user go back to alphabet
+        $("#sectionId").addClass("hidescreen");
+        $("#buttonRet").addClass("hidescreen");
+        CreateEndingSound();
+        if (balloonPopped) {
+            $("#messageId").text("הבלון התפוצץ");
+            
+            fireworksInterval = setInterval(CreateFirework, 800);
+
+
+        }
+        else {
+            $("#messageId").text("לא נורא, הבלון יתפוצץ בפעם הבאה");
+        }
+        $("#endGameScreen").removeClass("hidescreen");
+    }
+    function deleteObject() {
+        $(this).remove();
+    }
+    function GoToAlphabet() {
+         window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
+    }
+</script>
+
+<body>
+    <div style="text-align:center">
+        <h1 style="color:gold"> פיצוץ בלון </h1>
+        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
+        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+        <br />
+        
+        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" />
+        <h2 style="color:gold"> אות משחק זה היא: פ</h2>
+
+    </div>
+    <section id="sectionId" class="w3-display-container	">
+
+        <div id="balloonId" class="balloon"></div>
+        
+    </section>
+    <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
+        
+        <h3 style="color:green; font-size:100px" id="messageId"><b></b></h3>
+        <br />
+        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+
+    </div>
+</body>

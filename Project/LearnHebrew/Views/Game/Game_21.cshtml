@@ -1,0 +1,385 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+<style>
+
+    body {
+        background-image: url('../../Pictures/Game_21/woodwall1.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    section {
+        position: relative;
+        
+        width: 95%;
+        height: 75%;
+        margin: auto;
+        cursor:none;
+    }
+    .fireball {
+        position: absolute;
+        width: 2%;
+        height: 2%;
+    }
+    .enemy {
+        width: 6%;
+        height: 6%;
+        position: absolute;
+    }
+    #endGameScreen {
+        height: 50%;
+    }
+
+    .hidescreen {
+        display: none;
+    }
+
+    #imageId {
+        width: 100px;
+        height: 100px;
+    }
+    .heart {
+        opacity: 0.7;
+        width: 25px;
+
+    }
+    #heartDiv {
+        position: absolute;
+        right: 0;
+        top: 0;
+        float:right;
+        text-align:right;
+        
+    }
+    #scoreId {
+        
+        margin-left:15px;
+        font-size: x-large;
+        color: gold;
+    }
+</style>
+<script>
+    let currentMousePos = { x: -1, y: -1 }; //axis X and Y for last location of mouse in the game section
+    let validLetters;
+    let invalidLetters;
+    let timeout;//interval for fireball creation
+    let gameoverIndicator; //interval for spawning enemies until game is over
+    let spawnTimer = 2000;
+    let lives = 2; //number of times a user can die in the game
+    let gameStarted = false; //indicator for game started for not letting pressed enter 
+    $(document).ready(function () {
+
+        validLetters = ["/Pictures/Game_21/shin1.png"];
+        invalidLetters = ["/Pictures/Game_21/taat1.png", "/Pictures/Game_21/maam3.png"];
+        LoadSoundAndPicture();
+        $("body").keydown(userKey_Options);
+        
+        $('#sectionId').mouseout(function () {
+            //clearInterval(timeout);
+            return false;
+        });
+
+        $('#sectionId').mousemove(function () {
+            currentMousePos.x = event.pageX - $(this).offset().left;
+            currentMousePos.y = event.pageY - $(this).offset().top;
+            CreateFireBall();
+        });
+    })
+
+    function userKey_Options() {
+        switch (window.event.keyCode) {
+            case (13):// enter was pressed
+                if (!gameStarted) {
+                    StartGame();
+                    gameStarted = true;
+                }
+                
+                break;
+           
+        }
+    }
+
+    function StartGame() {
+        gameStarted = true;
+        $("#buttonId").addClass("hidescreen");
+        $("#buttonRet").removeClass("hidescreen");
+        FillHearts();
+        gameoverIndicator = setInterval(createEnemy, 1000);
+    }
+
+    function FillHearts() {
+        $heartDiv = $("#heartDiv");
+        for (var i = 0; i < lives; i++) {
+            var $image = $("<img>");
+            $image.attr("src", "/Pictures/Game_12/heart.png");
+            $image.addClass("heart");
+            $heartDiv.append($image);
+
+        }
+    }
+    function CreateFireBall() {
+        let $fireBall = $("<img>");
+        $fireBall.attr("src", "/Pictures/Game_21/fireball.png");
+        $fireBall.addClass("fireball");
+        //var axisX = event.pageX;
+        //alert(event.pageX);
+        
+        //alert(currentMousePos.x);
+
+        $fireBall.css("top", currentMousePos.y + "px");
+        $fireBall.css("left", currentMousePos.x + "px");
+        $("#sectionId").append($fireBall);
+
+        $fireBall.animate({
+            opacity: 0.4
+
+        }, {
+                duration: 200,
+                easing: "linear",
+                //progress: collisionCheck,
+                complete: deleteObject
+
+            });
+    }
+    function createEnemy() {
+
+        let $enemy = $("<img>");
+        let enemyType = Math.floor((Math.random() * 10) + 1);
+
+        if (enemyType >= 1 && enemyType <= 7) {
+            let randomNumber = Math.floor((Math.random() * validLetters.length) + 0);
+            $enemy.attr("src", validLetters[randomNumber]);
+
+        }
+
+        else {
+            let randomNumber = Math.floor((Math.random() * invalidLetters.length) + 0);
+            $enemy.attr("src", invalidLetters[randomNumber]);
+
+        }
+        $enemy.addClass("enemy");
+        
+        let axisY = parseInt($("section").css("height")) - parseInt($enemy.css("height"))-30;
+        //var limitLeft = parseInt($("#sectionId").css("left")) + parseInt($enemy.css("width"));
+        let limitLeft = 0;
+        let limitRight = parseInt($("#sectionId").css("width")) - parseInt($enemy.css("width"));
+        //var limitRight = 1000;
+        let axisX = Math.floor((Math.random() * limitRight) + limitLeft);
+        $enemy.css("top", axisY + "px");
+        $enemy.css("left", axisX + "px");
+
+        $("#sectionId").append($enemy);
+        let randomXupper = Math.floor((Math.random() * limitRight) + limitLeft);
+
+        $enemy.animate({
+            top: (parseInt($("section").css("top")))  + "px",
+            left: randomXupper
+
+        }, {
+                duration: spawnTimer,
+                easing: "swing",
+                progress: collisionCheck,
+                //complete: deleteObject
+
+            });
+        randomXupper = Math.floor((Math.random() * limitRight) + limitLeft);
+        $enemy.delay(10).animate({           
+            left: randomXupper,
+            top: (parseInt($("section").css("height"))) - (parseInt($enemy.css("height"))) + "px"
+
+
+        }, {
+                duration: spawnTimer,
+                easing: "swing",
+                progress: collisionCheck,
+                complete: deleteObject
+
+            });
+
+    }
+    function collisionCheck() {
+        let $enemy = $(this);//getting the current enemy
+
+
+        $(".fireball").each(function () {
+            let $fireball = $(this);
+
+            if (checkIntersection($fireball, $enemy)) {
+
+                enemyDestroyed($enemy);
+
+                
+                
+
+            }
+
+        });
+
+    }
+    
+    function checkIntersection($x, $y) {
+        if ($x == undefined || $y == undefined) return false;
+        xLeft = parseInt($x.css("left"));
+        xTop = parseInt($x.css("top"));
+        xRight = xLeft + parseInt($x.css("width"));
+        xBottom = xTop + parseInt($x.css("height"));
+
+        yLeft = parseInt($y.css("left"));
+        yTop = parseInt($y.css("top"));
+        yRight = yLeft + parseInt($y.css("width"));
+        yBottom = yTop + parseInt($y.css("height"));
+        
+        return ((xLeft >= yLeft && xLeft <= yRight || yLeft >= xLeft && yLeft <= xRight) && (xTop <= yBottom && xTop >= yTop || yTop <= xBottom && yTop >= xTop));
+    }
+    
+    function enemyDestroyed($enemy) {
+        let indicator = false;
+        //var sound = $("#yes-audio")[0];
+        //sound.play();
+        for (let i = 0; i < validLetters.length; i++) {
+            if ($enemy.attr('src') == validLetters[i]) {
+                $("#scoreId").text(parseInt($("#scoreId").text()) + 1);
+                indicator = true;
+                CreateSound(1);
+                let $dropper = $("<img>");
+                $dropper.addClass("enemy");
+                $dropper.attr("src", $enemy.attr("src"));
+                $dropper.css("left", $enemy.css("left"));
+                $dropper.css("top", $enemy.css("top"));
+                $("#sectionId").append($dropper);
+
+                $dropper.animate({
+                    top: (parseInt($("section").css("height"))) - (parseInt($enemy.css("height"))) + "px"
+
+
+                }, {
+                        step: function (now, fx) {
+                            $(this).css('transform', 'rotate(' + now + 'deg)');
+                        },
+                        duration: spawnTimer,
+                        easing: "linear",
+                        //progress: collisionCheck,
+                        complete: deleteObject
+
+                    });
+
+                $enemy.finish();
+                
+                break;
+            }
+
+
+
+        }
+        if (!indicator) {
+            lives--;
+            CreateSound(2);
+            RemoveHeart();
+            let $error = $("<img>");
+            $error.addClass("enemy");
+            $error.attr("src", "/Pictures/Game_21/error.png");
+            $error.css("left", $enemy.css("left"));
+            $error.css("top", $enemy.css("top"));
+            $("#sectionId").append($error);
+            
+            //$enemy.attr("src","/Pictures/Game_21/error.png")
+            $error.animate({
+                opacity: 0.4
+
+
+            }, {
+                    
+                    duration: spawnTimer,
+                    easing: "linear",
+                    //progress: collisionCheck,
+                    complete: deleteObject
+
+                });
+            $enemy.finish();
+
+        }
+        if (lives == '0') {
+            GameOver();
+        }
+        //if (jQuery.inArray(($enemy.attr('src'), validLetters) != -1)) {
+        //    $("#score").text(parseInt($("#score").text()) + 1);
+
+        //}
+        //else {
+        //    $("#life").text(parseInt($("#life").text()) - 1);
+        //    if ($("#life").text() == '0')
+        //        GameOver();
+        //}
+    }
+    
+    function RemoveHeart() {
+        $("#heartDiv").empty();
+        FillHearts();
+    }
+    function LoadSoundAndPicture() {
+        new Audio("/Audio/Game_21/doh.mp3").load();
+        new Audio("/Audio/Game_21/slash.mp3").load();
+        //this may need to be changes once games become dynamic letter based
+        for (let i = 0; i < validLetters.length; i++) {
+            fetch(validLetters[i]);
+        }
+        for (let j = 0; j < invalidLetters.length; j++) {
+            fetch(invalidLetters[j]);
+        }
+    }
+    function CreateSound(number) {
+        let $sound;
+        if (number == 1) {
+            $sound = new Audio("/Audio/Game_21/slash.mp3");
+        }
+        else {
+            $sound = new Audio("/Audio/Game_21/doh.mp3");
+        }
+        $sound.play();
+    }
+    function GameOver() {
+        clearInterval(gameoverIndicator);
+        //do popoup here to let the user go back to alphabet
+        $("#sectionId").addClass("hidescreen");
+        $("#buttonRet").addClass("hidescreen");
+        $("#finalScore").text($("#scoreId").text());
+        $("#endGameScreen").removeClass("hidescreen");
+    }
+    function deleteObject() {
+        $(this).remove();
+    }
+    function GoToAlphabet() {
+         window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
+    }
+</script>
+
+<body>
+    <div style="text-align:center">
+        <h1 style="color:gold"> נינג'ה אותיות </h1>
+        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
+        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+        <br />
+        <br />
+        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" />
+        <h2 style="color:gold"> אות משחק זה היא: ש</h2>
+    </div>
+    <section id="sectionId" class="w3-display-container	">
+
+        <div id="heartDiv" ></div>
+        <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
+    </section>
+    <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
+        <h1 style="color:gold"><b>ניקוד: </b><span id="finalScore"><b></b></span></h1>
+        <br />
+        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+
+    </div>
+</body>

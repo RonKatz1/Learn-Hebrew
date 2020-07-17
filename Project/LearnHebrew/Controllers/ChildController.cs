@@ -132,13 +132,41 @@ namespace LearnHebrew.Controllers
         {
             return View("~/Views/Child/Help.cshtml");
         }
+        public ActionResult GoToGame_22()
+        {
+            return View("~/Views/Game/Game_22.cshtml");
+        }
+        public ActionResult GoToGame_21()
+        {
+            return View("~/Views/Game/Game_21.cshtml");
+        }
+        public ActionResult GoToGame_20()
+        {
+            return View("~/Views/Game/Game_20.cshtml");
+        }
         public ActionResult GoToGame_19()
         {
             return View("~/Views/Game/Game_19.cshtml");
         }
+        public ActionResult GoToGame_17()
+        {
+            return View("~/Views/Game/Game_17.cshtml");
+        }
+        public ActionResult GoToGame_16()
+        {
+            return View("~/Views/Game/Game_16.cshtml");
+        }
+        public ActionResult GoToGame_13()
+        {
+            return View("~/Views/Game/Game_13.cshtml");
+        }
         public ActionResult GoToGame_12()
         {
             return View("~/Views/Game/Game_12.cshtml");
+        }
+        public ActionResult GoToGame_9()
+        {
+            return View("~/Views/Game/Game_9.cshtml");
         }
         public ActionResult GoToGame_8()
         {

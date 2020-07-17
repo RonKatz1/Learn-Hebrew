@@ -1,0 +1,484 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<style>
+    body {
+        background-image: url('../../Pictures/Game_22/sidewalk_background.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    section {
+        position: relative;
+        margin: auto;      
+        width: 60%;
+        height: 35%;
+        background-color:whitesmoke;
+    }
+    .heart {
+        opacity: 0.7;
+        width: 25px;
+    }
+    #heartDiv {
+        position: absolute;
+        right: 0;
+        top: 0;
+        float: right;
+        text-align: right;
+        z-index: 3;
+    }
+    #scoreId {
+        margin-left: 15px;
+        font-size: x-large;
+        color: gold;
+    }
+    .hidescreen {
+        display: none;
+    }
+    #manId {
+        position: absolute;
+        width: 8%;
+        height: 20%;
+    }
+    .shot {
+        width: 5%;
+        height: 8%;
+        position: absolute;
+    }
+    .wall {
+        position: absolute;
+        width: 8%;
+        height: 25%;
+        z-index: 1;
+    }
+    .letter {
+        position: absolute;
+        width: 8%;
+        height: 20%;
+    }
+</style>
+<script>
+    let validLetters;//array of valid src of letter images per the user choosing before picking this game  
+    let invalidLetters;//array of invalid src of letters
+    let transformedBol = false;//boolean var for knowing if user is currently "transformed"
+    
+    let gameStarted = false; //indicator for game started for not letting pressed enter
+    let runningManIndicator;//interval for changing man picture
+    let runningSpeed = 400;//pace of changing man picture
+    let $man;//var for "grabbing" the user image
+    let obstacleIndicator;//interval of obstacle spawning
+    let obstacleSpawn = 1200;//time it takes to create a new obstacle in mili secomds
+    let obstacleRunwayTimer = 2000;//time it takes to an obstacle to move and disappear
+    let lives = 9;//the number of times a user can mess up before he losses the game
+
+    let shotSpeed = 2000;
+    let jumpSpeed = 500;
+
+
+
+    $(document).ready(function () {
+        validLetters = ["/Pictures/Game_22/taaf1.png", "/Pictures/Game_22/taaf2.png", "/Pictures/Game_22/taaf3.png"];
+        invalidLetters = ["/Pictures/Game_22/taat1.png", "/Pictures/Game_22/shin1.png"];
+        runningManIndicator = setInterval(ChangeMan, runningSpeed);
+
+        LoadSoundAndPicture();
+
+        $man = $("#manId");
+        $man.css("bottom", 0);
+        $man.css("left", Math.floor(parseInt($man.css("width"))/2));
+        $("body").keyup(userKey_Options);
+
+        $(window).resize(function () {
+            
+            $(".wall").each(function () {
+                let $wall = $(this);
+                $wall.stop();
+                $wall.remove();
+            });
+            $(".shot").each(function () {
+                let $shot = $(this);
+                $shot.stop();
+                $shot.remove();
+            });
+            $(".letter").each(function () {
+                let $letter = $(this);
+                $letter.stop();
+                $letter.remove();
+            });
+
+        })
+
+        
+    })
+    function LoadSoundAndPicture() {
+        new Audio("/Audio/Game_22/blast.mp3").load();
+        new Audio("/Audio/Game_22/jump.mp3").load();
+        //this may need to be changes once games become dynamic letter based
+        for (let i = 0; i < validLetters.length; i++) {
+            fetch(validLetters[i]);
+        }
+        for (let j = 0; j < invalidLetters.length; j++) {
+            fetch(invalidLetters[j]);
+        }
+    }
+    function CreateSound(number) {
+        let $sound;
+        if (number == 1) {
+            $sound = new Audio("/Audio/Game_22/blast.mp3");
+        }
+        else {
+            $sound = new Audio("/Audio/Game_22/jump.mp3");
+        }
+        $sound.play();
+    }
+    function StartGame() {
+        gameStarted = true;
+        $("#buttonId").addClass("hidescreen");
+        $("#buttonRet").removeClass("hidescreen");
+        FillHearts();
+
+        obstacleIndicator = setInterval(CreateObstacle, obstacleSpawn);
+        //CreateObstacle();
+
+    }
+    function userKey_Options() {
+        switch (window.event.keyCode) {
+            case (13):// enter was pressed
+                if (!gameStarted) {
+                    StartGame();
+                    gameStarted = true;
+                }
+                break;
+            case (38):// up key was pressed
+                if (gameStarted) {
+                    Jump();
+                }
+                break;
+            case (32):// enter key was pressed
+                if (gameStarted) {
+                    Shooting();
+                }
+                break;
+
+        }
+    }
+    function ChangeMan() {
+        switch ($man.attr("src")) {
+            case ("/Pictures/Game_22/man1.png"):
+                $man.attr("src", "/Pictures/Game_22/man2.png");
+                break;
+            case ("/Pictures/Game_22/man2.png"):
+                $man.attr("src", "/Pictures/Game_22/man1.png");
+                break;
+        }
+    }
+    function IncreaseChallenge() {
+        if (parseInt($("#scoreId").text()) == 10) {
+            clearInterval(obstacleIndicator);
+            obstacleSpawn = obstacleSpawn - 100;
+            obstacleRunwayTimer = obstacleRunwayTimer - 500;
+            obstacleIndicator = setInterval(CreateObstacle, obstacleSpawn);
+
+        }
+        if (parseInt($("#scoreId").text()) == 20) {
+            clearInterval(obstacleIndicator);
+            obstacleSpawn = obstacleSpawn - 100;
+            obstacleRunwayTimer = obstacleRunwayTimer - 500;
+            obstacleIndicator = setInterval(CreateObstacle, obstacleSpawn);
+
+        }
+    }
+    function FillHearts() {
+        $heartDiv = $("#heartDiv");
+        for (let i = 0; i < lives; i++) {
+            let $image = $("<img>");
+            $image.attr("src", "/Pictures/Game_20/heart.png");
+            $image.addClass("heart");
+            $heartDiv.append($image);
+
+        }
+    }
+    function Shooting() {
+        let $shot = $("<img>");
+        CreateSound(1);
+        $shot.attr("src", "/Pictures/Game_22/fireattack.png");
+
+        $shot.addClass("shot");
+        let shotStartingPoint_Yaxis = parseInt($man.css("top")) - 5;//calculating height of shot
+        let shotStartingPoint_Xaxis = parseInt($man.css("left")) + (parseInt($man.css("width")) / 4);
+        $shot.css("top", shotStartingPoint_Yaxis + "px");
+        $shot.css("left", shotStartingPoint_Xaxis + "px");
+
+        $("#sectionId").append($shot);
+
+        $shot.animate({
+            left: parseInt($("#sectionId").css("width")) - parseInt($("#heartDiv").css("height")) + "px"
+
+
+        }, {
+                duration: shotSpeed,
+                easing: "linear",
+
+                complete: deleteObject
+
+
+
+            });
+    }
+    function CreateObstacle() {
+        let obstacleType = Math.floor((Math.random() * 3) + 1);
+        let letterType = Math.floor((Math.random() * 3) + 1);
+        let axisX = parseInt($("#sectionId").css("width")) - parseInt($man.css("width"));
+        let $wall, $letter;
+        switch (obstacleType) {
+            case (1)://only wall
+                $wall = $("<img>");
+                $wall.attr("src", "/Pictures/Game_22/brickwall.png");
+                $wall.addClass("wall");
+                $wall.css("bottom", 0 + "px");
+                $wall.css("left", axisX + "px");
+                $("#sectionId").append($wall);
+                $wall.animate({
+                    left: 0
+
+                }, {
+                        duration: obstacleRunwayTimer,
+                        easing: "linear",
+                        progress: collisionCheck,
+                        complete: deleteObject
+
+                    });
+                break;
+            case (2)://only letter
+                $letter = $("<img>");
+                if (letterType > 1) {
+                    let randomNumber = Math.floor((Math.random() * validLetters.length) + 0);
+                    $letter.attr("src", validLetters[randomNumber]);
+                }
+                else {
+                    let randomNumber = Math.floor((Math.random() * invalidLetters.length) + 0);
+                    $letter.attr("src", invalidLetters[randomNumber]);
+                }
+                $letter.addClass("letter");
+                $letter.css("top",parseInt($("#heartDiv").css("height")) + "px");
+                $letter.css("left", axisX + "px");
+                $("#sectionId").append($letter);
+                $letter.animate({
+                    left: 0
+
+                }, {
+                        duration: obstacleRunwayTimer,
+                        easing: "linear",
+                        progress: collisionCheckLetter,
+                        complete: deleteObject
+
+                    });
+                break;
+            case (3)://letter and wall
+                $wall = $("<img>");
+                $wall.attr("src", "/Pictures/Game_22/brickwall.png");
+                $wall.addClass("wall");
+                $wall.css("bottom", 0 + "px");
+                $wall.css("left", axisX + "px");
+                $("#sectionId").append($wall);
+                $wall.animate({
+                    left: 0
+
+                }, {
+                        duration: obstacleRunwayTimer,
+                        easing: "linear",
+                        progress: collisionCheck,
+                        complete: deleteObject
+
+                    });
+                $letter = $("<img>");
+                if (letterType > 1) {
+                    let randomNumber = Math.floor((Math.random() * validLetters.length) + 0);
+                    $letter.attr("src", validLetters[randomNumber]);
+                }
+                else {
+                    let randomNumber = Math.floor((Math.random() * invalidLetters.length) + 0);
+                    $letter.attr("src", invalidLetters[randomNumber]);
+                }
+                $letter.addClass("letter");
+                $letter.css("top", parseInt($("#heartDiv").css("height")) + "px");
+                $letter.css("left", axisX + "px");
+                $("#sectionId").append($letter);
+                $letter.animate({
+                    left: 0
+
+                }, {
+                        duration: obstacleRunwayTimer,
+                        easing: "linear",
+                        progress: collisionCheckLetter,
+                        complete: deleteObject
+
+                    });
+                break;
+
+        }
+    }
+    function collisionCheck() {
+        let $wall = $(this);//getting the current wall
+
+
+        $(".shot").each(function () {
+            let $shot = $(this);
+
+            if (checkIntersection($shot, $wall)) {//user shot hit the wall
+                $shot.stop();
+                $shot.remove();
+                $wall.stop();
+                $wall.remove();
+            }
+        });
+
+        if (checkIntersection($man, $wall)) {//user hit the wall
+            $wall.stop();
+            $wall.remove();
+            lives--;
+            if (lives > 0) {
+                RemoveHeart();
+
+            }
+            else {
+                GameOver();
+            }
+        }
+    }
+    function collisionCheckLetter() {
+        let $letter = $(this);//getting the current letter
+        let indicator = false;
+        if (checkIntersection($man, $letter)) {//user touched the letter
+            $letter.stop();
+            $letter.remove();
+            for (let i = 0; i < validLetters.length; i++) {
+                if ($letter.attr('src') == validLetters[i]) {
+                    $("#scoreId").text(parseInt($("#scoreId").text()) + 1);
+                    indicator = true;
+                    IncreaseChallenge();
+                    break;
+                }
+
+
+
+            }
+            if (!indicator) {
+                lives--;
+                if (lives > 0) {
+                    RemoveHeart();
+                }
+                else {
+                    GameOver();
+                }
+            }
+        }
+    }
+    function checkIntersection($x, $y) {
+        if ($x == undefined || $y == undefined) return false;
+        xLeft = parseInt($x.css("left"));
+        xTop = parseInt($x.css("top"));
+        xRight = xLeft + parseInt($x.css("width"));
+        xBottom = xTop + parseInt($x.css("height"));
+
+        yLeft = parseInt($y.css("left"));
+        yTop = parseInt($y.css("top"));
+        yRight = yLeft + parseInt($y.css("width"));
+        yBottom = yTop + parseInt($y.css("height"));
+
+        return ((xLeft >= yLeft && xLeft <= yRight || yLeft >= xLeft && yLeft <= xRight) && (xTop <= yBottom && xTop >= yTop || yTop <= xBottom && yTop >= xTop));
+    }
+    function Jump() { 
+        CreateSound(2);
+        $('*').off('keyup');
+        $man.attr("src", "/Pictures/Game_22/jump.png");
+        setTimeout(function () {
+            $("body").keyup(userKey_Options);
+            $man.attr("src", "/Pictures/Game_22/man1.png");
+        }, jumpSpeed * 2);
+        
+
+        $man.animate({
+            top: (parseInt($("section").css("top"))) + "px"
+
+        }, {
+                duration: jumpSpeed,
+                easing: "linear",
+                //progress: collisionCheck,
+                //complete: deleteObject
+
+            });
+
+        $man.delay(10).animate({
+            top: (parseInt($("section").css("height"))) - (parseInt($man.css("height"))) + "px"
+
+
+        }, {
+                duration: jumpSpeed,
+                easing: "linear",
+                //progress: collisionCheck,
+                //complete: deleteObject
+
+            });
+        //jumpedBol = false;
+
+
+        //$("body").keyup(userKey_Options).delay(jumpSpeed*2);
+    }
+
+
+    function RemoveHeart() {
+        $("#heartDiv").empty();
+        FillHearts();
+    }
+
+
+    function GameOver() {
+        clearInterval(runningManIndicator);
+        clearInterval(obstacleIndicator);
+        $("#sectionId").addClass("hidescreen");
+        $("#buttonRet").addClass("hidescreen");
+        $("#instructionDiv").addClass("hidescreen");
+        $("#finalScore").text($("#scoreId").text());
+        $("#endGameScreen").removeClass("hidescreen");
+        $('*').off('keyup');
+    }
+    function deleteObject() {
+        $(this).remove();
+    }
+    function GoToAlphabet() {
+         window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
+    }
+</script>
+
+<body>
+    <div style="text-align:center">
+        <h1 style="color:gold"> האיש הרץ </h1>
+        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
+        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+        <br />
+        <br />
+        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" />
+    </div>
+    <section id="sectionId" class="w3-display-container">
+        <div id="heartDiv"></div>
+        <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
+        <img id="manId" src="~/Pictures/Game_22/man1.png" />
+    </section>
+    <div id="instructionDiv" style="text-align:center;padding-top:5px">
+        <h2 style="color:gold"> אות משחק זה היא: ת</h2>
+        
+
+    </div>
+    <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
+        <h3>ניקוד: <span id="finalScore"></span></h3>
+        <br />
+        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+
+    </div>
+</body>
