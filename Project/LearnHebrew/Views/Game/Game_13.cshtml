@@ -1,0 +1,375 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<style>
+    body {
+        background-image: url('../../Pictures/Game_13/stone-checker.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    section {
+        position: relative;
+        width: 95%;
+        height: 75%;
+        margin: auto;    
+        cursor: url('../../Pictures/Game_13/target.png'),auto;
+    }
+
+
+
+    .letter {
+        width: 6%;
+        height: 6%;
+        position: absolute;
+    }
+    .cockroach {
+        width: 4%;
+        height: 8%;
+        position: absolute;
+        animation: shake 0.5s;
+        animation-iteration-count:infinite;
+    }
+    @@keyframes shake {
+        0% { transform: translate(1px, 1px) rotate(0deg); }
+        10% { transform: translate(-1px, -2px) rotate(-1deg); }
+        20% { transform: translate(-3px, 0px) rotate(1deg); }
+        30% { transform: translate(3px, 2px) rotate(0deg); }
+        40% { transform: translate(1px, -1px) rotate(1deg); }
+        50% { transform: translate(-1px, 2px) rotate(-1deg); }
+        60% { transform: translate(-3px, 1px) rotate(0deg); }
+        70% { transform: translate(3px, 1px) rotate(-1deg); }
+        80% { transform: translate(-1px, -1px) rotate(1deg); }
+        90% { transform: translate(1px, 2px) rotate(0deg); }
+        100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+    #endGameScreen {
+        height: 50%;
+    }
+
+    .hidescreen {
+        display: none;
+    }
+
+    .heart {
+        opacity: 0.7;
+        width: 2%;
+    }
+
+    #heartDiv {
+        position: absolute;
+        right: 0;
+        top: 0;
+        float: right;
+        text-align: right;
+        
+    }
+
+    #scoreId {
+        margin-left: 15px;
+        font-size: x-large;
+        color: gold;
+    }
+    .rotate90 {
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+</style>
+<script>
+    var validLetters;
+    var cockroaches;
+    var gameoverIndicator; //interval for spawning enemies until game is over
+    var cockroachSpawn = 2000;
+    var cockroachSpeed = 8000;
+    var lives = 10; //number of times a user can die in the game
+    var gameStarted = false; //indicator for game started for not letting pressed enter
+    var letterSpeed = 10000;
+
+    $(document).ready(function () {
+
+        validLetters = ["/Pictures/Game_13/maam1.png", "/Pictures/Game_13/maam2.png", "/Pictures/Game_13/maam3.png", "/Pictures/Game_13/maam4.png"];
+        cockroaches = ["/Pictures/Game_13/cockroach1UD.png","/Pictures/Game_13/cockroach2UD.png"];
+        $("body").keydown(userKey_Options);
+
+        
+
+
+    })
+    function userKey_Options() {
+        switch (window.event.keyCode) {
+            case (13):// enter was pressed
+                if (!gameStarted) {
+                    StartGame();
+                    gameStarted = true;
+                }
+                break;      
+        }
+    }
+    function StartGame() {
+        gameStarted = true;
+        $("#buttonId").addClass("hidescreen");
+        $("#buttonRet").removeClass("hidescreen");
+        FillHearts();
+        gameoverIndicator = setInterval(createCockroach, cockroachSpawn);
+    }
+    function FillHearts() {
+        $heartDiv = $("#heartDiv");
+        for (var i = 0; i < lives; i++) {
+            var $image = $("<img>");
+            $image.attr("src", "/Pictures/Game_16/heart.png");
+            $image.addClass("heart");
+            $heartDiv.append($image);
+
+        }
+    }
+    function createCockroach() {//the assumption is all cockroach images by default face upward
+        var direction = Math.floor((Math.random() * 4) + 1);// var for deciding where cockroack spawns
+        var cockroachImage = Math.floor((Math.random() * 2) + 1);
+        var $cockroach = $("<img>");
+        
+        $cockroach.addClass("cockroach");
+        //alert(direction);
+        switch (direction) {
+            case (1)://left to right
+                if (cockroachImage == 1) {
+                    $cockroach.attr("src", "/Pictures/Game_13/cockroach1LR.png");
+                }
+                else {
+                    $cockroach.attr("src", "/Pictures/Game_13/cockroach2LR.png");
+
+                }
+                var axisY = randomEnemy_PlaceY($cockroach);
+                $cockroach.css("top", axisY + "px");
+                $cockroach.css("left", 0 + "px");
+                $("#sectionId").append($cockroach);
+                $cockroach.animate({
+                    left: (parseInt($("#sectionId").css("width"))) - (parseInt($cockroach.css("width"))) + "px"
+
+
+                }, {
+                        duration: cockroachSpeed,
+                        easing: "linear",
+                        progress: Clicked,
+                        complete: deleteCockroach
+
+                    });
+                break;
+            case (2)://right to left
+                //alert("this 2");
+                if (cockroachImage == 1) {
+                    $cockroach.attr("src", "/Pictures/Game_13/cockroach1RL.png");
+                }
+                else {
+                    $cockroach.attr("src", "/Pictures/Game_13/cockroach2RL.png");
+
+                }
+                var axisY = randomEnemy_PlaceY($cockroach);
+                $cockroach.css("top", axisY + "px");
+                $cockroach.css("left", parseInt($("#sectionId").css("width"))) - (parseInt($cockroach.css("width")) + "px");
+                $("#sectionId").append($cockroach);
+                $cockroach.animate({
+                    left: 0 + "px"
+
+
+                }, {
+                        duration: cockroachSpeed,
+                        easing: "linear",
+                        progress: Clicked,
+                        complete: deleteCockroach
+
+                    });
+                break;
+
+            case (3)://up to down
+                //alert("this 3");
+                if (cockroachImage == 1) {
+                    $cockroach.attr("src", "/Pictures/Game_13/cockroach1UD.png");
+                }
+                else {
+                    $cockroach.attr("src", "/Pictures/Game_13/cockroach2UD.png");
+
+                }
+                var axisx = randomEnemy_PlaceX($cockroach);
+                $cockroach.css("top", 0 + "px");
+                $cockroach.css("left", axisx + "px");
+                $("#sectionId").append($cockroach);
+                $cockroach.animate({
+                    top: (parseInt($("#sectionId").css("height"))) - (parseInt($cockroach.css("height"))) + "px"
+
+
+                }, {
+                        duration: cockroachSpeed,
+                        easing: "linear",
+                        progress: Clicked,
+                        complete: deleteCockroach
+
+                    });
+                break;
+            
+            case (4)://down to up
+                //alert("this 4");
+                if (cockroachImage == 1) {
+                    $cockroach.attr("src", "/Pictures/Game_13/cockroach1DU.png");
+                }
+                else {
+                    $cockroach.attr("src", "/Pictures/Game_13/cockroach2DU.png");
+
+                }
+                var axisx = randomEnemy_PlaceX($cockroach);
+                $cockroach.css("top", (parseInt($("#sectionId").css("height"))) - (parseInt($cockroach.css("height"))) + "px");
+                $cockroach.css("left", axisx + "px");
+                $("#sectionId").append($cockroach);
+                $cockroach.animate({
+                    top: 0 + "px"
+
+
+                }, {
+                        duration: cockroachSpeed,
+                        easing: "linear",
+                        progress: Clicked,
+                        complete: deleteCockroach
+
+                    });
+                break;
+        }
+        
+    }
+    function RemoveHeart() {
+        $("#heartDiv").empty();
+        FillHearts();
+    }
+    function Clicked() {
+        
+        $(this).unbind().click(function () {
+            CreateSound();
+            $(this).stop();
+            $(this).remove();
+            CreateLetter();
+
+        });
+
+    }
+    function CreateLetter() {
+        var letterImage = Math.floor((Math.random() * validLetters.length) + 0);
+        var $letter = $("<img>");
+        $letter.attr("src", validLetters[letterImage]);
+        $letter.addClass("letter");
+        $("#sectionId").append($letter);
+        var axisX = randomEnemy_PlaceX($letter);
+        var axisY = randomEnemy_PlaceY($letter);
+        $letter.css("left", axisX + "px");
+        $letter.css("top", axisY + "px");
+
+        $letter.animate({
+            opacity: 0.4
+
+
+        }, {
+
+                duration: letterSpeed,
+                easing: "linear",
+                progress: LetterClicked,
+                complete: deleteObject
+
+            });
+        
+    }
+    function LetterClicked() {
+        $(this).unbind().click(function () {
+            CreateSound();
+            $(this).remove();
+            $("#scoreId").text(parseInt($("#scoreId").text()) + 1);
+            IncreaseChallenge();
+        });
+    }
+    function IncreaseChallenge() {
+        if (parseInt($("#scoreId").text()) == 10){
+            clearInterval(gameoverIndicator);
+            cockroachSpawn = cockroachSpawn - 500;
+            cockroachSpeed = cockroachSpeed - 2000;
+            gameoverIndicator = setInterval(createCockroach, cockroachSpawn);
+
+        }
+        if (parseInt($("#scoreId").text()) == 20) {
+            clearInterval(gameoverIndicator);
+            cockroachSpawn = cockroachSpawn - 500;
+            cockroachSpeed = cockroachSpeed - 2000;
+            gameoverIndicator = setInterval(createCockroach, cockroachSpawn);
+
+        }
+    }
+    function randomEnemy_PlaceY(element) {
+        var limitTop = 0;
+        //alert($("#stationR").css("width"));
+        var limitDown = parseInt($("#sectionId").css("height")) - ((parseInt($("#heartDiv").css("height")))  * 2);
+        return Math.floor((Math.random() * limitDown) + limitTop);
+    }
+    function randomEnemy_PlaceX(element) {
+        var limitLeft = 0;
+        var limitRight = parseInt($("#sectionId").css("width")) - ((parseInt($("#heartDiv").css("height"))) * 2);
+        return Math.floor((Math.random() * limitRight) + limitLeft);
+    }
+    function CreateSound() {
+        let $sound = $("<audio>");
+        $sound.attr("src", "/Audio/Game_13/gun_fire2.mp3");
+
+        $sound[0].play();
+    }
+    function GameOver() {
+        clearInterval(gameoverIndicator);
+        //do popoup here to let the user go back to alphabet
+        $("#sectionId").addClass("hidescreen");
+        $("#buttonRet").addClass("hidescreen");
+        $("#finalScore").text($("#scoreId").text());
+        $("#endGameScreen").removeClass("hidescreen");
+    }
+    function deleteObject() {
+        $(this).remove();
+    }
+    function deleteCockroach() {
+        $(this).remove();
+        lives--;
+        if (lives > 0) {
+            RemoveHeart();
+        }
+        else {
+            GameOver();
+        }
+    }
+    function GoToAlphabet() {
+         window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
+    }
+</script>
+
+<body>
+    <div style="text-align:center">
+        <h1 style="color:gold"> תפיסת מקקים </h1>
+        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
+        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+        <br />
+        <br />
+        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" />
+        
+
+    </div>
+    <section id="sectionId" class="w3-display-container	">
+
+        <div id="heartDiv"></div>
+        <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
+    </section>
+    <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
+        <h3>ניקוד: <span id="finalScore"></span></h3>
+        <br />
+        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+
+    </div>
+</body>

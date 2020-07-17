@@ -1,0 +1,594 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+<style>
+
+
+    section {
+        width: 50%;
+        height: 80%;
+        border: 1px solid black;
+        position: relative;
+        margin: auto;
+        background-color: antiquewhite;
+    }
+
+    #rocketId {
+        position: absolute;
+        width: 10%;
+        height: 12%;
+    }
+
+
+    .letter {
+        width: 4%;
+        height: 4%;
+        position: absolute;
+    }
+
+    .shot {
+        width: 2%;
+        height: 2%;
+        position: absolute;
+    }
+
+
+    #endGameScreen {
+        height: 50%;
+    }
+
+    .hidescreen {
+        display: none;
+    }
+
+    .heart {
+        opacity: 0.7;
+        width: 25px;
+    }
+
+    #heartDiv {
+        position: absolute;
+        right: 0;
+        top: 0;
+        float: right;
+        text-align: right;
+    }
+    #scoreId {
+        margin-left: 15px;
+        font-size: x-large;
+        color: gold;
+    }
+</style>
+<script>
+    let validLetters;//array of valid letter for the game, baed on the user
+    let gameoverIndicator; //interval for moving enemies until game is over
+    let letterMovement = 900;//time inmili seconds for all letters to move
+    let letterSpeed = 1000;//speed of letter movement
+    let letterMovementInterval, enemyShootingInterval;//interval for movement, letter shooting
+    let letterMover = 10;//movement value of each letter per movement action
+    let $letterMatrix=[];//will contain all letters
+    let letterAmountRow=5;//number of letters in a row
+    let letterAmountCol = 5;//number of letters in a col
+    let lives = 6; //number of times a user can die in the game
+    let gameStarted = false; //indicator for game started for not letting pressed enter
+    let move;//setting moving distance per move for user
+    let $rocket;//placeholder  for the user in every new game
+    let counter = 0;//variable for knowing when a game is won
+    let gameWonBol=false;//boolean variable for deciding the sentence at the end of the game
+    let rocketTop;
+    let letterShootingSpeed = 2000;// the time it takes a shot from a letter to reach the end of the section
+    let letterShootingRate = 2000;//the time it takes a letter to shoot
+
+
+    let all;//dont need
+    $(document).ready(function () {
+        $rocket = $("#rocketId");
+        $rocket.css("bottom", 0);
+        move = Math.floor(parseInt($rocket.css("width")) / 2);
+        $rocket.css("left", Math.floor(parseInt($rocket.css("width")) / 2));
+        validLetters = ["/Pictures/Game_9/taat1.png", "/Pictures/Game_9/taat2.png", "/Pictures/Game_9/taat3.png", "/Pictures/Game_9/taat4.png"];
+        rocketTop = parseInt($rocket.css("top"));
+        $("body").keyup(userKey_Options);
+
+        $(window).resize(function () {//for window resizing
+            $rocket.css("left", Math.floor(parseInt($rocket.css("width")) / 2));
+            move = Math.floor(parseInt($rocket.css("width")) / 2);
+            rocketTop = parseInt($rocket.css("top"));
+        })
+
+
+    })
+
+    function userKey_Options() {
+        switch (window.event.keyCode) {
+            case (13):// enter was pressed
+                if (!gameStarted) {
+                    StartGame();
+                    gameStarted = true;
+                }
+                break;
+            case (37):// left keyboard was pressed = moving the user one move to the left
+                MoveLeft();
+                break;
+            case (39):// right keyboard was pressed = moving the user one move to the right
+                MoveRight();
+                break;
+            case (32)://space keyboard was pressed = firing a single shot
+                RocketShooting();
+                break;
+        }
+    }
+    function MoveLeft() {
+        MoveUser(-1 * move);
+    }
+    function MoveRight() {
+        MoveUser(move);
+    }
+    function MoveUser(axisX) {
+        let currentPosition = parseInt($rocket.css("left"));//getting current position of user
+        let newPosition = currentPosition + axisX;//calculating new position of user
+        if (newPosition >= 0 && newPosition <= (parseInt($("#sectionId").css("width")) - parseInt($rocket.css("width"))))//need to be changed ifsection limits user changes game
+            $rocket.css("left", newPosition + "px");//moving user to new position
+
+    }
+    function StartGame() {
+        gameStarted = true;
+        FillHearts();
+        $("#buttonId").addClass("hidescreen");
+        $("#buttonRet").removeClass("hidescreen");
+        FillLetterArray();
+        letterMovementInterval = setInterval(MoveLetters, letterMovement);
+        enemyShootingInterval = setInterval(EnemyShooting, letterShootingRate);
+    }
+    function FillLetterArray() {
+
+        for (let i = 0; i < letterAmountRow; i++) {
+            let $letterRow=[];
+            for (let j = 0; j < letterAmountCol; j++) {
+                let letterImage = Math.floor((Math.random() * validLetters.length) + 0);
+                let $letter = $("<img>");
+                $letter.attr("src", validLetters[letterImage]);
+                $letter.addClass("letter");
+
+                let rocketSize = parseInt($rocket.css("width"));//for placing each letter within the section in a certain distance
+                let axisX = (i * 40) + rocketSize;
+                let axisY = (j * 40) + rocketSize;
+                $letter.css("left", axisX + "px");
+                $letter.css("top", axisY + "px");
+                $letter.attr("id", "letter" + i + j);
+                $("#sectionId").append($letter);
+
+                $letterRow.push($letter);
+                
+            }
+            $letterMatrix.push($letterRow);
+            
+            
+        }
+    }
+    function FillHearts() {
+        $heartDiv = $("#heartDiv");
+        for (var i = 0; i < lives; i++) {
+            var $image = $("<img>");
+            $image.attr("src", "/Pictures/Game_9/heart.png");
+            $image.addClass("heart");
+            $heartDiv.append($image);
+
+        }
+    }
+    function MoveLetters() {
+        
+        let wall = false;
+        $(".letter").each(function () {
+            const $letter = $(this);
+            if (letterMover > 0) {
+
+                var currentPosition = parseInt($letter.css("left"));//getting current position of letter
+                var newPosition = currentPosition + letterMover;//calculating new position of user
+
+                if (newPosition >= 0 && newPosition <= (parseInt($("#sectionId").css("width")) - parseInt($letter.css("width"))))//need to be changed ifsection limits letter changes game
+                    console.log()//moving letter to new position
+                else {
+                    wall = true;
+                }
+            }
+            else {//letterMover < 0
+                var currentPosition = parseInt($letter.css("left"));//getting current position of letter
+                var newPosition = currentPosition + letterMover;//calculating new position of user
+                //alert(parseInt($("#sectionId").css("width")));
+                if (newPosition >= 0 && newPosition <= (parseInt($("#sectionId").css("width")) - parseInt($letter.css("width"))))//need to be changed ifsection limits letter changes game
+                    console.log();//moving letter to new position
+                else {
+                    wall = true;
+                }
+            }
+        });
+
+        if (wall) {
+            letterMover *= -1;
+            $(".letter").each(function () {
+                let $letter = $(this);
+                let currentTop = parseInt($letter.css("top"));
+                let newTop = currentTop + (Math.abs(letterMover) * 3);
+                if (newTop < rocketTop) {
+                    $letter.css("top", newTop + "px");
+                }
+                else {
+                    GameOver();
+                }
+            });}
+
+        $(".letter").each(function () {
+            const $letter = $(this);
+            let currentPosition = parseInt($letter.css("left"));//getting current position of letter
+            let newPosition = currentPosition + letterMover;//calculating new position of user
+            $letter.css("left", newPosition + "px");//moving letter to new position
+        });
+
+
+       
+    }
+    function RocketShooting() {
+        let $shot = $("<img>");
+        $shot.attr("src", "/Pictures/Game_9/greenBall.png");
+
+        $shot.addClass("shot");
+        let shotStartingPoint_Yaxis = parseInt($rocket.css("top")) - parseInt($shot.css("width"));//calculating height of shot
+        let shotStartingPoint_Xaxis = parseInt($rocket.css("left")) + (parseInt($rocket.css("width")) / 4);
+        $shot.css("top", shotStartingPoint_Yaxis + "px");
+        $shot.css("left", shotStartingPoint_Xaxis + "px");
+
+        $("section").append($shot);
+
+        $shot.animate({
+            top: "0px"
+
+
+        }, {
+                duration: 2000,
+                easing: "linear",
+                progress: collisionCheck,
+                complete: deleteObject
+
+
+
+            });
+    }
+    function collisionCheck() {
+        let $shot = $(this);//getting the current shot
+
+
+        $(".letter").each(function () {
+            let $letter = $(this);
+
+            if (checkIntersection($letter, $shot)) {
+
+                
+                $shot.stop();
+                $shot.remove();
+                RemoveLetter($letter);
+                $letter.remove();
+                $("#scoreId").text(parseInt($("#scoreId").text())+ 1);
+                if (parseInt($("#scoreId").text()) == (letterAmountRow * letterAmountCol)) {
+                    gameWonBol = true;
+                    GameOver();
+                }
+            }
+
+        });
+
+    }
+    function collisionCheckLetterShot() {
+        let $shot = $(this);//getting the current shot from letter
+        if (checkIntersection($rocket, $shot)) {//rocket was hit
+            $shot.stop();
+            $shot.remove();
+            lives--;
+            if (lives == 0) {
+                GameOver();
+            }
+            else {
+                RemoveHeart();
+            }
+        }
+    }
+    function RemoveHeart() {
+        $("#heartDiv").empty();
+        FillHearts();
+    }
+    function RemoveLetter(target) {
+        for (let i = 0; i < letterAmountRow; i++) {
+            for (let j = 0; j < $letterMatrix[i].length; j++) {
+                if ($letterMatrix[i][j]) {
+                    let test = $letterMatrix[i][j];
+
+                    if (test.attr("id") == target.attr("id")) {
+                        if ($letterMatrix[i].length == 100) {//delete this maybe
+                            $letterMatrix[i].length = 0;
+                            break;
+                        }
+                        else {
+                            $letterMatrix[i].splice(j, 1);
+                            break;
+                        }                      
+                    }
+                }
+            }
+        }
+    }
+    function EnemyShooting() {
+        let bottomLetters = [];
+        let $shot = $("<img>");
+        $shot.attr("src", "/Pictures/Game_9/greenBall.png");
+        $shot.addClass("shot");
+        for (let i = 0; i < letterAmountRow; i++) {
+            if ($letterMatrix[i].length != 0) {
+                let lastLetterInArray = $letterMatrix[i].length - 1;
+                bottomLetters.push($letterMatrix[i][lastLetterInArray]);
+            }
+        }
+        let randomLetter = GetRandomLetter(bottomLetters);
+        let shotStartingPoint_Yaxis = parseInt(randomLetter.css("top"));
+        let shotStartingPoint_Xaxis = parseInt(randomLetter.css("left"));
+        $shot.css("top", shotStartingPoint_Yaxis + "px");
+        $shot.css("left", shotStartingPoint_Xaxis + "px");
+
+
+
+        $("section").append($shot);
+
+        $shot.animate({
+            top: (parseInt($("#sectionId").css("height"))) + "px"
+
+        }, {
+                duration: letterShootingSpeed,
+                easing: "linear",
+                progress: collisionCheckLetterShot,
+                complete: deleteObject
+
+
+
+            });
+    }
+    //dont need
+    function NewIdea() {
+        all = $(".letter");
+        all.sort(function (a, b)
+        {
+            return parseInt($(b).css("top")) - parseInt($(a).css("top"));
+            //if (parseInt($(b).css("top")) > $(a).css("top"))
+            //    return $(b).css("top") - $(a).css("top");
+            //else
+            //    return;
+
+        });
+        //all.sort((a, b) => ($(a).css("top") > $(b).css("top") ? 1 : -1))
+        //alert($(all[0]).attr("id"));
+        let arr = [];
+        //let temp = parseInt($(all[0]).css("top"));
+        //for (let i = 0; i < all.length; i++) {
+        //    if (parseInt($(all[i]).css("top")) == temp) {
+        //        if (arr.length<letterAmountRow)
+        //            arr.push(all[i]);
+
+        //    }
+        //    if (parseInt($(all[i]).css("top")) > temp) {
+        //        if (arr.length < letterAmountRow) {
+        //            arr.push(all[i]);
+        //        }
+        //        else {
+        //            if (arr.length >= letterAmountRow) {
+        //                temp = parseInt($(all[i]).css("top"));
+        //                for (let k = 0; k < arr.length; k++) {
+        //                    if (parseInt($(arr[k]).css("top")) < temp){
+        //                        arr.splice(arr.indexOf(arr[k]), 1);
+        //                        break;
+        //                    }
+        //                }
+        //            }
+        //        }
+                
+        //        //arr.length = 0;
+        //        //arr.push(all[i]);
+        //        //temp = parseInt($(all[i]).css("top"));
+        //    }
+
+        //}
+        ////alert(arr);
+        //let $shot = $("<img>");
+        //$shot.attr("src", "/Pictures/Game_9/greenBall.png");
+        //$shot.addClass("shot");
+        //let randN = Math.floor((Math.random() * arr.length) + 0);
+        //let shotStartingPoint_Yaxis = parseInt($(arr[randN]).css("top"));
+        //let shotStartingPoint_Xaxis = parseInt($(arr[randN]).css("left"));
+        //$shot.css("top", shotStartingPoint_Yaxis + "px");
+        //$shot.css("left", shotStartingPoint_Xaxis + "px");
+        let $shot = $("<img>");
+        $shot.attr("src", "/Pictures/Game_9/greenBall.png");
+        $shot.addClass("shot");
+        let randN = Math.floor((Math.random() * 4) + 0);
+        let shotStartingPoint_Yaxis = parseInt($(all[randN]).css("top"));
+        let shotStartingPoint_Xaxis = parseInt($(all[randN]).css("left"));
+        $shot.css("top", shotStartingPoint_Yaxis + "px");
+        $shot.css("left", shotStartingPoint_Xaxis + "px");
+
+
+
+        $("section").append($shot);
+        $shot.animate({
+            top: (parseInt($("#sectionId").css("height"))) + "px"
+
+        }, {
+                duration: letterShootingSpeed,
+                easing: "linear",
+                //progress: collisionCheck,
+                complete: deleteObject
+
+
+
+            });
+
+    }
+    function checkIntersection($x, $y) {
+        if ($x == undefined || $y == undefined) return false;
+        xLeft = parseInt($x.css("left"));
+        xTop = parseInt($x.css("top"));
+        xRight = xLeft + parseInt($x.css("width"));
+        xBottom = xTop + parseInt($x.css("height"));
+
+        yLeft = parseInt($y.css("left"));
+        yTop = parseInt($y.css("top"));
+        yRight = yLeft + parseInt($y.css("width"));
+        yBottom = yTop + parseInt($y.css("height"));
+
+        return ((xLeft >= yLeft && xLeft <= yRight || yLeft >= xLeft && yLeft <= xRight) && (xTop <= yBottom && xTop >= yTop || yTop <= xBottom && yTop >= xTop));
+    }
+    //dont need
+    function oldidea() {
+        let $shot = $("<img>");
+        $shot.attr("src", "/Pictures/Game_9/greenBall.png");
+        $shot.addClass("shot");
+        //let templetterAmountRow = 0;
+        ////let randomRow = Math.floor((Math.random() * letterAmountRow) + 0);
+        ////while ($letterMatrix[randomRow].length != 0) {
+        ////    randomCol = Math.floor((Math.random() * letterAmountCol) + 0);
+        ////}
+        //let lastRowWithLetters = $letterMatrix[0];//getting last row
+        //while (lastRowWithLetters.length == 0) {//while the row we got is empty
+        //    templetterAmountRow++;
+        //    lastRowWithLetters = $letterMatrix[templetterAmountRow - 1];
+        //}
+        ////let randomEnemyFromlastRowWithLetters= 
+
+        ////let chosenEnemy = $letterMatrix[lastRowWithLetters][];
+
+        //let chosenEnemy = lastRowWithLetters[Math.floor(Math.random() * lastRowWithLetters.length)];
+        ////alert(chosenEnemy.attr("id"));
+        ////let shotStartingPoint_Yaxis = parseInt(chosenEnemy.css("top")) - parseInt(chosenEnemy.css("height"));//calculating height of shot
+        ////let shotStartingPoint_Yaxis = parseInt($("#" + chosenEnemy.attr("id")).css("top")) - parseInt($("#" + chosenEnemy.attr("id")).css("height"));
+        ////let shotStartingPoint_Xaxis = parseInt(chosenEnemy.css("left")) + (parseInt(chosenEnemy.css("width")) / 4);
+        ////let shotStartingPoint_Xaxis = parseInt($("#" + chosenEnemy.attr("id")).css("left")) + Math.floor(parseInt($("#" + chosenEnemy.attr("id")).css("width") / 2));
+
+        //let shotStartingPoint_Yaxis = parseInt(chosenEnemy.css("top"));
+        //let shotStartingPoint_Xaxis = parseInt(chosenEnemy.css("left"));
+        //$shot.css("top", shotStartingPoint_Yaxis + "px");
+        //$shot.css("left", shotStartingPoint_Xaxis + "px");
+        let templetterAmountCol = 0;
+        let randomColNotEmpty = $letterMatrix[0];
+        //for (let i = 0; i < 5; i++) {
+
+        //}
+        //while (randomColNotEmpty.length == 0 || templetterAmountCol<5) {
+        //    templetterAmountCol++;
+        //    randomColNotEmpty = $letterMatrix[templetterAmountCol];
+        //}
+        //let rand = Math.floor((Math.random() * 4) + 0);
+        //let chosenEnemy;
+        //while ($letterMatrix[0].length == 0) {
+        //    rand = Math.floor((Math.random() * 4) + 0);
+        //}
+        //for (let k = 4; k >= 0; k--) {
+        //    if ($letterMatrix[rand][k]) {
+        //        chosenEnemy = $letterMatrix[rand][k];
+        //        break;
+        //    }
+        //}
+        //chosenEnemy = randomColNotEmpty[randomColNotEmpty.length - 1];
+        let bottomLetters = GetBottomLetters();
+        let randomLetter = GetRandomLetter(bottomLetters);
+        let shotStartingPoint_Yaxis = parseInt(randomLetter.css("top"));
+        let shotStartingPoint_Xaxis = parseInt(randomLetter.css("left"));
+        $shot.css("top", shotStartingPoint_Yaxis + "px");
+        $shot.css("left", shotStartingPoint_Xaxis + "px");
+
+
+
+        $("section").append($shot);
+
+        $shot.animate({
+            top: (parseInt($("#sectionId").css("height")))  + "px"
+
+        }, {
+                duration: letterShootingSpeed,
+                easing: "linear",
+                //progress: collisionCheck,
+                complete: deleteObject
+
+
+
+            });
+    }
+    function GameOver() {
+        if (gameWonBol) {
+            $("#messageId").text("כל הכבוד");
+        }
+        else {
+            $("#messageId").text("לא נורא, נסו שוב בפעם הבאה");
+
+        }
+
+        clearInterval(gameoverIndicator);
+        clearInterval(enemyShootingInterval);
+        //do popoup here to let the user go back to alphabet
+        $("#sectionId").addClass("hidescreen");
+        $("#buttonRet").addClass("hidescreen");
+        $("#finalScore").text($("#scoreId").text());
+        $("#endGameScreen").removeClass("hidescreen");
+    }
+    function deleteObject() {
+        $(this).remove();
+    }
+    function GoToAlphabet() {
+         window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
+    }
+    //dont need
+    function GetBottomLetters() {
+        let bottomLetters = [];
+        for (let col = 0; col < letterAmountCol; col++) {
+            for (let row = letterAmountRow-1; row >= 0; row--) {
+                if ($letterMatrix[row][col]) {
+                    bottomLetters.push($letterMatrix[row][col]);
+                    break;
+                }
+            }
+        }
+        return bottomLetters;
+    }
+    //need
+    function GetRandomLetter(letterList) {
+        return letterList[Math.floor(Math.random() * letterList.length)];
+    }
+</script>
+
+
+<body>
+    <div style="text-align:center">
+        <h1 style="color:gold"> פולשי האותיות </h1>
+        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
+        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+        <br />
+        <br />
+        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" />
+
+
+    </div>
+    <section id="sectionId" class="w3-display-container	">
+
+        <div id="heartDiv"></div>
+        <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
+        <img id="rocketId" src="~/Pictures/Game_9/rocket.png" />
+    </section>
+    <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
+        <h1 id="messageId"><b></b></h1>
+        <h3>ניקוד: <span id="finalScore"></span></h3>
+        <br />
+        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+
+    </div>
+</body>

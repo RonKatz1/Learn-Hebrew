@@ -36,8 +36,8 @@
 
     #endGameScreen {
         
-        width: 50%;
-        height: 50%;
+       
+        
     }
 
 
@@ -74,8 +74,9 @@
         color: gold;
     }
     .buttonClass {
-        position: absolute;
-        left: 48%;
+        
+        margin:0 auto;
+        
         border-radius:12px;
         color:gold;
         font-size:large;
@@ -92,6 +93,9 @@
     .audios {
         display: none;
     }
+    #explanationId{
+        cursor:pointer;
+    }
 </style>
 <script>
     var move = 25;//setting moving distance per move for user
@@ -106,7 +110,7 @@
     $(document).ready(function () {       
         validLetters = ["/Pictures/Game_5/haay1.png", "/Pictures/Game_5/haay2.png", "/Pictures/Game_5/haay3.png"];
         invalidLetters = ["/Pictures/Game_5/lamad1.png", "/Pictures/Game_5/kuuf1.png", "/Pictures/Game_5/raaish1.png"];
-        
+        LoadSoundAndPicture();
         var obj = document.createElement("audio");
         obj.src = "/Audio/Game_5/game_explanation.mp3";
         obj.volume = 0.3;
@@ -118,9 +122,32 @@
             obj.play();
             // obj.pause();
         });
+
+        $(window).resize(function () {
+            $("#user").css("left", Math.floor(parseInt($("#sectionId").css("width")) / 2) + "px");
+            $(".enemy").each(function () {
+                let $enemy = $(this);
+                $enemy.stop();
+                $enemy.remove();               
+            });
+
+        })
     })
+    function LoadSoundAndPicture() {
+        new Audio("/Audio/Game_5/shot.mp3").load();
+        new Audio("/Audio/Game_5/SFX_Explosion_02.mp3").load();
+        //this may need to be changes once games become dynamic letter based
+        for (let i = 0; i < validLetters.length; i++) {
+            fetch(validLetters[i]);
+        }
+        for (let j = 0; j < invalidLetters.length; j++) {
+            fetch(invalidLetters[j]);
+        }
+    }
     function StartGame() {
         $User = $("#user");//linking placeholder to user in current game
+        $("#buttonId").addClass("hidescreen");
+
         $("body").keydown(userKey_Options);
         gameoverIndicator = setInterval(createEnemy, alienSpawnTime);
     }
@@ -152,7 +179,7 @@
 
     }
     function shooting() {
-
+        CreateShotSound();
         var $shot = $("<img>");
         $shot.attr("src", "/Pictures/Game_5/shot.png");
 
@@ -258,8 +285,9 @@
     }
     function enemyDestroyed($enemy) {
         var indicator = false;
-        var sound = $("#yes-audio")[0];
-        sound.play();
+        //var sound = $("#yes-audio")[0];
+        //sound.play();
+        CreateExplotionSound();
         for (var i = 0; i < validLetters.length; i++) {
             if ($enemy.attr('src') == validLetters[i]) {
                 $("#scoreId").text(parseInt($("#scoreId").text()) + 1);
@@ -286,14 +314,29 @@
         //        GameOver();
         //}
     }
+    function CreateExplotionSound() {
+        let $sound = $("<audio>");
+        $sound.attr("src", "/Audio/Game_5/SFX_Explosion_02.mp3");
+        
+        $sound[0].play();
+        
+    }
+    function CreateShotSound() {
+        let $sound = $("<audio>");
+        $sound.attr("src", "/Audio/Game_5/shot.mp3");
+
+        $sound[0].play();
+    }
     function GameOver() {
         clearInterval(gameoverIndicator);
         //do popoup here to let the user go back to alphabet
         $("#sectionId").addClass("hidescreen");
         $("#tableId").addClass("hidescreen");
         $("#buttonId").addClass("hidescreen");
+        $("#instructionId").addClass("hidescreen");
         $("#finalScore").text($("#scoreId").text());
         $("#endGameScreen").removeClass("hidescreen");
+        $('*').off('keydown');
     }
     function GoToAlphabet() {
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
@@ -325,21 +368,20 @@
     <br />
     <section id="sectionId">
         <p id="scoreId">0</p>
-        <p id="lifeId">5</p>
+        <p id="lifeId">1</p>
         <img id="heartId" src="~/Pictures/Game_5/heart.png" />
         <img id="user" src="~/Pictures/Game_5/ship.png" />
     </section>
-    <div style="text-align:center;padding-top:5px">
+    <div id="instructionId" style="text-align:center;padding-top:5px">
+        <h2 style="color:gold"> אות משחק זה היא: ה</h2>
         <input id="buttonId" class="buttonClass" type="button" value="התחלה" onclick="StartGame()" />
+
     </div>
 
     <br />
 
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <p style="left:45%" class="pCalss" id="finalScore"></p><p style="left:50%" class="pCalss">   ניקוד סופי  </p>
-        <br />
-        <br />
-        <br />
+        <h1 style="color:gold"><b>ניקוד: </b><span id="finalScore"><b></b></span></h1>
         <br />
         <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
 

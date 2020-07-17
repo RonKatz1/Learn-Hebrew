@@ -1,0 +1,366 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+<style>
+    body {
+        background-image: url('../../Pictures/Game_16/bucket_background.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    
+    section {
+        position: relative;
+        width: 95%;
+        height: 75%;
+        margin: auto;
+        
+    }
+
+ 
+
+    .letter {
+        width: 6%;
+        height: 6%;
+        position: absolute;
+    }
+
+    #endGameScreen {
+        height: 50%;
+    }
+
+    .hidescreen {
+        display: none;
+    }
+
+    #imageId {
+        width: 100px;
+        height: 100px;
+    }
+    #bucketId {
+        position: absolute;
+        width: 10%;
+        height: 15%;
+        z-index: 2;
+    }
+    .heart {
+        opacity: 0.7;
+        width: 25px;
+    }
+
+    #heartDiv {
+        position: absolute;
+        right: 0;
+        top: 0;
+        float: right;
+        text-align: right;
+        height:50%;
+    }
+    #messageDiv {
+        position: absolute;
+    }
+    #scoreId {
+        margin-left: 15px;
+        font-size: x-large;
+        color: gold;
+    }
+    .dropPoint {
+        position: absolute;
+        width: 10%;
+        height: 45%;
+        z-index:1;
+    }
+    
+</style>
+<script>
+    var validLetters;
+    var invalidLetters;
+    var gameoverIndicator; //interval for spawning enemies until game is over
+    var letterSpawn = 2300;
+    var letterSpeed = 2500;
+    var lives = 2; //number of times a user can die in the game
+    var gameStarted = false; //indicator for game started for not letting pressed enter
+    var move = 20;//setting moving distance per move for user
+    var $bucket;//placeholder  for the user in every new game
+    var bucketContent = 0;
+    var bucketMaxContent = 1;
+    $(document).ready(function () {
+        $bucket = $("#bucketId");
+        $bucket.css("bottom", 0);
+        $bucket.css("left", Math.floor(parseInt($bucket.css("width")) / 2));
+        validLetters = ["/Pictures/Game_16/aaiin1.png", "/Pictures/Game_16/aaiin2.png", "/Pictures/Game_16/aaiin3.png", "/Pictures/Game_16/aaiin4.png"];
+        CreateDropStations();
+        $("#messageDiv").css("top", Math.floor(parseInt($("#sectionId").css("height")) / 2) - parseInt($bucket.css("height")));
+        $("#messageDiv").css("left", Math.floor(parseInt($("#sectionId").css("width")) / 2) - Math.floor(parseInt($("#messageDiv").css("width")) / 2));
+        $("body").keydown(userKey_Options);
+
+        $(window).resize(function () {
+            $("#stationR").css("left", parseInt($("#sectionId").width()) - parseInt($("#bucketId").width()) + "px");
+            $("#stationL").css(0 + "px");
+            $bucket.css("left", Math.floor(parseInt($bucket.css("width")) / 2) + "px");
+            $("#messageDiv").css("top", Math.floor(parseInt($("#sectionId").css("height")) / 2) - parseInt($bucket.css("height")));
+            $("#messageDiv").css("left", Math.floor(parseInt($("#sectionId").css("width")) / 2) - Math.floor(parseInt($("#messageDiv").css("width")) / 2));
+        })
+
+        
+    })
+
+    function userKey_Options() {
+        switch (window.event.keyCode) {
+            case (13):// enter was pressed
+                if (!gameStarted) {
+                    StartGame();
+                    gameStarted = true;
+                }           
+                break;
+            case (37):// left key was pressed
+                if (gameStarted) {
+                    MoveLeft();
+                    
+                }
+                break;
+            case (39):// right keyboard was pressed=moving the user one move to the right
+                if (gameStarted) {
+                    MoveRight();
+                    
+                }
+                break;
+
+        }
+    }
+    function CreateDropStations() {
+        var $stationRight = $("<img>");
+        $stationRight.attr("src", "/Pictures/Game_16/dropStation.png");
+        $stationRight.attr("id", "stationR");
+        $stationRight.addClass("dropPoint");
+        $stationRight.css("bottom", 0 + "px");
+        $stationRight.css("left", parseInt($("#sectionId").width()) - parseInt($("#bucketId").width()) + "px");
+        
+        $("#sectionId").append($stationRight);
+
+        var $stationLeft = $("<img>");
+        $stationLeft.attr("src", "/Pictures/Game_16/dropStation.png");
+        $stationLeft.attr("id", "stationL");
+        $stationLeft.addClass("dropPoint");
+        $stationLeft.css("bottom", 0 + "px");
+        $stationLeft.css("left", 0 + "px");
+        
+        $("#sectionId").append($stationLeft);
+    }
+    function MoveLeft() {
+        MoveUser(-1 * move);
+    }
+    function MoveRight() {
+        MoveUser(move);
+    }
+    function MoveUser(axisX) {
+        var currentPosition = parseInt($bucket.css("left"));//getting current position of user
+        var newPosition = currentPosition + axisX;//calculating new position of user
+        //alert(parseInt($("#sectionId").css("width")));
+        if (newPosition >= 0 && newPosition <= (parseInt($("#sectionId").css("width")) - parseInt($bucket.css("width")))) {//need to be changed ifsection limits user changes game
+            $bucket.css("left", newPosition + "px");//moving user to new position
+        }
+        else {
+            $(".dropPoint").each(function () {
+                var $station = $(this);
+
+                if (checkIntersection($station, $bucket) && $bucket.attr("src") =="/Pictures/Game_16/bucketFull.png") {
+                    $bucket.attr("src", "/Pictures/Game_16/bucket.png");          
+                    bucketContent = 0;
+                    $("#messageDiv").addClass("hidescreen");
+
+                }
+
+            });
+        }
+
+    }
+
+    function StartGame() {
+        gameStarted = true;
+        $("#buttonId").addClass("hidescreen");
+        $("#buttonRet").removeClass("hidescreen");
+        FillHearts();
+        gameoverIndicator = setInterval(createLetter, letterSpawn);
+    }
+
+    function FillHearts() {
+        $heartDiv = $("#heartDiv");
+        for (var i = 0; i < lives; i++) {
+            var $image = $("<img>");
+            $image.attr("src", "/Pictures/Game_16/heart.png");
+            $image.addClass("heart");
+            $heartDiv.append($image);
+
+        }
+    }
+    function createLetter() {
+        var $letter = $("<img>");
+        var enemyType = Math.floor((Math.random() * 10) + 1);
+
+        if (enemyType >= 1 && enemyType <= 7) {
+            var randomNumber = Math.floor((Math.random() * validLetters.length) + 0);
+            $letter.attr("src", validLetters[randomNumber]);
+
+        }
+
+        else {
+            //var randomNumber = Math.floor((Math.random() * invalidLetters.length) + 0);
+            $letter.attr("src", "/Pictures/Game_16/paay1.png");
+
+        }
+        $letter.addClass("letter");
+        var axisX = randomEnemy_Place();
+        $letter.css("top", 0 + "px");
+        $letter.css("left", axisX + "px");
+
+        $("#sectionId").append($letter);
+
+        $letter.animate({
+            top: (parseInt($("section").css("height"))) - (parseInt($letter.css("height"))) + "px"
+
+
+        }, {
+                duration: letterSpeed,
+                easing: "linear",
+                progress: collisionCheck,
+                complete: deleteObject
+
+            });
+
+    }
+    function randomEnemy_Place() {
+        var limitLeft = parseInt($bucket.css("width"));//floot
+        //alert($("#stationR").css("width"));
+        var limitRight = parseInt($("#sectionId").css("width")) - ((parseInt($("#stationR").css("width"))) * 3);
+        return Math.floor((Math.random() * limitRight) + limitLeft);
+    }
+
+    function collisionCheck() {
+        var $letter = $(this);//getting the current letter
+        if (checkIntersection($bucket, $letter)) {
+
+            $letter.stop();
+            $letter.remove();
+            if (bucketContent < bucketMaxContent) {
+                letterGathered($letter);
+            }
+            
+            
+        }
+    }
+    function letterGathered($letter) {
+        var indicator = false;
+        bucketContent++;
+        if (bucketContent > (bucketMaxContent-1)) {
+            $bucket.attr("src", "/Pictures/Game_16/bucketFull.png");
+            $("#messageDiv").removeClass("hidescreen");
+        }
+        
+        for (var i = 0; i < validLetters.length; i++) {
+            if ($letter.attr('src') == validLetters[i]) {
+                $("#scoreId").text(parseInt($("#scoreId").text()) + 1);
+                indicator = true;
+                CreateGoodSound();
+                break;
+            }
+
+
+
+        }
+        if (!indicator) {
+            lives--;
+            RemoveHeart();
+            CreateErrorSound();
+        }
+        if (lives == 0) {
+            GameOver();
+        }
+        //if (jQuery.inArray(($enemy.attr('src'), validLetters) != -1)) {
+        //    $("#score").text(parseInt($("#score").text()) + 1);
+
+        //}
+        //else {
+        //    $("#life").text(parseInt($("#life").text()) - 1);
+        //    if ($("#life").text() == '0')
+        //        GameOver();
+        //}
+    }
+    function RemoveHeart() {
+        $("#heartDiv").empty();
+        FillHearts();
+    }
+    function checkIntersection($x, $y) {
+        if ($x == undefined || $y == undefined) return false;
+        xLeft = parseInt($x.css("left"));
+        xTop = parseInt($x.css("top"));
+        xRight = xLeft + parseInt($x.css("width"));
+        xBottom = xTop + parseInt($x.css("height"));
+
+        yLeft = parseInt($y.css("left"));
+        yTop = parseInt($y.css("top"));
+        yRight = yLeft + parseInt($y.css("width"));
+        yBottom = yTop + parseInt($y.css("height"));
+
+        return ((xLeft >= yLeft && xLeft <= yRight || yLeft >= xLeft && yLeft <= xRight) && (xTop <= yBottom && xTop >= yTop || yTop <= xBottom && yTop >= xTop));
+    }
+    function CreateGoodSound() {
+        let $sound = $("<audio>");
+        $sound.attr("src", "/Audio/Game_16/good_sound.mp3");
+
+        $sound[0].play();
+    }
+    function CreateErrorSound() {
+        let $sound = $("<audio>");
+        $sound.attr("src", "/Audio/Game_16/error.mp3");
+
+        $sound[0].play();
+    }
+    function GameOver() {
+        clearInterval(gameoverIndicator);
+        //do popoup here to let the user go back to alphabet
+        $("#sectionId").addClass("hidescreen");
+        $("#buttonRet").addClass("hidescreen");
+        $("#finalScore").text($("#scoreId").text());
+        $("#endGameScreen").removeClass("hidescreen");
+    }
+    function deleteObject() {
+        $(this).remove();
+    }
+    function GoToAlphabet() {
+         window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
+    }
+</script>
+
+
+<body>
+    <div style="text-align:center">
+        <h1 style="color:gold"> דלי אותיות </h1>
+        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
+        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+        <br />
+        <br />
+        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" />
+        <h2 style="color:gold"> אות משחק זה היא: ע</h2>
+
+    </div>
+    <section id="sectionId" class="w3-display-container	">
+        
+        <div id="messageDiv" class="hidescreen"><h1 style="color:red;font-size:100px"><b>רוקנו את הדלי</b></h1></div>
+        <div id="heartDiv"></div>
+        <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
+        <img id="bucketId" src="~/Pictures/Game_16/bucket.png" />
+    </section>
+    <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
+        <h3>ניקוד: <span id="finalScore"></span></h3>
+        <br />
+        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+
+    </div>
+</body>

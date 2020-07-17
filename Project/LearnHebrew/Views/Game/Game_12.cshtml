@@ -9,7 +9,7 @@
     section {
         width: 58%;
         height: 68%;
-        
+        background-color:white;
         position: relative;
         margin: auto;
     }
@@ -29,17 +29,12 @@
     }
 
     #endGameScreen {
-        background-color: aqua;
-        width: 99%;
-        height: 99%;
+        
+        height: 50%;
     }
 
 
-    table {
-        margin: auto;
-        border: 1px solid black;
-        border-collapse: collapse;
-    }
+    
 
     .hidescreen {
         display: none;
@@ -49,6 +44,31 @@
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
+    }
+    .buttonClass {
+        
+        border-radius: 12px;
+        color: gold;
+        font-size: large;
+        background-color: hotpink
+    }
+    #scoreId {
+        top: 0%;
+        left: 93%;
+        position: absolute;
+        font-size: x-large;
+        color: gold;
+    }
+    #heartDiv {
+        top: 0%;
+        left: 3%;
+        position: absolute;
+    }
+    .heart {
+        opacity: 0.7;
+        width: 7%;
+        
+        
     }
 </style>
 <script>
@@ -62,6 +82,7 @@
     var invalidLetters;
     var savedTop;
     var savedBottom;
+    var lives = 3;
     $(document).ready(function () {
         
         validLetters = ["/Pictures/Game_12/lamad1.PNG", "/Pictures/Game_12/lamad2.PNG", "/Pictures/Game_12/lamad3.PNG"];
@@ -73,6 +94,8 @@
         savedBottom = parseInt($User.css("top"));
         $("body").keydown(userKey_Options);
         gameoverIndicator = setInterval(createEnemy, alienSpawnTime);
+        FillHearts();
+        $("#buttonId").addClass("hidescreen");
     }
     function userKey_Options() {
         switch (window.event.keyCode) {
@@ -117,6 +140,16 @@
         if (newPosition >= 0 && newPosition <= (parseInt($("#sectionId").css("width")) - parseInt($User.css("width"))))
             $User.css("left", newPosition + "px");//moving user to new position
 
+    }
+    function FillHearts() {
+        $heartDiv = $("#heartDiv");
+        for (var i = 0; i < lives; i++) {
+            var $image = $("<img>");
+            $image.attr("src", "/Pictures/Game_12/heart.png");
+            $image.addClass("heart");
+            $heartDiv.append($image);
+
+        }
     }
     function deleteObject() {
         $(this).remove();
@@ -198,11 +231,10 @@
     }
     function enemyDestroyed($enemy) {
         var indicator = false;
-        //alert(validLetters);
-        //alert(jQuery.inArray(($enemy.attr('src'),validLetters)));
+        CreateSound();
         for (var i = 0; i < validLetters.length; i++) {
             if ($enemy.attr('src') == validLetters[i]) {
-                $("#score").text(parseInt($("#score").text()) + 1);
+                $("#scoreId").text(parseInt($("#scoreId").text()) + 1);
                 indicator = true;
                 break;
             }
@@ -211,9 +243,10 @@
 
         }
         if (!indicator) {
-            $("#life").text(parseInt($("#life").text()) - 1);
+            lives--;
+            RemoveHeart();
         }
-        if ($("#life").text() == '0') {
+        if (lives == '0') {
             GameOver();
         }
         //if (jQuery.inArray(($enemy.attr('src'), validLetters) != -1)) {
@@ -226,12 +259,22 @@
         //        GameOver();
         //}
     }
+    function RemoveHeart() {     
+        $("#heartDiv").empty();
+        FillHearts();
+    }
+    function CreateSound() {
+        let $sound = $("<audio>");
+        $sound.attr("src", "/Audio/Game_12/eat.mp3");
+
+        $sound[0].play();
+    }
     function GameOver() {
         clearInterval(gameoverIndicator);
         //do popoup here to let the user go back to alphabet
         $("#sectionId").addClass("hidescreen");
-        $("#tableId").addClass("hidescreen");
-        $("#finalScore").text($("#score").text());
+        //$("#tableId").addClass("hidescreen");
+        $("#finalScore").text($("#scoreId").text());
         $("#endGameScreen").removeClass("hidescreen");
     }
     function GoToAlphabet() {
@@ -244,34 +287,24 @@
         <h1 style="color:gold"> אכילת אותיות </h1>
         <h2 style="color:gold">עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה</h2>
         <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+        <br />
+        <br />
+        <input id="buttonId" class="buttonClass" type="button" value="התחלה" onclick="StartGame()" />
     </div>
     <br />
     <section id="sectionId">
-
-
+        <div id="heartDiv"></div>
+        <p id="scoreId">0</p>
         <img id="user" src="~/Pictures/Game_12/mouth.png" />
     </section>
-    <input type="button" value="התחלה" onclick="StartGame()" />
-    <br />
-    <table id="tableId">
-        <tr>
-            <td><p id="score">0</p></td>
-            <td>ניקוד</td>
-        </tr>
-        <tr>
-            <td><p id="life">5</p></td>
-            <td>חיים</td>
-        </tr>
-    </table>
-    <div style="z-index:90" id="endGameScreen" class="hidescreen">
-        <table>
-            <tr>
-                <td><p id="finalScore">0</p></td>
-                <td>ניקוד סופי :</td>
-            </tr>
-            <tr>
-                <td><input type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" /></td>
-            </tr>
-        </table>
+
+    
+
+    
+    <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
+        <h3>ניקוד: <span id="finalScore"></span></h3>
+        <br />
+        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+
     </div>
 </body>

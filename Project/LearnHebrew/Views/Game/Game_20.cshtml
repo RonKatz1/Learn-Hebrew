@@ -1,0 +1,372 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<style>
+    body {
+        background-image: url('../../Pictures/Game_20/clouds_background.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    section {
+        position:relative;
+        margin: auto;
+        border: 1px solid black;
+        background-color:deepskyblue;
+    }
+    .cloud{
+        position:absolute;
+        z-index:2;
+        
+    }
+    .heart {
+        
+        opacity: 0.7;
+        width: 25px;
+        
+    }
+    #heartDiv {
+        position: absolute;
+        right: 0;
+        top: 0;
+        float: right;
+        text-align: right;
+        z-index: 3;
+    }
+    #scoreId {
+        margin-left: 15px;
+        font-size: x-large;
+        color: gold;
+    }
+    .hidescreen {
+        display: none;
+    }
+    #birdId {
+        position:absolute;
+        width: 50px;
+        height: 50px;
+    }
+    .pipe {
+        position: absolute;
+        width: 50px;
+        height:200px;
+        z-index:1;
+       
+    }
+    .letter {
+        position: absolute;
+        width:25px;
+        height:25px;
+
+    }
+</style>
+<script>
+    
+    var validLetters;//array of valid src of letter images per the user choosing before picking this game  
+    var flappingBirdIndicator;//interval changing of flying bird
+    var flappingSpeed = 200;//time it takes to change the src of the bird image
+    var obstacleIndicator;//interval of obstacle spawning
+    var obstacleSpawn = 2000;//time it takes to create a new obstacle in mili secomds
+    var obstacleRunwayTimer = 2000;//time it takes to an obstacle to move and disappear
+    var $bird; //variable for bird image
+    var lives = 5;//the number of times a user can mess up before he losses the game
+    var move = 25;//the movement size the bird can make going up or down
+    var freeFall = 5;//falling distance per change of bird image
+    var gameStarted = false; //indicator for game started for not letting pressed enter
+
+    $(document).ready(function () {
+
+        validLetters = ["/Pictures/Game_20/raaish1.png", "/Pictures/Game_20/raaish2.png", "/Pictures/Game_20/raaish3.png"];
+        flappingBirdIndicator = setInterval(ChangeBird, flappingSpeed);
+
+        $bird = $("#birdId");
+        $bird.css("top", ($("#sectionId").height() / 2) - $bird.height());
+
+        CreateClouds();
+    })
+    function StartGame() {
+        gameStarted = true;
+        $("#buttonId").addClass("hidescreen");
+        $("#buttonRet").removeClass("hidescreen");
+        FillHearts();
+        $("body").keydown(userKey_Options);
+
+        obstacleIndicator = setInterval(CreateObstacle, obstacleSpawn);
+        //CreateObstacle();
+
+    }
+    function CreateClouds() {
+        var $cloudUp = $("<img>");
+        $cloudUp.attr("src", "/Pictures/Game_20/cloud.png");
+        $cloudUp.addClass("cloud");
+        $cloudUp.css("top", 0 + "px");
+        $cloudUp.css("left", 0 + "px");
+        $cloudUp.css("width", parseInt($("#sectionId").width()) + "px");
+        $cloudUp.css("height", 30 + "px");
+        $("#sectionId").append($cloudUp);
+
+        var $cloudDown = $("<img>");
+        $cloudDown.attr("src", "/Pictures/Game_20/cloud.png");
+        $cloudDown.addClass("cloud");
+        $cloudDown.css("bottom", 0 + "px");
+        $cloudDown.css("left", 0 + "px");
+        $cloudDown.css("width", parseInt($("#sectionId").width()) + "px");
+        $cloudDown.css("height", 30 + "px");
+        $("#sectionId").append($cloudDown);
+
+    }
+    function userKey_Options() {
+        switch (window.event.keyCode) {
+            case (13):// enter was pressed
+                if (!gameStarted) {
+                    StartGame();
+                    gameStarted = true;
+                }
+            case (38):// up key was pressed
+                if (gameStarted) {
+                    MoveBird(-1 * move);            
+                }
+                break;
+            case (40):// down key was pressed
+                if (gameStarted) {
+                    MoveBird(move);
+                }
+                break;
+
+        }
+    }
+    function MoveBird(movement) {    
+        var currentPosition = parseInt($bird.css("top"));//getting current position of user
+        var newPosition = currentPosition + movement;//calculating new position of user
+        $bird.css("top", newPosition + "px");
+        if (!(newPosition >= 0 && newPosition <= (parseInt($("#sectionId").css("height")) - parseInt($bird.css("height"))))) {
+            lives--;
+            if (lives > 0) {
+                RemoveHeart();
+                RestartGame();
+            }
+            else {
+                GameOver();
+            }
+
+        }
+        
+    }
+    function ChangeBird() {
+        switch ($bird.attr("src")) {
+            case ("/Pictures/Game_20/bird1.png"):
+                $bird.attr("src", "/Pictures/Game_20/bird2.png");
+                break;
+            case ("/Pictures/Game_20/bird2.png"):
+                $bird.attr("src", "/Pictures/Game_20/bird1.png");
+                break;
+        }
+        if (gameStarted)
+            MoveBird(freeFall);
+    }
+
+    function FillHearts() {
+        $heartDiv = $("#heartDiv");
+        for (var i = 0; i < lives; i++) {
+            var $image = $("<img>");
+            $image.attr("src", "/Pictures/Game_20/heart.png");
+            $image.addClass("heart");
+            $heartDiv.append($image);
+
+        }
+    }
+
+    function RemoveHeart() {
+        $("#heartDiv").empty();
+        FillHearts();
+    }
+    function RestartGame() {
+        $bird.css("top", ($("#sectionId").height() / 2) - $bird.height());
+        //need to add stop and restart process of creating obstacles
+    }
+    function CreateObstacle() {
+        var axisX = parseInt($("#sectionId").css("width")) - parseInt($bird.css("width"));
+        var originalHeight = 200;
+        var birdH = parseInt($bird.css("height"));
+        var randomHeight = Math.floor((Math.random() * 150) + 100);
+
+        
+
+
+        var $pipeUp = $("<img>");
+        $pipeUp.attr("src", "/Pictures/Game_20/pipe1.png");
+        $pipeUp.addClass("pipe");
+        $pipeUp.css("bottom", 0 + "px");
+        $pipeUp.css("left", axisX + "px");
+
+        var $pipeDown = $("<img>");
+        $pipeDown.attr("src", "/Pictures/Game_20/pipe2.png");
+        $pipeDown.addClass("pipe");
+        $pipeDown.css("top", 0 + "px");
+        $pipeDown.css("left", axisX + "px");
+
+        var $letter = $("<img>");
+        var randomNumber = Math.floor((Math.random() * validLetters.length) + 0);
+        $letter.attr("src", validLetters[randomNumber]);
+        $letter.addClass("letter");
+        $letter.css("left", axisX + "px");
+
+        var dificulty = Math.floor((Math.random() * 2) + 2); //determine dificulty of the would be spawned obstacle
+
+        if (dificulty == 1) {//easy dificulty
+            randomHeight = Math.floor((Math.random() * 3) + 1);
+            $pipeUp.css("height", Math.floor(originalHeight / randomHeight) + "px");
+
+            randomHeight = Math.floor((Math.random() * 3) + 1);
+            $pipeDown.css("height", Math.floor(originalHeight / randomHeight) + "px");
+
+            $("#sectionId").append($pipeUp);
+            $("#sectionId").append($pipeDown);
+
+            
+            var randMiddle = Math.floor((Math.random() * ($pipeDown.height() - $letter.height())) + (parseInt($pipeDown.css("top")) + $pipeDown.height()));
+
+            if ($pipeUp.height() == $pipeDown.height()) {//spawn case where letter top is dificult to predict randomly
+                randMiddle = $pipeDown.height() + Math.floor(birdH / 2);
+            }
+
+            $letter.css("top", randMiddle + "px");
+            $("#sectionId").append($letter);
+        }
+        else {//hard dificulty
+            var totHeight = parseInt($("#sectionId").css("height")) - (birdH*2) - ($("#heartDiv").height()*2) ;
+            
+            var randomUpH = Math.floor((Math.random() * totHeight) + birdH);
+
+            
+            $pipeUp.css("height", randomUpH + "px");
+            
+            
+
+            $pipeDown.css("height", (totHeight - $pipeUp.height() + birdH) + "px");
+            
+            var middle = $pipeDown.height() + Math.floor(birdH/2);
+            $letter.css("top", middle + "px")
+
+            $("#sectionId").append($letter);
+            $("#sectionId").append($pipeUp);
+            $("#sectionId").append($pipeDown);
+        }
+
+        $pipeUp.animate({           
+            left: 0
+
+        }, {
+                duration: obstacleRunwayTimer,
+                easing: "linear",
+                progress: collisionCheckPipe,
+                complete: deleteObject
+
+            });
+        $pipeDown.animate({
+            left: 0
+
+        }, {
+                duration: obstacleRunwayTimer,
+                easing: "linear",
+                progress: collisionCheckPipe,
+                complete: deleteObject
+
+            });
+        $letter.animate({
+            left: 0
+
+        }, {
+                duration: obstacleRunwayTimer,
+                easing: "linear",
+                progress: collisionCheckLetter,
+                complete: deleteObject
+
+            });
+        
+
+
+
+    }
+    function collisionCheckPipe() {
+        var $pipe = $(this);//getting the current pipe
+        if (checkIntersection($bird, $pipe)) {
+            lives--;
+            $(".pipe").stop();
+            $(".pipe").remove();
+            $(".letter").stop();
+            $(".letter").remove();
+            if (lives > 0) {
+                RemoveHeart();
+                RestartGame();
+            }
+            else {
+                GameOver();
+            }
+        }                
+    }
+    function collisionCheckLetter() {
+        var $letter = $(this);//getting the current letter
+        if (checkIntersection($bird, $letter)) {
+            $("#scoreId").text(parseInt($("#scoreId").text()) + 1);           
+            $(".letter").stop();
+            $(".letter").remove();
+            
+        }   
+    }
+    function checkIntersection($x, $y) {
+        if ($x == undefined || $y == undefined) return false;
+        xLeft = parseInt($x.css("left"));
+        xTop = parseInt($x.css("top"));
+        xRight = xLeft + parseInt($x.css("width"));
+        xBottom = xTop + parseInt($x.css("height"));
+
+        yLeft = parseInt($y.css("left"));
+        yTop = parseInt($y.css("top"));
+        yRight = yLeft + parseInt($y.css("width"));
+        yBottom = yTop + parseInt($y.css("height"));
+
+        return ((xLeft >= yLeft && xLeft <= yRight || yLeft >= xLeft && yLeft <= xRight) && (xTop <= yBottom && xTop >= yTop || yTop <= xBottom && yTop >= xTop));
+    }
+    function GameOver() {
+        clearInterval(flappingBirdIndicator);
+        clearInterval(obstacleIndicator);
+        //do popoup here to let the user go back to alphabet
+        $("#sectionId").addClass("hidescreen");
+        $("#buttonRet").addClass("hidescreen");
+        $("#finalScore").text($("#scoreId").text());
+        $("#endGameScreen").removeClass("hidescreen");
+    }
+    function deleteObject() {
+        $(this).remove();
+    }
+    function GoToAlphabet() {
+         window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
+    }
+</script>
+<body>
+    <div style="text-align:center">
+        <h1 style="color:gold"> פלאפי הציפור </h1>
+        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
+        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
+        <br />
+        <br />
+        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" />
+    </div>
+    <section id="sectionId" class="w3-display-container" style="width:420px;height:480px">
+        <div id="heartDiv"></div>
+        <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
+        <img id="birdId" src="~/Pictures/Game_20/bird1.png" />
+    </section>
+    <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
+        <h3>ניקוד: <span id="finalScore"></span></h3>
+        <br />
+        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+
+    </div>
+</body>
