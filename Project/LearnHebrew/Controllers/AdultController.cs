@@ -13,7 +13,7 @@ namespace LearnHebrew.Controllers
         //private string ContentVoicePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/Voice";
 
         //private string ContentFilePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/ContentFiles";
-        private string ContentFilePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/LearnHebrew/ContentFiles";
+        private string ContentFilePath = "C:/Users/ron katz/Documents/GitHub/Learn-Hebrew/Project/LearnHebrew/ContentFiles";
 
         public ActionResult Index()
         {
