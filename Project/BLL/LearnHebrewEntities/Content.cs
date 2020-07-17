@@ -29,9 +29,13 @@ namespace BLL.LearnHebrewEntities
         [DataMember]
         public bool IsApproved { get; set; }
         [DataMember]
+        public bool HideUnAprroverdContent { get; set; }
+        [DataMember]
         public int ApprovedCount { get; set; }
         [DataMember]
         public int DisApprovedCount { get; set; }
+        [DataMember]
+        public string UnDotedWord { get; set; }
 
         [DataMember]
         public ContentFile PhotoFile { get; set; }

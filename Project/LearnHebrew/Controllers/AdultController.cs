@@ -80,10 +80,11 @@ namespace LearnHebrew.Controllers
                     return Content("fail sace content");
 
                 var word = col["Word"];
+                var UnDotedWord = col["UnDotedWord"];
                 content.AdultID = AdultID;
                 content.Word = word;
                 content.Data.DateCreated = DateTime.Now;
-
+                content.Data.UnDotedWord = UnDotedWord;
                 if(Photo != null)
                 {
                     content.Data.PhotoFile = CreateFile(Photo, word);
@@ -129,9 +130,12 @@ namespace LearnHebrew.Controllers
                     return Content("fail");
 
                 var allContents = BLL.Services.ContentServices.LoadAllContents();
+                //get content that doesnt get 5 confirmed(IsApproved) or 3 unConfirmed(HideConeten)
+                allContents = allContents != null && allContents.Count() > 0 ? allContents.Where(c => !c.Data.HideUnAprroverdContent && !c.Data.IsApproved).ToList() : new List<BLL.LearnHebrewEntities.Content>();
+
                 if(allContents != null && allContents.Count() > 0)
                 {
-                    if (m.Adult.Data.ContentIDsConfermed == null)
+                    if (m.Adult.Data.ContentIDsConfermed == null || m.Adult.Data.ContentIDsConfermed.Count() <= 0)
                         m.Adult.Data.ContentIDsConfermed = new List<int>();
 
                     m.Contents = allContents.Where(c=>c.AdultID != m.Adult.AdultID && !c.Data.IsApproved && !m.Adult.Data.ContentIDsConfermed.Contains(c.ContentID)).ToList();
@@ -180,6 +184,8 @@ namespace LearnHebrew.Controllers
                 {
                     //delete content from contents
                     //delete content from adult content list
+
+                    content.Data.HideUnAprroverdContent = true;
                 }
 
                 adult.Data.ContentIDsConfermed.Add(ContentID);
@@ -281,6 +287,20 @@ namespace LearnHebrew.Controllers
             {
                 return Content("cant connect to child");
             }
+        }
+
+        public ActionResult ChildProgress()
+        {
+            Models.AdultModel m = new Models.AdultModel();
+            m.Adult = Auxiliray.Session.AdultInSession;
+
+            var adultChilds = new List<BLL.LearnHebrewEntities.Child>();
+            if (m.Adult != null && m.Adult.Data != null && m.Adult.Data.ChildsIDs != null && m.Adult.Data.ChildsIDs.Count() > 0)
+                adultChilds = BLL.Services.ChildServices.LoadAllChildsByIds(m.Adult.Data.ChildsIDs);
+
+            m.AdultChilds = adultChilds;
+
+            return View("~/Views/Adult/ChildProgress.cshtml", m);
         }
     }
 }
