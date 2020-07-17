@@ -70,7 +70,7 @@ namespace LearnHebrew.Controllers
         [HttpPost]
         public ActionResult SaveContent(FormCollection col, HttpPostedFileBase Photo, HttpPostedFileBase Voice)
         {
-
+            Models.AdultModel m = new Models.AdultModel();
             BLL.LearnHebrewEntities.Content content = new BLL.LearnHebrewEntities.Content();
 
             try
@@ -98,7 +98,13 @@ namespace LearnHebrew.Controllers
 
                 if(contentID != 0)
                 {
-                    return Content("OK");
+                    //return Content("OK");
+                    if (Auxiliray.Session.AdultInSession == null && Auxiliray.Session.AdultInSession.AdultID != AdultID)
+                        return Content("fail upload content page");
+
+                    m.Adult = Auxiliray.Session.AdultInSession;
+
+                    return View("~/Views/Adult/UploadContent.cshtml", m);
                 }
                 else
                 {

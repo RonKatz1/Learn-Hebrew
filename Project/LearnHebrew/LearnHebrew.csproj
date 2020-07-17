@@ -368,6 +368,7 @@
     <Content Include="Views\Adult\ConnectToChild.cshtml" />
     <Content Include="Views\Adult\UploadContent.cshtml" />
     <Content Include="Views\Game\Game_8.cshtml" />
+    <Content Include="Views\Game\Game_7_Hangman.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
