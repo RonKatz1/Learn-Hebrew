@@ -252,6 +252,9 @@
     <Content Include="Audio\Game_5\SFX_Explosion_02.mp3" />
     <Content Include="Audio\Game_5\shot.mp3" />
     <Content Include="Audio\Game_8\gun_fire.mp3" />
+    <Content Include="Audio\Game_9\Game_9_instructions.mp3" />
+    <Content Include="Audio\Game_9\lose_life.mp3" />
+    <Content Include="Audio\Game_9\SFX_Explosion_03.mp3" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -395,6 +398,7 @@
     <Content Include="Pictures\Game_9\greenBall.png" />
     <Content Include="Pictures\Game_9\heart.png" />
     <Content Include="Pictures\Game_9\rocket.png" />
+    <Content Include="Pictures\Game_9\space&amp;planes_background.png" />
     <Content Include="Pictures\Game_9\taat1.png" />
     <Content Include="Pictures\Game_9\taat2.png" />
     <Content Include="Pictures\Game_9\taat3.png" />
