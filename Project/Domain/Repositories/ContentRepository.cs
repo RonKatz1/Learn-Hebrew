@@ -18,7 +18,8 @@ namespace Domain.Repositories
         {
             try
             {
-                Entity.Content temp = this.LearnHebrewDB.Contents.FirstOrDefault(x => x.ContentID == content.ContentID);
+                //Entity.Content temp = this.LearnHebrewDB.Contents.FirstOrDefault(x => x.ContentID == content.ContentID);
+                Entity.Content temp = this.LearnHebrewDB.Contents.Where(x => x.ContentID == content.ContentID).FirstOrDefault();
                 if (temp == null)
                 {
                     this.LearnHebrewDB.Contents.Add(content);
