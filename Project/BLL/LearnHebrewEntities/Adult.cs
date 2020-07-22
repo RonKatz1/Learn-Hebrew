@@ -31,7 +31,6 @@ namespace BLL.LearnHebrewEntities
             public AdultData()
             {
                 this.ChildsIDs = new List<int>();
-                this.ContentIDsConfermed = new List<int>();
             }
         }
     }
