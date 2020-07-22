@@ -12,8 +12,8 @@ namespace LearnHebrew.Controllers
         //private string ContentPhotoPath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/Photos";
         //private string ContentVoicePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/Voice";
 
-        //private string ContentFilePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/LearnHebrew/ContentFiles";
-        private string ContentFilePath = "C:/Users/ron katz/Documents/GitHub/Learn-Hebrew/Project/LearnHebrew/ContentFiles";
+        private string ContentFilePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/LearnHebrew/ContentFiles";
+        //private string ContentFilePath = "C:/Users/ron katz/Documents/GitHub/Learn-Hebrew/Project/LearnHebrew/ContentFiles";
 
         public ActionResult Index()
         {
@@ -188,6 +188,10 @@ namespace LearnHebrew.Controllers
 
                     content.Data.HideUnAprroverdContent = true;
                 }
+
+
+                if (adult.Data.ContentIDsConfermed == null || adult.Data.ContentIDsConfermed.Count() <= 0)
+                    adult.Data.ContentIDsConfermed = new List<int>();
 
                 adult.Data.ContentIDsConfermed.Add(ContentID);
 
