@@ -133,6 +133,7 @@ namespace LearnHebrew.Controllers
                 //get content that doesnt get 5 confirmed(IsApproved) or 3 unConfirmed(HideConeten)
                 allContents = allContents != null && allContents.Count() > 0 ? allContents.Where(c => !c.Data.HideUnAprroverdContent && !c.Data.IsApproved).ToList() : new List<BLL.LearnHebrewEntities.Content>();
 
+
                 if(allContents != null && allContents.Count() > 0)
                 {
                     if (m.Adult.Data.ContentIDsConfermed == null || m.Adult.Data.ContentIDsConfermed.Count() <= 0)
