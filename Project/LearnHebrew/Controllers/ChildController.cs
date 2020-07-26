@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
 
 
 namespace LearnHebrew.Controllers
@@ -187,6 +188,37 @@ namespace LearnHebrew.Controllers
         public ActionResult GoToGame_7_Hangman()
         {
             return View("~/Views/Game/Game_7_Hangman.cshtml");
+        }
+
+        // [Route("Child/gotogame/{letter}/{name}")]
+            
+        public ActionResult GoToGame(char letter, string name, string needContent)
+        {
+            Models.GameInformationModel m = new Models.GameInformationModel();
+            m.Letter = letter;
+            if (needContent == "true")
+            {
+                var specificContent = BLL.Services.ContentServices.LoadAllContents();
+                specificContent = specificContent.Where(c => c.Data.IsApproved && c.Data.UnDotedWord.StartsWith(Char.ToString(letter))).ToList();
+
+                m.Contents = specificContent;
+            }
+            else// needContent == "false"
+            {
+                //string folderPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "/Users/ron katz/Documents/GitHub/Learn-Hebrew/Project/LearnHebrew/Pictures/Alphabet";
+
+                string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+                string str = folderPath.Substring(0, folderPath.IndexOf("\\", System.StringComparison.InvariantCultureIgnoreCase) + "\\".Length);
+                str = str + "/";
+                str = str + folderPath.Substring(str.Length - 1).Replace("\\", "/");
+                folderPath = str + "Pictures/Alphabet";
+                DirectoryInfo di = new DirectoryInfo(folderPath);
+                m.ValidLetterName = di.GetFiles("*.png").Where(f => f.Name.StartsWith(Char.ToString(letter))).Select(f => f.Name).ToList();
+                m.InValidLetterName = di.GetFiles("*.png").Where(f => !f.Name.StartsWith(Char.ToString(letter))).Select(f => f.Name).ToList();
+            }
+            var view = "~/Views/Game/Game_" + name + ".cshtml";
+            return View(view, m);
+           
         }
     }
 }

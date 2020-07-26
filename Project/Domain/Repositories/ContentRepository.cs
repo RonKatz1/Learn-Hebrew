@@ -48,5 +48,6 @@ namespace Domain.Repositories
         {
             return this.LearnHebrewDB.Contents.ToList();
         }
+        
     }
 }

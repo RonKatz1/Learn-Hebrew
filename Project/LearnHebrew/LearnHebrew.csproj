@@ -226,6 +226,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\childModel.cs" />
+    <Compile Include="Models\GameInformationModel.cs" />
     <Compile Include="Models\messageModel.cs" />
     <Compile Include="Models\AdultModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -291,6 +292,11 @@
     <Content Include="Pictures\Alphabet\vaav.jpeg" />
     <Content Include="Pictures\Alphabet\yuud.jpeg" />
     <Content Include="Pictures\Alphabet\zaain.jpeg" />
+    <Content Include="Pictures\Alphabet\א1.png" />
+    <Content Include="Pictures\Alphabet\א2.png" />
+    <Content Include="Pictures\Alphabet\א3.png" />
+    <Content Include="Pictures\Alphabet\א4.png" />
+    <Content Include="Pictures\Alphabet\א5.png" />
     <Content Include="Pictures\class.jpeg" />
     <Content Include="Pictures\Game_12\chef_kitchen.PNG" />
     <Content Include="Pictures\Game_12\heart.png" />
@@ -337,11 +343,8 @@
     <Content Include="Pictures\Game_19\kuuf1.png" />
     <Content Include="Pictures\Game_19\kuuf2.png" />
     <Content Include="Pictures\Game_19\kuuf3.png" />
-    <Content Include="Pictures\Game_1\closet.jpeg" />
-    <Content Include="Pictures\Game_1\ear.jpeg" />
     <Content Include="Pictures\Game_1\hidden.jpeg" />
-    <Content Include="Pictures\Game_1\rock.jpeg" />
-    <Content Include="Pictures\Game_1\watermallon.jpeg" />
+    <Content Include="Pictures\Game_1\mystery.jpeg" />
     <Content Include="Pictures\Game_20\bird1.png" />
     <Content Include="Pictures\Game_20\bird2.png" />
     <Content Include="Pictures\Game_20\cloud.png" />
@@ -403,6 +406,18 @@
     <Content Include="Pictures\Game_9\taat2.png" />
     <Content Include="Pictures\Game_9\taat3.png" />
     <Content Include="Pictures\Game_9\taat4.png" />
+    <Content Include="Pictures\Game_preview\game_12_preview.png" />
+    <Content Include="Pictures\Game_preview\game_13_preview.png" />
+    <Content Include="Pictures\Game_preview\game_15_preview.png" />
+    <Content Include="Pictures\Game_preview\game_16_preview.png" />
+    <Content Include="Pictures\Game_preview\game_17_preview.png" />
+    <Content Include="Pictures\Game_preview\game_19_preview.png" />
+    <Content Include="Pictures\Game_preview\game_1_preview.png" />
+    <Content Include="Pictures\Game_preview\game_20_preview.png" />
+    <Content Include="Pictures\Game_preview\game_21_preview.png" />
+    <Content Include="Pictures\Game_preview\game_22_preview.png" />
+    <Content Include="Pictures\Game_preview\game_5_preview.png" />
+    <Content Include="Pictures\Game_preview\game_9_preview.png" />
     <Content Include="Pictures\questionMark.jpeg" />
     <Content Include="Pictures\teacher.jpeg" />
     <Content Include="Scripts\bootstrap.js" />

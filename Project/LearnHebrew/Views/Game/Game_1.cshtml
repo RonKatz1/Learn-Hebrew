@@ -1,62 +1,281 @@
-﻿@{
-    Layout = null;
+﻿@model LearnHebrew.Models.GameInformationModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <style>
-    img {
-        max-width: 50%;
-        max-height: 80%;
-        border: 1px solid #ddd;
+    section {
+        position: relative;
+        text-align:center;
+        margin: auto;
+    } 
+
+    #endGameScreen {
+        height: 50%;
     }
 
-     img:hover {
-         box-shadow: 0 0 2px 1px rgba(0,140,186,0.5);
-     }
-     td {
-            width:50%;
-            height:80%;
-     }
+    .hidescreen {
+        display: none;
+    }
 
+    .heart {
+        opacity: 0.7;
+        width: 25px;
+    }
+
+    #heartDiv {
+        position: absolute;
+        right: 0;
+        top: 0;
+        float: right;
+        text-align: right;
+        height: 50%;
+    }
+
+    #scoreId {
+        margin-left: 15px;
+        font-size: x-large;
+        color: gold;
+    }
+
+    .mysteryImg {
+        width: 300px;
+        height: 200px;
+    }
+
+    .center {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .flip-box {
+        background-color: transparent;
+        width: 300px;
+        height: 200px;
+        border: 1px solid #f1f1f1;
+        perspective: 1000px; /* Remove this if you don't want the 3D effect */
+    }
+
+    /* This container is needed to position the front and back side */
+    .flip-box-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+    }
+
+    /* Do an horizontal flip when you move the mouse over the flip box container */
+    .flip-box:hover .flip-box-inner {
+        transform: rotateY(180deg);
+    }
+
+    /* Position the front and back side */
+    .flip-box-front, .flip-box-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden; /* Safari */
+        backface-visibility: hidden;
+    }
+
+    
+
+    /* Style the back side */
+    .flip-box-back {
+        
+        transform: rotateY(180deg);
+    }
 </style>
 <script>
-    
-    function Start() {
-    // a get call will give the approved content here to a global var 
+    let contentArray = [];
+
+    let startFlipTimerInterval; //interval for spawning enemies until game is over
+    let timeUntilFirstFlip = 3;
+
+    let lives = 10; //number of times a user can choose wrong in the game
+    let gameStarted = false; //indicator for game started for not letting pressed enter
+    $(document).ready(function () {
+
+
+
+
+        $(window).resize(function () {
+
+        })
+
+
+    })
+    function StartGame() {
+        FillContenArray();
+        // a get call will give the approved content here to a global var
+        PutImages();
+        alert(@Model.Contents.Count);
 
     }
+    function FillContenArray_old() {
+        contentArray.length = 0;
+        let numberOfPairs = 4;
+
+        //let list = Html.Raw(serializer.serialize(Model.Contents));
+        // var list2 = Json.parse(list);
+        for (let i = 1; i <= numberOfPairs; i++) {
+            //let randomNumber = Math.floor((Math.random() * (@Model.Contents.Count - 1)) + 0);
+            @{
+                var rnd = new Random();
+                var num = rnd.Next(0, Model.Contents.Count() - 1);
+                }
+            @*contentArray.push(@Model.Contents[@:randomNumber].Data.PhotoFile);*@
+            @*contentArray.push(@Model.Contents[@:randomNumber]);*@
+            @*contentArray.push('@Model.Contents[1].Data.PhotoFile.Code');*@
+            contentArray.push("@(BLL.Services.ContentServices.GetFilePath(Model.Contents[num].Data.PhotoFile))");
+            //alert(list2[0].d);
+
+        }
+    }
+    @{ 
+        var indexs = new List<int>();
+        for (int i = 0; i < 4; i++)
+        {
+            var rand = new Random();
+            var randNum = rnd.Next(0, Model.Contents.Count() - 1);
+            indexs.Add(randNum);
+
+        }
+        var index = 0;
+        }
+
+        function FillContenArray() {
+                @*contentArray.push("@(BLL.Services.ContentServices.GetFilePath(Model.Contents[indexs[0]].Data.PhotoFile))");
+                contentArray.push("@(BLL.Services.ContentServices.GetFilePath(Model.Contents[indexs[1]].Data.PhotoFile))");
+                contentArray.push("@(BLL.Services.ContentServices.GetFilePath(Model.Contents[indexs[2]].Data.PhotoFile))");
+                contentArray.push("@(BLL.Services.ContentServices.GetFilePath(Model.Contents[indexs[3]].Data.PhotoFile))");*@
+        }
+        function PutImages() {
+            let imageDiv = $(".flip-box-back");
+
+            for (var i = 0; i < imageDiv.length; i++) {
+                let imge = $("<img>");
+                imge.attr("src", contentArray[i]);
+                imageDiv[i].append(imge);
+            }
+
+        }
 </script>
-<h1> משחק מספר 1 </h1>
-<h2>כאן יופיע הסבר על המשחק ואולי כפתור לשמיעת ההסבר</h2>
-<input type="button" value="התחלה" onclick="Start()" />
-<div id="mainDiv">
-    <table>
-        <tr>
-            <td id="trd1">
-                <img src="~/Pictures/Game_1/hidden.jpeg" />
-            </td>
-            <td id="trd2">
-                <img src="~/Pictures/Game_1/hidden.jpeg" />
-            </td>
-            <td id="trd3">
-                <img src="~/Pictures/Game_1/hidden.jpeg" />
-            </td>
-            <td id="trd4">
-                <img src="~/Pictures/Game_1/hidden.jpeg" />
-            </td>
-        </tr>
-        <tr>
-            <td id="trd5">
-                <img src="~/Pictures/Game_1/hidden.jpeg" />
-            </td>
-            <td id="trd6">
-                <img src="~/Pictures/Game_1/hidden.jpeg" />
-            </td>
-            <td id="trd7">
-                <img src="~/Pictures/Game_1/hidden.jpeg" />
-            </td>
-            <td id="trd8">
-                <img src="~/Pictures/Game_1/hidden.jpeg" />
-            </td>
-        </tr>
-    </table>
-</div>
+<body>
+    <div style="text-align:center">
+        <h1 style="color:gold"> משחק הזיכרון </h1>
+        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>      
+        <div><i id="explanationId" style="color:gold" class="fa fa-volume-up"></i></div>
+        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" />
+    </div>
+    <section id="sectionId" class="w3-display-container	">
+        <div id="heartDiv"></div>
+        <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
+        <table class="center">
+            <tr>
+                <td>
+                    <div class="flip-box">
+                        <div class="flip-box-inner">
+                            <div class="flip-box-front">
+                                <img class="mysteryImg" src="~/Pictures/Game_1/mystery.jpeg" />
+                            </div>
+                            <div id="flip-box-back1" class="flip-box-back">  
+                                
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="flip-box">
+                        <div class="flip-box-inner">
+                            <div class="flip-box-front">
+                                <img class="mysteryImg" src="~/Pictures/Game_1/mystery.jpeg" />
+                            </div>
+                            <div id="flip-box-back2" class="flip-box-back">
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="flip-box">
+                        <div class="flip-box-inner">
+                            <div class="flip-box-front">
+                                <img class="mysteryImg" src="~/Pictures/Game_1/mystery.jpeg" />
+                            </div>
+                            <div id="flip-box-back3" class="flip-box-back">
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="flip-box">
+                        <div class="flip-box-inner">
+                            <div class="flip-box-front">
+                                <img class="mysteryImg" src="~/Pictures/Game_1/mystery.jpeg" />
+                            </div>
+                            <div id="flip-box-back4" class="flip-box-back">
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="flip-box">
+                        <div class="flip-box-inner">
+                            <div class="flip-box-front">
+                                <img class="mysteryImg" src="~/Pictures/Game_1/mystery.jpeg" />
+                            </div>
+                            <div id="flip-box-back5" class="flip-box-back">
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="flip-box">
+                        <div class="flip-box-inner">
+                            <div class="flip-box-front">
+                                <img class="mysteryImg" src="~/Pictures/Game_1/mystery.jpeg" />
+                            </div>
+                            <div id="flip-box-back6" class="flip-box-back">
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="flip-box">
+                        <div class="flip-box-inner">
+                            <div class="flip-box-front">
+                                <img class="mysteryImg" src="~/Pictures/Game_1/mystery.jpeg" />
+                            </div>
+                            <div id="flip-box-back7" class="flip-box-back">
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="flip-box">
+                        <div class="flip-box-inner">
+                            <div class="flip-box-front">
+                                <img class="mysteryImg" src="~/Pictures/Game_1/mystery.jpeg" />
+                            </div>
+                            <div id="flip-box-back8" class="flip-box-back">
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </section>
+    <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
+        <h3>ניקוד: <span id="finalScore"></span></h3>
+        
+        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+
+    </div>
+</body>
