@@ -248,6 +248,9 @@
     <Content Include="Audio\Game_21\slash.mp3" />
     <Content Include="Audio\Game_22\blast.mp3" />
     <Content Include="Audio\Game_22\jump.mp3" />
+    <Content Include="Audio\Game_2\Game_2_instructions.mp3" />
+    <Content Include="Audio\Game_2\snakeError.mp3" />
+    <Content Include="Audio\Game_2\snakeGrab.mp3" />
     <Content Include="Audio\Game_5\explosion.mp3" />
     <Content Include="Audio\Game_5\game_explanation.mp3" />
     <Content Include="Audio\Game_5\SFX_Explosion_02.mp3" />
@@ -297,6 +300,11 @@
     <Content Include="Pictures\Alphabet\א3.png" />
     <Content Include="Pictures\Alphabet\א4.png" />
     <Content Include="Pictures\Alphabet\א5.png" />
+    <Content Include="Pictures\Alphabet\ב1.png" />
+    <Content Include="Pictures\Alphabet\ב2.png" />
+    <Content Include="Pictures\Alphabet\ב3.png" />
+    <Content Include="Pictures\Alphabet\ב4.png" />
+    <Content Include="Pictures\Alphabet\ב5.png" />
     <Content Include="Pictures\class.jpeg" />
     <Content Include="Pictures\Game_12\chef_kitchen.PNG" />
     <Content Include="Pictures\Game_12\heart.png" />
@@ -375,6 +383,7 @@
     <Content Include="Pictures\Game_22\taaf2.png" />
     <Content Include="Pictures\Game_22\taaf3.png" />
     <Content Include="Pictures\Game_22\taat1.png" />
+    <Content Include="Pictures\Game_2\heart.png" />
     <Content Include="Pictures\Game_5\haay1.png" />
     <Content Include="Pictures\Game_5\haay2.png" />
     <Content Include="Pictures\Game_5\haay3.png" />
@@ -416,6 +425,7 @@
     <Content Include="Pictures\Game_preview\game_20_preview.png" />
     <Content Include="Pictures\Game_preview\game_21_preview.png" />
     <Content Include="Pictures\Game_preview\game_22_preview.png" />
+    <Content Include="Pictures\Game_preview\game_2_preview.png" />
     <Content Include="Pictures\Game_preview\game_5_preview.png" />
     <Content Include="Pictures\Game_preview\game_9_preview.png" />
     <Content Include="Pictures\questionMark.jpeg" />
@@ -486,6 +496,7 @@
     <Content Include="Views\Game\Game_9.cshtml" />
     <Content Include="Views\Game\Game_7_Hangman.cshtml" />
     <Content Include="Views\Adult\ChildProgress.cshtml" />
+    <Content Include="Views\Game\Game_2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
