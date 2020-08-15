@@ -1,0 +1,26 @@
+﻿@model LearnHebrew.Models.ChildProgressModel
+
+
+@if (Model.ChildProgresses != null && Model.ChildProgresses.Count() > 0)
+{
+    <table>
+        <tr>
+            <th>אות</th>
+            <th>תאריך למידה</th>
+            <th>ניקוד</th>
+        </tr>
+
+        @foreach (var p in Model.ChildProgresses)
+        {
+            <tr>
+                <td>@p.Data.Letter</td>
+                <td>@p.Data.Date.ToShortDateString()</td>
+                <td>points</td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <h3>הילד עדיין לא התחיל ללמוד</h3>
+}

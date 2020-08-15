@@ -226,6 +226,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\childModel.cs" />
+    <Compile Include="Models\ChildProgressModel.cs" />
     <Compile Include="Models\GameInformationModel.cs" />
     <Compile Include="Models\messageModel.cs" />
     <Compile Include="Models\AdultModel.cs" />
@@ -497,6 +498,7 @@
     <Content Include="Views\Game\Game_7_Hangman.cshtml" />
     <Content Include="Views\Adult\ChildProgress.cshtml" />
     <Content Include="Views\Game\Game_2.cshtml" />
+    <Content Include="Views\Adult\_ChildProgressInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

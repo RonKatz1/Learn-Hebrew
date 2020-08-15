@@ -4,13 +4,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<script>
+    function ShowChildProgress(ChildID) {
+        $.post("@Url.Action("ShowChildProgress", "Adult")" + "?ChildID=" + ChildID,  function (data) {
+            $("#ChildProgressReportContainer").html("");
+            $("#ChildProgressReportContainer").html(data);
+        });
+    }
+</script>
+
 <h2>בחר ילד לצפייה בהתקדמות שלו</h2>
 
 @if(Model.AdultChilds != null && Model.AdultChilds.Count() > 0)
 {
     foreach(var child in Model.AdultChilds)
     {
-        <h6>@child.Name</h6>
+        <h6 onclick="ShowChildProgress(@child.ChildID)">@child.Name</h6>
+        @*<a href="@Url.Action("ShowChildProgress", "Adult", new { ChildID = child.ChildID})">@child.Name</a>*@
     }
 }
 else
@@ -18,3 +28,6 @@ else
     <h6>לא קיימים ילדים, אנא הוסף תחילה ילדים לרשימה שלך מהמסך הראשי</h6>
 }
 
+<div id="ChildProgressReportContainer">
+
+</div>
