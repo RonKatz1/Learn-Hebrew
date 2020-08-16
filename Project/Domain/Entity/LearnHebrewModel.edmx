@@ -24,6 +24,14 @@
           <Property Name="Data" Type="nvarchar(max)" />
           <Property Name="ChildID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
+        <EntityType Name="ChildProgress">
+          <Key>
+            <PropertyRef Name="ProgressID" />
+          </Key>
+          <Property Name="ProgressID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ChildID" Type="int" Nullable="false" />
+          <Property Name="Data" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="ChildToAdult">
           <Key>
             <PropertyRef Name="ChildToAdultID" />
@@ -76,6 +84,7 @@
         <EntityContainer Name="ModelStoreContainer">
           <EntitySet Name="Adult" EntityType="Self.Adult" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Child" EntityType="Self.Child" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChildProgress" EntityType="Self.ChildProgress" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChildToAdult" EntityType="Self.ChildToAdult" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChildToGame" EntityType="Self.ChildToGame" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChildToUnseen" EntityType="Self.ChildToUnseen" Schema="dbo" store:Type="Tables" />
@@ -155,6 +164,7 @@
           <EntitySet Name="Games" EntityType="Self.Game" />
           <EntitySet Name="Unseens" EntityType="Self.Unseen" />
           <EntitySet Name="Contents" EntityType="Model.Content" />
+          <EntitySet Name="ChildProgresses" EntityType="Model.ChildProgress" />
         </EntityContainer>
         <EntityType Name="Content">
           <Key>
@@ -163,6 +173,14 @@
           <Property Name="ContentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="AdultID" Type="Int32" Nullable="false" />
           <Property Name="Word" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ChildProgress">
+          <Key>
+            <PropertyRef Name="ProgressID" />
+          </Key>
+          <Property Name="ProgressID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ChildID" Type="Int32" Nullable="false" />
           <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
@@ -244,6 +262,15 @@
                 <ScalarProperty Name="Word" ColumnName="Word" />
                 <ScalarProperty Name="AdultID" ColumnName="AdultID" />
                 <ScalarProperty Name="ContentID" ColumnName="ContentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChildProgresses">
+            <EntityTypeMapping TypeName="Model.ChildProgress">
+              <MappingFragment StoreEntitySet="ChildProgress">
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="ChildID" ColumnName="ChildID" />
+                <ScalarProperty Name="ProgressID" ColumnName="ProgressID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

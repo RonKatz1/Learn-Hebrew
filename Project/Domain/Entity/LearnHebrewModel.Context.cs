@@ -33,5 +33,6 @@ namespace Domain.Entity
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<Unseen> Unseens { get; set; }
         public virtual DbSet<Content> Contents { get; set; }
+        public virtual DbSet<ChildProgress> ChildProgresses { get; set; }
     }
 }

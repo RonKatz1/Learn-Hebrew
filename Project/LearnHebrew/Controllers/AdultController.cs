@@ -12,8 +12,8 @@ namespace LearnHebrew.Controllers
         //private string ContentPhotoPath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/Photos";
         //private string ContentVoicePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/Voice";
 
-        //private string ContentFilePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/LearnHebrew/ContentFiles";
-        private string ContentFilePath = "C:/Users/ron katz/Documents/GitHub/Learn-Hebrew/Project/LearnHebrew/ContentFiles";
+        private string ContentFilePath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/LearnHebrew/ContentFiles";
+        //private string ContentFilePath = "C:/Users/ron katz/Documents/GitHub/Learn-Hebrew/Project/LearnHebrew/ContentFiles";
 
         public ActionResult Index()
         {
@@ -306,6 +306,24 @@ namespace LearnHebrew.Controllers
             m.AdultChilds = adultChilds;
 
             return View("~/Views/Adult/ChildProgress.cshtml", m);
+        }
+
+        public ActionResult ShowChildProgress(int ChildID)
+        {
+            Models.ChildProgressModel m = new Models.ChildProgressModel();
+
+            try
+            {
+                var progresses = BLL.Services.ChildProgressServices.LoadAllChildProgressesByChildID(ChildID);
+
+                m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses : new List<BLL.LearnHebrewEntities.ChildProgress>();
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            return View("~/Views/Adult/_ChildProgressInfo.cshtml", m);
         }
     }
 }
