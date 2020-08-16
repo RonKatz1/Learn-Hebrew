@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LearnHebrew.Models.GameInformationModel
+@{
     Layout = null;
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -14,12 +15,14 @@
         margin: auto;
         background-image: url('../../Pictures/Game_5/space.jpg');
     }
+
     body {
         background-image: url('../../Pictures/Game_5/planet.jpg');
-        background-position:center;
-        background-repeat:no-repeat;
-        background-size:cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
+
     #user {
         width: 10%;
         height: 12%;
@@ -35,9 +38,6 @@
     }
 
     #endGameScreen {
-        
-       
-        
     }
 
 
@@ -50,6 +50,7 @@
     .hidescreen {
         display: none;
     }
+
     #heartId {
         opacity: 0.7;
         width: 8%;
@@ -58,14 +59,15 @@
         left: 90%;
         position: absolute;
     }
+
     #lifeId {
         top: 0%;
         left: 93%;
         position: absolute;
         font-size: medium;
-        color:gold;
-       
+        color: gold;
     }
+
     #scoreId {
         top: 0%;
         left: 7%;
@@ -73,45 +75,85 @@
         font-size: x-large;
         color: gold;
     }
+
     .buttonClass {
-        
-        margin:0 auto;
-        
-        border-radius:12px;
-        color:gold;
-        font-size:large;
-        background-color:hotpink
-       
+        margin: 0 auto;
+        border-radius: 12px;
+        color: gold;
+        font-size: large;
+        background-color: hotpink;
+        cursor: pointer;
     }
+
     .pCalss {
         position: absolute;
         left: 48%;
         color: gold;
         font-size: xx-large;
-        padding-left:20px;
+        padding-left: 20px;
     }
+
     .audios {
         display: none;
     }
-    #explanationId{
-        cursor:pointer;
+
+    #explanationId {
+        cursor: pointer;
+    }
+    .gameOverBtn {
+        margin-top: 10px;
     }
 </style>
 <script>
-    var move = 25;//setting moving distance per move for user
-    var $User;//placeholder  for the user in every new game
-    var shotTime = 5000;//5 seconds for shot to clear out
-    var alienTime = 10000;
-    var alienSpawnTime = 1000;//time of spawning enemies
-    var gameoverIndicator;//interval animation of spawning enemies
-    var validLetters;
-    var invalidLetters;
-    
-    $(document).ready(function () {       
-        validLetters = ["/Pictures/Game_5/haay1.png", "/Pictures/Game_5/haay2.png", "/Pictures/Game_5/haay3.png"];
-        invalidLetters = ["/Pictures/Game_5/lamad1.png", "/Pictures/Game_5/kuuf1.png", "/Pictures/Game_5/raaish1.png"];
-        LoadSoundAndPicture();
-        var obj = document.createElement("audio");
+    let move = 25;//setting moving distance per move for user
+    let $User;//placeholder  for the user in every new game
+    let shotTime = 5000;//5 seconds for shot to clear out
+    let alienTime = 10000;
+    let alienSpawnTime = 1000;//time of spawning enemies
+    let gameoverIndicator;//interval animation of spawning enemies
+    let validLetters=[];
+    let invalidLetters=[];
+    let lives = 3;
+    $(document).ready(function () {
+        FillLetters();
+        //validLetters = ["/Pictures/Game_5/haay1.png", "/Pictures/Game_5/haay2.png", "/Pictures/Game_5/haay3.png"];
+        //invalidLetters = ["/Pictures/Game_5/lamad1.png", "/Pictures/Game_5/kuuf1.png", "/Pictures/Game_5/raaish1.png"];
+        LoadGameInstruction();
+        windowResize();
+
+        
+    })
+    function FillLetters() {
+        $.ajax({
+            url: '/Child/GetGameLetters' + '/' + '?Letter=@Model.Letter',           
+            type: 'GET',
+            dataType: 'json',
+            error: function (e, ts, et) {
+                alert("error at GetGameLetters" + ts);
+            },
+            success: function (data) {              
+                for (let i = 0; i < 5; i++) {
+                    validLetters.push("/Pictures/Alphabet/" + data.ValidLetterName[i]);                
+                }
+                for (let j = 0; j < data.InValidLetterName.length; j++) {
+                    invalidLetters.push("/Pictures/Alphabet/" + data.InValidLetterName[j]); 
+                }
+            }
+        });
+    }
+    function windowResize() {
+        $(window).resize(function () {
+            $("#user").css("left", Math.floor(parseInt($("#sectionId").css("width")) / 2) + "px");
+            $(".enemy").each(function () {
+                let $enemy = $(this);
+                $enemy.stop();
+                $enemy.remove();
+            });
+
+        })
+    }
+    function LoadGameInstruction() {
+        let obj = document.createElement("audio");
         obj.src = "/Audio/Game_5/game_explanation.mp3";
         obj.volume = 0.3;
         obj.autoPlay = false;
@@ -120,19 +162,8 @@
 
         $("#explanationId").click(function () {
             obj.play();
-            // obj.pause();
         });
-
-        $(window).resize(function () {
-            $("#user").css("left", Math.floor(parseInt($("#sectionId").css("width")) / 2) + "px");
-            $(".enemy").each(function () {
-                let $enemy = $(this);
-                $enemy.stop();
-                $enemy.remove();               
-            });
-
-        })
-    })
+    }
     function LoadSoundAndPicture() {
         new Audio("/Audio/Game_5/shot.mp3").load();
         new Audio("/Audio/Game_5/SFX_Explosion_02.mp3").load();
@@ -147,7 +178,7 @@
     function StartGame() {
         $User = $("#user");//linking placeholder to user in current game
         $("#buttonId").addClass("hidescreen");
-
+        LoadSoundAndPicture();
         $("body").keydown(userKey_Options);
         gameoverIndicator = setInterval(createEnemy, alienSpawnTime);
     }
@@ -171,21 +202,20 @@
         MoveUser(move);
     }
     function MoveUser(axisX) {
-        var currentPosition = parseInt($User.css("left"));//getting current position of user
-        var newPosition = currentPosition + axisX;//calculating new position of user
-        //alert(parseInt($("#sectionId").css("width")));
+        let currentPosition = parseInt($User.css("left"));//getting current position of user
+        let newPosition = currentPosition + axisX;//calculating new position of user
         if (newPosition >= 0 && newPosition <= (parseInt($("#sectionId").css("width")) - parseInt($User.css("width"))))//need to be changed ifsection limits user changes game
             $User.css("left", newPosition + "px");//moving user to new position
 
     }
     function shooting() {
         CreateShotSound();
-        var $shot = $("<img>");
+        let $shot = $("<img>");
         $shot.attr("src", "/Pictures/Game_5/shot.png");
 
         $shot.addClass("shot");
-        var shotStartingPoint_Yaxis = parseInt($User.css("top")) - parseInt($shot.css("width"));//calculating height of shot
-        var shotStartingPoint_Xaxis = parseInt($User.css("left")) + (parseInt($User.css("width")) / 4);
+        let shotStartingPoint_Yaxis = parseInt($User.css("top")) - parseInt($shot.css("width"));//calculating height of shot
+        let shotStartingPoint_Xaxis = parseInt($User.css("left")) + (parseInt($User.css("width")) / 4);
         $shot.css("top", shotStartingPoint_Yaxis + "px");
         $shot.css("left", shotStartingPoint_Xaxis + "px");
 
@@ -209,22 +239,22 @@
     }
     function createEnemy() {
 
-        var $enemy = $("<img>");
-        var enemyType = Math.floor((Math.random() * 10) + 1);
+        let $enemy = $("<img>");
+        let enemyType = Math.floor((Math.random() * 10) + 1);
 
         if (enemyType >= 1 && enemyType <= 7) {
-            var randomNumber = Math.floor((Math.random() * validLetters.length) +0 );
+            let randomNumber = Math.floor((Math.random() * validLetters.length) +0 );
             $enemy.attr("src", validLetters[randomNumber]);
 
         }
 
         else {
-            var randomNumber = Math.floor((Math.random() * invalidLetters.length) + 0);
+            let randomNumber = Math.floor((Math.random() * invalidLetters.length) + 0);
             $enemy.attr("src", invalidLetters[randomNumber]);
 
         }
         $enemy.addClass("enemy");
-        var axisX = randomEnemy_Place();
+        let axisX = randomEnemy_Place();
         $enemy.css("top", 0 + "px");
         $enemy.css("left", axisX + "px");
 
@@ -244,16 +274,14 @@
 
     }
     function randomEnemy_Place() {
-        var limitLeft = (parseInt($User.css("width")) / 4);//floot
-        var limitRight = parseInt($("section").css("width")) - (parseInt($User.css("width")));
+        let limitLeft = (parseInt($User.css("width")) / 4);//floot
+        let limitRight = parseInt($("section").css("width")) - (parseInt($User.css("width")));
         return Math.floor((Math.random() * limitRight) + limitLeft);
     }
     function collisionCheck() {
-        var $enemy = $(this);//getting the current enemy
-
-
+        let $enemy = $(this);//getting the current enemy
         $(".shot").each(function () {
-            var $shot = $(this);
+            let $shot = $(this);
 
             if (checkIntersection($shot, $enemy)) {
 
@@ -284,11 +312,9 @@
         return ((xLeft >= yLeft && xLeft <= yRight || yLeft >= xLeft && yLeft <= xRight) && (xTop <= yBottom && xTop >= yTop || yTop <= xBottom && yTop >= xTop));
     }
     function enemyDestroyed($enemy) {
-        var indicator = false;
-        //var sound = $("#yes-audio")[0];
-        //sound.play();
+        let indicator = false;      
         CreateExplotionSound();
-        for (var i = 0; i < validLetters.length; i++) {
+        for (let i = 0; i < validLetters.length; i++) {
             if ($enemy.attr('src') == validLetters[i]) {
                 $("#scoreId").text(parseInt($("#scoreId").text()) + 1);
                 indicator = true;
@@ -304,32 +330,22 @@
         if ($("#lifeId").text() == '0') {
             GameOver();
         }
-        //if (jQuery.inArray(($enemy.attr('src'), validLetters) != -1)) {
-        //    $("#score").text(parseInt($("#score").text()) + 1);
-
-        //}
-        //else {
-        //    $("#life").text(parseInt($("#life").text()) - 1);
-        //    if ($("#life").text() == '0')
-        //        GameOver();
-        //}
     }
     function CreateExplotionSound() {
         let $sound = $("<audio>");
         $sound.attr("src", "/Audio/Game_5/SFX_Explosion_02.mp3");
-        
+
         $sound[0].play();
-        
+
     }
+    //This function creates a "shot" sound
     function CreateShotSound() {
         let $sound = $("<audio>");
         $sound.attr("src", "/Audio/Game_5/shot.mp3");
-
         $sound[0].play();
     }
     function GameOver() {
         clearInterval(gameoverIndicator);
-        //do popoup here to let the user go back to alphabet
         $("#sectionId").addClass("hidescreen");
         $("#tableId").addClass("hidescreen");
         $("#buttonId").addClass("hidescreen");
@@ -341,22 +357,7 @@
     function GoToAlphabet() {
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
     }
-    //function GameExplanation() {
-    //    //<audio id="soundEx"  controls="controls">
-    //    //    <source src="~/Audio/Game_5/game_explanation.mp3" type="audio/mpeg" />
-    //    //</audio>
-    //    var obj = $("<audio>");
-    //    obj.css("src", "/Audio/Game_5/game_explanation.mp3");
-    //    //a.css("type", "audio/mpeg");
-    //    obj.attr("id", "soundEx");
-    //    obj.volume = 0.1;
-    //    obj.autoPlay = false;
-    //    obj.preLoad = true;
-    //    obj.controls = true;
-    //    obj.play();
-    //    //var sound = $("#soundEx")[0];
-    //    //sound.play();
-    //}
+   
 </script>
 
 <body>
@@ -373,16 +374,12 @@
         <img id="user" src="~/Pictures/Game_5/ship.png" />
     </section>
     <div id="instructionId" style="text-align:center;padding-top:5px">
-        <h2 style="color:gold"> אות משחק זה היא: ה</h2>
+        <h2 style="color:gold"><b>  אות משחק זה היא @Model.Letter </b></h2>
         <input id="buttonId" class="buttonClass" type="button" value="התחלה" onclick="StartGame()" />
-
+        <input id="buttonRet" class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
-
-    <br />
-
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
         <h1 style="color:gold"><b>ניקוד: </b><span id="finalScore"><b></b></span></h1>
-        <br />
         <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
 
     </div>
@@ -391,6 +388,6 @@
         <source src="/Audio/Game_5/explosion.mp3" type="audio/mpeg" />
     </audio>
 
-    
+
 </body>
 

@@ -1,4 +1,6 @@
-﻿@{
+﻿@model LearnHebrew.Models.GameInformationModel
+
+@{
     Layout = null;
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -12,17 +14,20 @@
         background-repeat: no-repeat;
         background-size: cover;
     }
+
     section {
         position: relative;
-        margin: auto;      
+        margin: auto;
         width: 60%;
         height: 35%;
-        background-color:whitesmoke;
+        background-color: whitesmoke;
     }
+
     .heart {
         opacity: 0.7;
         width: 25px;
     }
+
     #heartDiv {
         position: absolute;
         right: 0;
@@ -31,69 +36,108 @@
         text-align: right;
         z-index: 3;
     }
+
     #scoreId {
         margin-left: 15px;
         font-size: x-large;
         color: gold;
     }
+
     .hidescreen {
         display: none;
     }
+
     #manId {
         position: absolute;
         width: 8%;
         height: 20%;
     }
+
     .shot {
         width: 5%;
         height: 8%;
         position: absolute;
     }
+
     .wall {
         position: absolute;
         width: 8%;
         height: 25%;
         z-index: 1;
     }
+
     .letter {
         position: absolute;
         width: 8%;
         height: 20%;
     }
+    .myButton {
+        box-shadow: inset 0px 1px 0px 0px #f9eca0;
+        background: linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
+        background-color: #f0c911;
+        border-radius: 6px;
+        border: 1px solid #e65f44;
+        cursor: pointer;
+        color: #c92200;
+        font-family: Arial;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 1px 6px;
+        text-decoration: none;
+        text-shadow: 0px 1px 0px #ded17c;
+    }
+
+        .myButton:hover {
+            background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
+            background-color: #f2ab1e;
+        }
+
+    #instructionId {
+        cursor: pointer;
+        color: goldenrod;
+        margin-bottom: 5px;
+    }
+
+    #gameOverh {
+        color: gold;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .gameOverBtn {
+        margin-top: 10px;
+    }
 </style>
 <script>
-    let validLetters;//array of valid src of letter images per the user choosing before picking this game  
-    let invalidLetters;//array of invalid src of letters
-    let transformedBol = false;//boolean var for knowing if user is currently "transformed"
-    
-    let gameStarted = false; //indicator for game started for not letting pressed enter
-    let runningManIndicator;//interval for changing man picture
-    let runningSpeed = 400;//pace of changing man picture
-    let $man;//var for "grabbing" the user image
-    let obstacleIndicator;//interval of obstacle spawning
-    let obstacleSpawn = 1200;//time it takes to create a new obstacle in mili secomds
-    let obstacleRunwayTimer = 2000;//time it takes to an obstacle to move and disappear
-    let lives = 9;//the number of times a user can mess up before he losses the game
-
+    let validLetters = [];// array of valid src of letter images per the user choosing before picking this game
+    let invalidLetters = [];// array of invalid src of letters
+    let transformedBol = false;// boolean var for knowing if user is currently "transformed"
+    let gameStarted = false; // indicator for game started for not letting pressed enter
+    let runningManIndicator;// interval for changing man picture
+    let runningSpeed = 400;// pace of changing man picture
+    let $man;// var for "grabbing" the user image
+    let obstacleIndicator;// interval of obstacle spawning
+    let obstacleSpawn = 1200;// time it takes to create a new obstacle in mili secomds
+    let obstacleRunwayTimer = 2000;// time it takes to an obstacle to move and disappear
+    let lives = 9;// the number of times a user can mess up before he losses the game
     let shotSpeed = 2000;
     let jumpSpeed = 500;
 
-
-
     $(document).ready(function () {
-        validLetters = ["/Pictures/Game_22/taaf1.png", "/Pictures/Game_22/taaf2.png", "/Pictures/Game_22/taaf3.png"];
-        invalidLetters = ["/Pictures/Game_22/taat1.png", "/Pictures/Game_22/shin1.png"];
+        //LoadGameInstruction();
+        FillLetters();
+        //validLetters = ["/Pictures/Game_22/taaf1.png", "/Pictures/Game_22/taaf2.png", "/Pictures/Game_22/taaf3.png"];
+        //invalidLetters = ["/Pictures/Game_22/taat1.png", "/Pictures/Game_22/shin1.png"];
         runningManIndicator = setInterval(ChangeMan, runningSpeed);
-
         LoadSoundAndPicture();
-
+        windowResize();
         $man = $("#manId");
         $man.css("bottom", 0);
         $man.css("left", Math.floor(parseInt($man.css("width"))/2));
-        $("body").keyup(userKey_Options);
-
+        $("body").keyup(userKey_Options);        
+    })
+    function windowResize() {
         $(window).resize(function () {
-            
             $(".wall").each(function () {
                 let $wall = $(this);
                 $wall.stop();
@@ -109,15 +153,28 @@
                 $letter.stop();
                 $letter.remove();
             });
-
         })
-
-        
-    })
+    }
+    //This function gets the path of the selected letter images
+    function FillLetters() {
+        $.ajax({
+            url: '/Child/GetGameLetters' + '/' + '?Letter=@Model.Letter',
+            type: 'GET',
+            dataType: 'json',
+            error: function (e, ts, et) {
+                alert("error at GetGameLetters" + ts);
+            },
+            success: function (data) {
+                for (let i = 0; i < 5; i++)
+                    validLetters.push("/Pictures/Alphabet/" + data.ValidLetterName[i]);
+                for (let j = 0; j < data.InValidLetterName.length; j++)
+                    invalidLetters.push("/Pictures/Alphabet/" + data.InValidLetterName[j]);
+            }
+        });
+    }
     function LoadSoundAndPicture() {
         new Audio("/Audio/Game_22/blast.mp3").load();
         new Audio("/Audio/Game_22/jump.mp3").load();
-        //this may need to be changes once games become dynamic letter based
         for (let i = 0; i < validLetters.length; i++) {
             fetch(validLetters[i]);
         }
@@ -392,7 +449,7 @@
 
         return ((xLeft >= yLeft && xLeft <= yRight || yLeft >= xLeft && yLeft <= xRight) && (xTop <= yBottom && xTop >= yTop || yTop <= xBottom && yTop >= xTop));
     }
-    function Jump() { 
+    function Jump() {
         CreateSound(2);
         $('*').off('keyup');
         $man.attr("src", "/Pictures/Game_22/jump.png");
@@ -400,7 +457,7 @@
             $("body").keyup(userKey_Options);
             $man.attr("src", "/Pictures/Game_22/man1.png");
         }, jumpSpeed * 2);
-        
+
 
         $man.animate({
             top: (parseInt($("section").css("top"))) + "px"
@@ -424,10 +481,6 @@
                 //complete: deleteObject
 
             });
-        //jumpedBol = false;
-
-
-        //$("body").keyup(userKey_Options).delay(jumpSpeed*2);
     }
 
 
@@ -459,11 +512,9 @@
     <div style="text-align:center">
         <h1 style="color:gold"> האיש הרץ </h1>
         <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
-        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
-        <br />
-        <br />
-        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
-        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" />
+        <div><i id="instructionId" class="fa fa-volume-up"></i></div>
+        <input class="myButton" id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
     </div>
     <section id="sectionId" class="w3-display-container">
         <div id="heartDiv"></div>
@@ -471,14 +522,10 @@
         <img id="manId" src="~/Pictures/Game_22/man1.png" />
     </section>
     <div id="instructionDiv" style="text-align:center;padding-top:5px">
-        <h2 style="color:gold"> אות משחק זה היא: ת</h2>
-        
-
+        <h2 style="color:gold"><b>  אות משחק זה היא @Model.Letter </b></h2>
     </div>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h3>ניקוד: <span id="finalScore"></span></h3>
-        <br />
-        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
-
+        <h3 id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>
+        <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
 </body>

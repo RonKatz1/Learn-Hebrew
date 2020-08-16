@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LearnHebrew.Models.GameInformationModel
+@{
     Layout = null;
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -17,22 +18,24 @@
 
     section {
         position: relative;
-        
         width: 95%;
         height: 75%;
         margin: auto;
-        cursor:none;
+        cursor: none;
     }
+
     .fireball {
         position: absolute;
         width: 2%;
         height: 2%;
     }
+
     .enemy {
         width: 6%;
         height: 6%;
         position: absolute;
     }
+
     #endGameScreen {
         height: 50%;
     }
@@ -45,42 +48,79 @@
         width: 100px;
         height: 100px;
     }
+
     .heart {
         opacity: 0.7;
         width: 25px;
-
     }
+
     #heartDiv {
         position: absolute;
         right: 0;
         top: 0;
-        float:right;
-        text-align:right;
-        
+        float: right;
+        text-align: right;
     }
+
     #scoreId {
-        
-        margin-left:15px;
+        margin-left: 15px;
         font-size: x-large;
         color: gold;
+    }
+    .myButton {
+        box-shadow: inset 0px 1px 0px 0px #f9eca0;
+        background: linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
+        background-color: #f0c911;
+        border-radius: 6px;
+        border: 1px solid #e65f44;
+        cursor: pointer;
+        color: #c92200;
+        font-family: Arial;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 1px 6px;
+        text-decoration: none;
+        text-shadow: 0px 1px 0px #ded17c;
+    }
+
+        .myButton:hover {
+            background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
+            background-color: #f2ab1e;
+        }
+
+    #instructionId {
+        cursor: pointer;
+        color: goldenrod;
+        margin-bottom: 5px;
+    }
+
+    #gameOverh {
+        color: gold;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .gameOverBtn {
+        margin-top: 10px;
     }
 </style>
 <script>
     let currentMousePos = { x: -1, y: -1 }; //axis X and Y for last location of mouse in the game section
-    let validLetters;
-    let invalidLetters;
+    let validLetters = [];
+    let invalidLetters = [];
     let timeout;//interval for fireball creation
     let gameoverIndicator; //interval for spawning enemies until game is over
     let spawnTimer = 2000;
     let lives = 2; //number of times a user can die in the game
-    let gameStarted = false; //indicator for game started for not letting pressed enter 
+    let gameStarted = false; //indicator for game started for not letting pressed enter
     $(document).ready(function () {
-
-        validLetters = ["/Pictures/Game_21/shin1.png"];
-        invalidLetters = ["/Pictures/Game_21/taat1.png", "/Pictures/Game_21/maam3.png"];
+        //LoadGameInstruction();
+        FillLetters();
+        //validLetters = ["/Pictures/Game_21/shin1.png"];
+        //invalidLetters = ["/Pictures/Game_21/taat1.png", "/Pictures/Game_21/maam3.png"];
         LoadSoundAndPicture();
         $("body").keydown(userKey_Options);
-        
+
         $('#sectionId').mouseout(function () {
             //clearInterval(timeout);
             return false;
@@ -92,7 +132,23 @@
             CreateFireBall();
         });
     })
-
+    //This function gets the path of the selected letter images
+    function FillLetters() {
+        $.ajax({
+            url: '/Child/GetGameLetters' + '/' + '?Letter=@Model.Letter',
+            type: 'GET',
+            dataType: 'json',
+            error: function (e, ts, et) {
+                alert("error at GetGameLetters" + ts);
+            },
+            success: function (data) {
+                for (let i = 0; i < 5; i++)
+                    validLetters.push("/Pictures/Alphabet/" + data.ValidLetterName[i]);
+                for (let j = 0; j < data.InValidLetterName.length; j++)
+                    invalidLetters.push("/Pictures/Alphabet/" + data.InValidLetterName[j]);
+            }
+        });
+    }
     function userKey_Options() {
         switch (window.event.keyCode) {
             case (13):// enter was pressed
@@ -100,9 +156,9 @@
                     StartGame();
                     gameStarted = true;
                 }
-                
+
                 break;
-           
+
         }
     }
 
@@ -130,7 +186,7 @@
         $fireBall.addClass("fireball");
         //var axisX = event.pageX;
         //alert(event.pageX);
-        
+
         //alert(currentMousePos.x);
 
         $fireBall.css("top", currentMousePos.y + "px");
@@ -165,7 +221,7 @@
 
         }
         $enemy.addClass("enemy");
-        
+
         let axisY = parseInt($("section").css("height")) - parseInt($enemy.css("height"))-30;
         //var limitLeft = parseInt($("#sectionId").css("left")) + parseInt($enemy.css("width"));
         let limitLeft = 0;
@@ -190,7 +246,7 @@
 
             });
         randomXupper = Math.floor((Math.random() * limitRight) + limitLeft);
-        $enemy.delay(10).animate({           
+        $enemy.delay(10).animate({
             left: randomXupper,
             top: (parseInt($("section").css("height"))) - (parseInt($enemy.css("height"))) + "px"
 
@@ -215,15 +271,15 @@
 
                 enemyDestroyed($enemy);
 
-                
-                
+
+
 
             }
 
         });
 
     }
-    
+
     function checkIntersection($x, $y) {
         if ($x == undefined || $y == undefined) return false;
         xLeft = parseInt($x.css("left"));
@@ -235,10 +291,10 @@
         yTop = parseInt($y.css("top"));
         yRight = yLeft + parseInt($y.css("width"));
         yBottom = yTop + parseInt($y.css("height"));
-        
+
         return ((xLeft >= yLeft && xLeft <= yRight || yLeft >= xLeft && yLeft <= xRight) && (xTop <= yBottom && xTop >= yTop || yTop <= xBottom && yTop >= xTop));
     }
-    
+
     function enemyDestroyed($enemy) {
         let indicator = false;
         //var sound = $("#yes-audio")[0];
@@ -271,7 +327,7 @@
                     });
 
                 $enemy.finish();
-                
+
                 break;
             }
 
@@ -288,14 +344,14 @@
             $error.css("left", $enemy.css("left"));
             $error.css("top", $enemy.css("top"));
             $("#sectionId").append($error);
-            
+
             //$enemy.attr("src","/Pictures/Game_21/error.png")
             $error.animate({
                 opacity: 0.4
 
 
             }, {
-                    
+
                     duration: spawnTimer,
                     easing: "linear",
                     //progress: collisionCheck,
@@ -318,7 +374,7 @@
         //        GameOver();
         //}
     }
-    
+
     function RemoveHeart() {
         $("#heartDiv").empty();
         FillHearts();
@@ -364,22 +420,17 @@
     <div style="text-align:center">
         <h1 style="color:gold"> נינג'ה אותיות </h1>
         <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
-        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
-        <br />
-        <br />
-        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
-        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" />
-        <h2 style="color:gold"> אות משחק זה היא: ש</h2>
+        <div><i id="instructionId" class="fa fa-volume-up"></i></div>
+        <input class="myButton" id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
+        <h2 style="color:gold"><b>  אות משחק זה היא @Model.Letter </b></h2>
     </div>
     <section id="sectionId" class="w3-display-container	">
-
-        <div id="heartDiv" ></div>
+        <div id="heartDiv"></div>
         <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
     </section>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h1 style="color:gold"><b>ניקוד: </b><span id="finalScore"><b></b></span></h1>
-        <br />
-        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
-
+        <h3 id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>
+        <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
 </body>

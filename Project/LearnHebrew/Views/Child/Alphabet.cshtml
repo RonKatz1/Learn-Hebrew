@@ -12,19 +12,29 @@
         text-align:center;
         z-index:2;
     }
-
-    .gameImg {
-        width: 10%;
-        height: 10%;
+    #gameTable{
+        margin-left:auto;
+        margin-right:auto;
     }
-
+    #gameTable td{
+        padding:40px;
+    }
+    .gameImg {
+        width: 100px;
+        height: 100px;
+        cursor: pointer;
+    }
+        .gameImg:hover {
+            box-shadow: 0 0 2px 1px rgba(0,140,186,0.5);
+        }
     .letterImg {
         max-width: 50%;
         max-height: 50%;
         border: 1px solid #ddd;
+        cursor:pointer;
     }
-        .letterImg:hover{
-            cursor:pointer;
+        .letterImg:hover {
+            box-shadow: 0 0 2px 1px rgba(0,140,186,0.5);
         }
     .hidescreen {
         display: none;
@@ -47,7 +57,7 @@
         }
 </style>
 <script>
-    let letterForGame;//the letter char which will eventually be transported to the selected game
+    let letterForGame;// the letter char which will eventually be transported to the selected game
     let gameName;//the name of the selected game
     let gameContenNeededBolArray;
     $(document).ready(function () {
@@ -120,10 +130,8 @@
                     <img id="ו" class="letter" src="~/Pictures/Alphabet/vaav.jpeg" />
                 </a>
             </td>
-            <td>
-                <a href="@(Url.Action("GoToGame_5", "Child"))">
-                    <img id="ה" class="letter" src="~/Pictures/Alphabet/haay.jpeg" />
-                </a>
+            <td>              
+                <img id="ה" class="letterImg" src="~/Pictures/Alphabet/haay.jpeg" />              
             </td>
             <td>
                 <img id="ד" class="letterImg" src="~/Pictures/Alphabet/daled.jpeg" />
@@ -140,43 +148,33 @@
         </tr>
         <tr>
             <td>
-                <a href="@(Url.Action("GoToGame_12", "Child"))">
-                    <img id="ל" class="letter" src="~/Pictures/Alphabet/lamad.jpeg" />
-                </a>
+                <img id="ל" class="letterImg" src="~/Pictures/Alphabet/lamad.jpeg" />
             </td>
             <td>
-                <img id="כ" class="letter" src="~/Pictures/Alphabet/chaaf.jpeg" />
+                <img id="כ" class="letterImg" src="~/Pictures/Alphabet/chaaf.jpeg" />
             </td>
             <td>
-                <img id="י" class="letter" src="~/Pictures/Alphabet/yuud.jpeg" />
+                <img id="י" class="letterImg" src="~/Pictures/Alphabet/yuud.jpeg" />
             </td>
             <td>
-                <a href="@(Url.Action("GoToGame_9", "Child"))">
-                    <img id="ט" class="letter" src="~/Pictures/Alphabet/taat.jpeg" />
-                </a>
+                <img id="ט" class="letterImg" src="~/Pictures/Alphabet/taat.jpeg" />
             </td>
             <td>
-                <a href="@(Url.Action("GoToGame_8", "Child"))">
-                    <img id="ח" class="letter" src="~/Pictures/Alphabet/chaat.jpeg" />
-                </a>
+                <img id="ח" class="letterImg" src="~/Pictures/Alphabet/chaat.jpeg" />
             </td>
             <td>
-                <img id="ז" class="letter" src="~/Pictures/Alphabet/zaain.jpeg" />
+                <img id="ז" class="letterImg" src="~/Pictures/Alphabet/zaain.jpeg" />
             </td>
         </tr>
         <tr>
             <td>
-                <img id="צ" class="letter" src="~/Pictures/Alphabet/tchadik.jpeg" />
+                <img id="צ" class="letterImg" src="~/Pictures/Alphabet/tchadik.jpeg" />
             </td>
             <td>
-                <a href="@(Url.Action("GoToGame_17", "Child"))">
-                    <img id="פ" class="letter" src="~/Pictures/Alphabet/paay.jpeg" />
-                </a>
+                <img id="פ" class="letterImg" src="~/Pictures/Alphabet/paay.jpeg" />
             </td>
             <td>
-                <a href="@(Url.Action("GoToGame_16", "Child"))">
-                    <img id="ע" class="letter" src="~/Pictures/Alphabet/aaiin.jpeg" />
-                </a>
+                <img id="ע" class="letterImg" src="~/Pictures/Alphabet/aaiin.jpeg" />
             </td>
             <td>
                 <a href="@(Url.Action("GoToGame_7_Hangman", "Child"))">
@@ -184,43 +182,33 @@
                 </a>
             </td>
             <td>
-                <img id="נ" class="letter" src="~/Pictures/Alphabet/nuun.jpeg" />
+                <img id="נ" class="letterImg" src="~/Pictures/Alphabet/nuun.jpeg" />
             </td>
             <td>
-                <a href="@(Url.Action("GoToGame_13", "Child"))">
-                    <img id="מ" class="letter" src="~/Pictures/Alphabet/maam.jpeg" />
-                </a>
+                <img id="מ" class="letterImg" src="~/Pictures/Alphabet/maam.jpeg" />
             </td>
         </tr>
         <tr>
             <td></td>
             <td></td>
             <td>
-                <a href="@(Url.Action("GoToGame_22", "Child"))">
-                    <img id="ת" class="letter" src="~/Pictures/Alphabet/taaf.jpeg" />
-                </a>
+                <img id="ת" class="letterImg" src="~/Pictures/Alphabet/taaf.jpeg" />
             </td>
             <td>
-                <a href="@(Url.Action("GoToGame_21", "Child"))">
-                    <img id="ש" class="letter" src="~/Pictures/Alphabet/shin.jpeg" />
-                </a>
+                <img id="ש" class="letterImg" src="~/Pictures/Alphabet/shin.jpeg" />
             </td>
             <td>
-                <a href="@(Url.Action("GoToGame_20", "Child"))">
-                    <img id="ר" class="letter" src="~/Pictures/Alphabet/raaish.jpeg" />
-                </a>
+                <img id="ר" class="letterImg" src="~/Pictures/Alphabet/raaish.jpeg" />
             </td>
             <td>
-                <a href="@(Url.Action("GoToGame_19", "Child"))">
-                    <img id="ק" class="letter" src="~/Pictures/Alphabet/kuuf.jpeg" />
-                </a>
+                <img id="ק" class="letterImg" src="~/Pictures/Alphabet/kuuf.jpeg" />
             </td>
 
         </tr>
     </table>
     <div class="hidescreen" id="gameDiv">
         <h1>בחרו במשחק </h1>
-        <table>
+        <table id="gameTable">
             <tr>
                 <td>
                     <img id="1" class="gameImg" src="~/Pictures/Game_preview/game_1_preview.png" />
@@ -266,6 +254,9 @@
             <tr>
                 <td>
                     <img id="2" class="gameImg" src="~/Pictures/Game_preview/game_2_preview.png" />
+                </td>
+                <td>
+                    <img id="8" class="gameImg" src="~/Pictures/Game_preview/game_8_preview.jpeg" />
                 </td>
             </tr>
         </table>

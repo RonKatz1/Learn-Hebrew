@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LearnHebrew.Models.GameInformationModel
+@{
     Layout = null;
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -13,62 +14,59 @@
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
-        
         cursor: url('../../Pictures/Game_8/target.png'),auto;
     }
+
     section {
-        
         position: absolute;
         width: 100%;
         height: 35%;
-        
-        bottom:0;
-        
+        bottom: 0;
     }
+
     #endGameScreen {
-        
         height: 50%;
     }
-  
+
     .hidescreen {
         display: none;
     }
 
-    
-    .hole{
-        
-       display:block;
-       width:300px;
 
+    .hole {
+        display: block;
+        width: 300px;
     }
+
     .letter {
-        width:50px;
-           
+        width: 50px;
+    }
+    .sign {
+        width: 100px;
     }
     #reverse {
-        
         position: relative;
         margin: auto;
-        
     }
 
     .slideUp {
         position: absolute;
         bottom: 0;
     }
-   
+
     .holeClass {
-        display:block;
+        display: block;
         background-image: url('../../Pictures/Game_8/dirt.png');
-        background-size:contain;
-        content:'';
-        width:100%;
-        height:100%;
-        position:absolute;
-        z-index:2;
-        bottom:-30px;
-        top:0;
+        background-size: contain;
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 2;
+        bottom: -30px;
+        top: 0;
     }
+
     .moleClass {
         background-image: url('../../Pictures/Game_8/chaat1.png');
         background-size: 60%;
@@ -77,19 +75,48 @@
         width: 100%;
         height: 100%;
     }
-    #imageId{
-        width:100px;
-        height:100px;
+
+    #imageId {
+        width: 100px;
+        height: 100px;
     }
+    .gameOverBtn {
+        margin-top: 10px;
+    }
+    #instructionId {
+        color: gold;
+        cursor: pointer;
+    }
+    .myButton {
+        box-shadow: inset 0px 1px 0px 0px #f9eca0;
+        background: linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
+        background-color: #f0c911;
+        border-radius: 6px;
+        border: 1px solid #e65f44;
+        cursor: pointer;
+        color: #c92200;
+        font-family: Arial;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 1px 6px;
+        text-decoration: none;
+        text-shadow: 0px 1px 0px #ded17c;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+        .myButton:hover {
+            background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
+            background-color: #f2ab1e;
+        }
 </style>
-<script>      
-    var gameoverIndicator;//interval animation of spawning enemies
-    var validLetters;
-    var invalidLetters;
+<script>
+    var gameoverIndicator;// interval animation of spawning enemies
+    var validLetters = [];// array of valid letter for the game, baed on the user
+    var invalidLetters = [];// array of ןמvalid letter for the game, baed on the user
     var gameoverIndicator;//interval animation of spawning enemies
     $(document).ready(function () {
-
-        validLetters = ["/Pictures/Game_8/chaat1.png", "/Pictures/Game_8/chaat2.png", "/Pictures/Game_8/chaat3.png", "/Pictures/Game_8/tempimg.jpeg", "/Pictures/Game_8/chaat1board.png"];
+        FillLetters();  
         LoadSoundAndPicture();
         $("#imageId").click(function () {
             $("#imageId").slideUp();
@@ -98,10 +125,27 @@
             },2000)
         });
     })
+    //This function gets the path of the selected letter images
+    function FillLetters() {
+        $.ajax({
+            url: '/Child/GetGameLetters' + '/' + '?Letter=@Model.Letter',           
+            type: 'GET',
+            dataType: 'json',
+            error: function (e, ts, et) {
+                alert("error at GetGameLetters" + ts);
+            },
+            success: function (data) {              
+                for (let i = 0; i < 5; i++) {
+                    validLetters.push("/Pictures/Alphabet/" + data.ValidLetterName[i]);                
+                }
+                for (let j = 0; j < data.InValidLetterName.length; j++) {
+                    invalidLetters.push("/Pictures/Alphabet/" + data.InValidLetterName[j]); 
+                }
+            }
+        });
+    }
+    // This funcion pre loads the sound and pictures of the game
     function LoadSoundAndPicture() {
-        //new Audio("/Audio/Game_8/gun_fire.mp3").load();
-        
-        //this may need to be changes once games become dynamic letter based
         for (let i = 0; i < validLetters.length; i++) {
             fetch(validLetters[i]);
         }
@@ -112,25 +156,29 @@
     }
     function CreateHole() {
         var imageType = Math.floor((Math.random() * 2) + 1);
-        var $sign = $("<img>");
-        $sign.attr('id', "imageId");
-        $sign.addClass("slideUp");
+        var $enemy = $("<img>");
+        //$enemy.attr('id', "imageId");
+        
+        $enemy.addClass("slideUp");
         var x = Math.floor((Math.random() * (parseInt($("#reverse").css("width")) - 100) + 1));//100 is image size so need to be dinamic later
         var y = Math.floor((Math.random() * (parseInt($("#reverse").css("height")) - 100) + 1));
-        $sign.css("top", y + "px");
-        $sign.css("left", x + "px");
-        $sign.css("bottom", 0 + "px");
-        $("#reverse").append($sign);
-        if (imageType == 1) {
-            var imagesrc = Math.floor((Math.random() * 2) + 1);
-            if (imagesrc == 1) {
-                $sign.attr("src", "/Pictures/Game_8/chaat1.png");
+        $enemy.css("top", y + "px");
+        $enemy.css("left", x + "px");
+        $enemy.css("bottom", 0 + "px");
+        $("#reverse").append($enemy);
+        if (imageType == 1) {// the enemy is a letter
+            $enemy.addClass("letter");
+            var imagesrc = Math.floor((Math.random() * 10) + 1);
+            if (imagesrc > 3) {
+                imagesrc = Math.floor((Math.random() * validLetters.length) + 0);
+                $enemy.attr("src", validLetters[imagesrc]);
             }
             else {
-                $sign.attr("src", "/Pictures/Game_8/cheese.png");
+                imagesrc = Math.floor((Math.random() * invalidLetters.length) + 0);
+                $enemy.attr("src", invalidLetters[imagesrc]);
             }
-            $sign.animate({
-                top: (parseInt($sign.css("height"))) + "px"
+            $enemy.animate({
+                top: (parseInt($enemy.css("height"))) + "px"
 
 
             }, {
@@ -141,11 +189,11 @@
 
                 });
         }
-        else {
-            $sign.attr("src", "/Pictures/Game_8/chaat1board.png");
-            //$sign.addClass("hidescreen");
-            //$sign.slideUp();
-            $sign.unbind().click(function () {
+        else {// the enemy is a sign
+            let enemySign = enemySrcSign();
+            $enemy.attr("src", enemySign);
+            $enemy.addClass("sign");
+            $enemy.unbind().click(function () {
                 CreateSound();
                 var indicator = false;
                 for (var i = 0; i < validLetters.length; i++) {
@@ -166,23 +214,33 @@
                 $(this).remove();
             })
             setTimeout(function () {
-                //$sign.removeClass("hidescreen");
-                $sign.slideUp(1500);
+                //$enemy.removeClass("hidescreen");
+                $enemy.slideUp(1500);
             }, 500)
         }
-        
-      
-        
+
+    }
+    function enemySrcSign() {
+        let src;
+        switch ('@Model.Letter') {
+            case 'א':
+                src = 'א';
+                break;
+            default:
+                src = "/Pictures/Game_8/chaat1board.png";
+                break;
+        }
+        return src;
     }
     function Clicked() {
         var indicator = false;
-        
+
         $(this).unbind().click(function () {
             CreateSound();
             for (var i = 0; i < validLetters.length; i++) {
-                if ($(this).attr('src') == validLetters[i]) {                
-                    var temp = parseInt($("#scoreId").text()) + 1;                   
-                    $("#scoreId").text(temp);                                 
+                if ($(this).attr('src') == validLetters[i]) {
+                    var temp = parseInt($("#scoreId").text()) + 1;
+                    $("#scoreId").text(temp);
                     indicator = true;
                     break;
                 }
@@ -211,38 +269,35 @@
         $sound[0].play();
     }
     function GameOver() {
-        //clearInterval(gameoverIndicator);
-        //do popoup here to let the user go back to alphabet
+        clearInterval(gameoverIndicator);
+        $("#buttonRet").addClass("hidescreen");
         $("#reverse").addClass("hidescreen");
         $("#buttonId").addClass("hidescreen");
-        
         $("#finalScore").text($("#scoreId").text());
         $("#endGameScreen").removeClass("hidescreen");
     }
-   
-    
-   
+
+
+
 
 </script>
 <body>
     <div style="text-align:center">
         <h1 style="color:gold"> פגיעת אותיות מהאדמה </h1>
         <h2 style="color:gold">עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה</h2>
-        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
-        <br />
-        <br />
-        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <div><i id="instructionId" class="fa fa-volume-up"></i></div>
+        <input id="buttonId" class="myButton" type="button" value="התחלה" onclick="StartGame()" />
+        <input id="buttonRet" class="myButton"  type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+
     </div>
     <div id="info" style="text-align:center;padding-bottom:12%">
-        <h3>ניקוד: <span id="scoreId">0</span></h3>
-        <h3>חיים: <span id="lifeId">5</span> </h3>
+        <h2 style="color:goldenrod">  אות משחק זה היא @Model.Letter </h2>
+        <h3 style="color:goldenrod">ניקוד: <span id="scoreId">0</span></h3>
+        <h3 style="color:goldenrod">חיים: <span id="lifeId">5</span> </h3>
     </div>
-    <section id="reverse">
-        
-    </section>
+    <section id="reverse"></section>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-       
-        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+        <input class="myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
 
     </div>
 

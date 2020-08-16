@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LearnHebrew.Models.GameInformationModel
+@{
     Layout = null;
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -17,37 +18,70 @@
         position: relative;
         width: 95%;
         height: 75%;
-        margin: auto;    
+        margin: auto;
         cursor: url('../../Pictures/Game_13/target.png'),auto;
     }
 
-
-
     .letter {
-        width: 6%;
+        width: 4%;
         height: 6%;
         position: absolute;
     }
+
     .cockroach {
         width: 4%;
         height: 8%;
         position: absolute;
         animation: shake 0.5s;
-        animation-iteration-count:infinite;
+        animation-iteration-count: infinite;
     }
+
     @@keyframes shake {
-        0% { transform: translate(1px, 1px) rotate(0deg); }
-        10% { transform: translate(-1px, -2px) rotate(-1deg); }
-        20% { transform: translate(-3px, 0px) rotate(1deg); }
-        30% { transform: translate(3px, 2px) rotate(0deg); }
-        40% { transform: translate(1px, -1px) rotate(1deg); }
-        50% { transform: translate(-1px, 2px) rotate(-1deg); }
-        60% { transform: translate(-3px, 1px) rotate(0deg); }
-        70% { transform: translate(3px, 1px) rotate(-1deg); }
-        80% { transform: translate(-1px, -1px) rotate(1deg); }
-        90% { transform: translate(1px, 2px) rotate(0deg); }
-        100% { transform: translate(1px, -2px) rotate(-1deg); }
-}
+        0% {
+            transform: translate(1px, 1px) rotate(0deg);
+        }
+
+        10% {
+            transform: translate(-1px, -2px) rotate(-1deg);
+        }
+
+        20% {
+            transform: translate(-3px, 0px) rotate(1deg);
+        }
+
+        30% {
+            transform: translate(3px, 2px) rotate(0deg);
+        }
+
+        40% {
+            transform: translate(1px, -1px) rotate(1deg);
+        }
+
+        50% {
+            transform: translate(-1px, 2px) rotate(-1deg);
+        }
+
+        60% {
+            transform: translate(-3px, 1px) rotate(0deg);
+        }
+
+        70% {
+            transform: translate(3px, 1px) rotate(-1deg);
+        }
+
+        80% {
+            transform: translate(-1px, -1px) rotate(1deg);
+        }
+
+        90% {
+            transform: translate(1px, 2px) rotate(0deg);
+        }
+
+        100% {
+            transform: translate(1px, -2px) rotate(-1deg);
+        }
+    }
+
     #endGameScreen {
         height: 50%;
     }
@@ -67,7 +101,6 @@
         top: 0;
         float: right;
         text-align: right;
-        
     }
 
     #scoreId {
@@ -75,6 +108,7 @@
         font-size: x-large;
         color: gold;
     }
+
     .rotate90 {
         -webkit-transform: rotate(180deg);
         -moz-transform: rotate(180deg);
@@ -82,27 +116,73 @@
         -ms-transform: rotate(180deg);
         transform: rotate(180deg);
     }
+    .myButton {
+        box-shadow: inset 0px 1px 0px 0px #f9eca0;
+        background: linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
+        background-color: #f0c911;
+        border-radius: 6px;
+        border: 1px solid #e65f44;
+        cursor: pointer;
+        color: #c92200;
+        font-family: Arial;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 1px 6px;
+        text-decoration: none;
+        text-shadow: 0px 1px 0px #ded17c;
+    }
+
+        .myButton:hover {
+            background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
+            background-color: #f2ab1e;
+        }
+
+    #instructionId {
+        cursor: pointer;
+        color:goldenrod;
+        margin-bottom:5px;
+    }
+    #gameOverh {
+        color: gold;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    .gameOverBtn {
+        margin-top: 10px;
+    }
 </style>
 <script>
-    var validLetters;
-    var cockroaches;
-    var gameoverIndicator; //interval for spawning enemies until game is over
-    var cockroachSpawn = 2000;
-    var cockroachSpeed = 8000;
-    var lives = 10; //number of times a user can die in the game
-    var gameStarted = false; //indicator for game started for not letting pressed enter
-    var letterSpeed = 10000;
+    let validLetters = [];// array of valid letter for the game, baed on the user
+    let cockroaches;// array of cockroach images
+    let gameoverIndicator; // interval for spawning enemies until game is over
+    let cockroachSpawn = 2000;// the time it takes for a cockroach to be created
+    let cockroachSpeed = 8000;// the time it takes for a cockroach to be removed
+    let lives = 10; // number of times a user can die in the game
+    let gameStarted = false; // indicator for game started for not letting pressed enter
+    let letterSpeed = 10000;// the time it takes a letter to remove itself
 
     $(document).ready(function () {
-
-        validLetters = ["/Pictures/Game_13/maam1.png", "/Pictures/Game_13/maam2.png", "/Pictures/Game_13/maam3.png", "/Pictures/Game_13/maam4.png"];
+        //LoadGameInstruction();
+        FillLetters();
         cockroaches = ["/Pictures/Game_13/cockroach1UD.png","/Pictures/Game_13/cockroach2UD.png"];
         $("body").keydown(userKey_Options);
-
-        
-
-
     })
+    //This function gets the path of the selected letter images
+    function FillLetters() {
+        $.ajax({
+            url: '/Child/GetGameLetters' + '/' + '?Letter=@Model.Letter',           
+            type: 'GET',
+            dataType: 'json',
+            error: function (e, ts, et) {
+                alert("error at GetGameLetters" + ts);
+            },
+            success: function (data) {              
+                for (let i = 0; i < 5; i++) 
+                    validLetters.push("/Pictures/Alphabet/" + data.ValidLetterName[i]);                                             
+            }
+        });
+    }
+    //This function enables the user movement
     function userKey_Options() {
         switch (window.event.keyCode) {
             case (13):// enter was pressed
@@ -110,9 +190,10 @@
                     StartGame();
                     gameStarted = true;
                 }
-                break;      
+                break;
         }
     }
+    // This funcion starts the game when the "התחלה" button is clicked
     function StartGame() {
         gameStarted = true;
         $("#buttonId").addClass("hidescreen");
@@ -120,23 +201,24 @@
         FillHearts();
         gameoverIndicator = setInterval(createCockroach, cockroachSpawn);
     }
+    // This funcion sets up the game hearts (lives)
     function FillHearts() {
         $heartDiv = $("#heartDiv");
-        for (var i = 0; i < lives; i++) {
-            var $image = $("<img>");
+        for (let i = 0; i < lives; i++) {
+            let $image = $("<img>");
             $image.attr("src", "/Pictures/Game_16/heart.png");
             $image.addClass("heart");
             $heartDiv.append($image);
 
         }
     }
+    // This funcion creates a "cockroach" image
     function createCockroach() {//the assumption is all cockroach images by default face upward
-        var direction = Math.floor((Math.random() * 4) + 1);// var for deciding where cockroack spawns
-        var cockroachImage = Math.floor((Math.random() * 2) + 1);
-        var $cockroach = $("<img>");
-        
+        let direction = Math.floor((Math.random() * 4) + 1);// var for deciding where cockroack spawns
+        let cockroachImage = Math.floor((Math.random() * 2) + 1);
+        let $cockroach = $("<img>");
+        let axisY, axisX;
         $cockroach.addClass("cockroach");
-        //alert(direction);
         switch (direction) {
             case (1)://left to right
                 if (cockroachImage == 1) {
@@ -146,7 +228,7 @@
                     $cockroach.attr("src", "/Pictures/Game_13/cockroach2LR.png");
 
                 }
-                var axisY = randomEnemy_PlaceY($cockroach);
+                axisY = randomEnemy_PlaceY($cockroach);
                 $cockroach.css("top", axisY + "px");
                 $cockroach.css("left", 0 + "px");
                 $("#sectionId").append($cockroach);
@@ -171,7 +253,7 @@
                     $cockroach.attr("src", "/Pictures/Game_13/cockroach2RL.png");
 
                 }
-                var axisY = randomEnemy_PlaceY($cockroach);
+                axisY = randomEnemy_PlaceY($cockroach);
                 $cockroach.css("top", axisY + "px");
                 $cockroach.css("left", parseInt($("#sectionId").css("width"))) - (parseInt($cockroach.css("width")) + "px");
                 $("#sectionId").append($cockroach);
@@ -197,7 +279,7 @@
                     $cockroach.attr("src", "/Pictures/Game_13/cockroach2UD.png");
 
                 }
-                var axisx = randomEnemy_PlaceX($cockroach);
+                axisx = randomEnemy_PlaceX($cockroach);
                 $cockroach.css("top", 0 + "px");
                 $cockroach.css("left", axisx + "px");
                 $("#sectionId").append($cockroach);
@@ -213,7 +295,7 @@
 
                     });
                 break;
-            
+
             case (4)://down to up
                 //alert("this 4");
                 if (cockroachImage == 1) {
@@ -223,7 +305,7 @@
                     $cockroach.attr("src", "/Pictures/Game_13/cockroach2DU.png");
 
                 }
-                var axisx = randomEnemy_PlaceX($cockroach);
+                axisx = randomEnemy_PlaceX($cockroach);
                 $cockroach.css("top", (parseInt($("#sectionId").css("height"))) - (parseInt($cockroach.css("height"))) + "px");
                 $cockroach.css("left", axisx + "px");
                 $("#sectionId").append($cockroach);
@@ -240,14 +322,14 @@
                     });
                 break;
         }
-        
     }
+    // This funcion removes remaining hearts on screen and replaces them with an updated heart amount
     function RemoveHeart() {
         $("#heartDiv").empty();
         FillHearts();
     }
+    // This function removes a "cockroach" image when it is clicked
     function Clicked() {
-        
         $(this).unbind().click(function () {
             CreateSound();
             $(this).stop();
@@ -257,14 +339,15 @@
         });
 
     }
+    //This function creates a "letter" image
     function CreateLetter() {
-        var letterImage = Math.floor((Math.random() * validLetters.length) + 0);
-        var $letter = $("<img>");
+        let letterImage = Math.floor((Math.random() * validLetters.length) + 0);
+        let $letter = $("<img>");
         $letter.attr("src", validLetters[letterImage]);
         $letter.addClass("letter");
         $("#sectionId").append($letter);
-        var axisX = randomEnemy_PlaceX($letter);
-        var axisY = randomEnemy_PlaceY($letter);
+        let axisX = randomEnemy_PlaceX($letter);
+        let axisY = randomEnemy_PlaceY($letter);
         $letter.css("left", axisX + "px");
         $letter.css("top", axisY + "px");
 
@@ -280,8 +363,9 @@
                 complete: deleteObject
 
             });
-        
+
     }
+    // This function increases the use score when a "letter" is clicked
     function LetterClicked() {
         $(this).unbind().click(function () {
             CreateSound();
@@ -290,6 +374,7 @@
             IncreaseChallenge();
         });
     }
+    //This function increases the speed of appearing "cockroaches" and "letters"
     function IncreaseChallenge() {
         if (parseInt($("#scoreId").text()) == 10){
             clearInterval(gameoverIndicator);
@@ -306,23 +391,26 @@
 
         }
     }
+    // This function returns a random axis y location on the section
     function randomEnemy_PlaceY(element) {
-        var limitTop = 0;
-        //alert($("#stationR").css("width"));
-        var limitDown = parseInt($("#sectionId").css("height")) - ((parseInt($("#heartDiv").css("height")))  * 2);
+        let limitTop = 0;
+        let limitDown = parseInt($("#sectionId").css("height")) - ((parseInt($("#heartDiv").css("height")))  * 2);
         return Math.floor((Math.random() * limitDown) + limitTop);
     }
+    // This function returns a random axis x location on the section
     function randomEnemy_PlaceX(element) {
-        var limitLeft = 0;
-        var limitRight = parseInt($("#sectionId").css("width")) - ((parseInt($("#heartDiv").css("height"))) * 2);
+        let limitLeft = 0;
+        let limitRight = parseInt($("#sectionId").css("width")) - ((parseInt($("#heartDiv").css("height"))) * 2);
         return Math.floor((Math.random() * limitRight) + limitLeft);
     }
+    // This function creates a sound 
     function CreateSound() {
         let $sound = $("<audio>");
         $sound.attr("src", "/Audio/Game_13/gun_fire2.mp3");
 
         $sound[0].play();
     }
+    // This function ends all intervals of the game and allows the player to return to "Alphabet" page
     function GameOver() {
         clearInterval(gameoverIndicator);
         //do popoup here to let the user go back to alphabet
@@ -331,9 +419,11 @@
         $("#finalScore").text($("#scoreId").text());
         $("#endGameScreen").removeClass("hidescreen");
     }
+    // This function removes an object
     function deleteObject() {
         $(this).remove();
     }
+    // This function removes a "cockroach" image
     function deleteCockroach() {
         $(this).remove();
         lives--;
@@ -344,6 +434,7 @@
             GameOver();
         }
     }
+    // This function return the player to "Alphabet" page
     function GoToAlphabet() {
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
     }
@@ -353,23 +444,16 @@
     <div style="text-align:center">
         <h1 style="color:gold"> תפיסת מקקים </h1>
         <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
-        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
-        <br />
-        <br />
-        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
-        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" />
-        
-
+        <div><i id="instructionId" class="fa fa-volume-up"></i></div>     
+        <input class="myButton" id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
     </div>
     <section id="sectionId" class="w3-display-container	">
-
         <div id="heartDiv"></div>
         <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
     </section>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h3>ניקוד: <span id="finalScore"></span></h3>
-        <br />
-        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
-
+        <h3 id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>
+        <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
 </body>

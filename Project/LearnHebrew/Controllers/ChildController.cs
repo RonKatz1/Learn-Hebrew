@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
-
+using LearnHebrew.DTO;
 
 namespace LearnHebrew.Controllers
 {
@@ -190,8 +190,57 @@ namespace LearnHebrew.Controllers
             return View("~/Views/Game/Game_7_Hangman.cshtml");
         }
 
-        // [Route("Child/gotogame/{letter}/{name}")]
+        [HttpGet]
+        [Route("Child/GetGameContent/{Letter}")]
+        public JsonResult GetGameContent(string Letter)
+        {
+            //Console.WriteLine(Request.Url);
+            //string decoded = HttpUtility.UrlDecode(Letter);
+            GameContentDto dto = new GameContentDto();
+            dto.Letter = Letter;
+            var specificContent = BLL.Services.ContentServices.LoadAllContents();
+            specificContent = specificContent.Where(c => c.Data.IsApproved && c.Data.UnDotedWord.StartsWith(Letter)).ToList();
+
+            dto.Contents = specificContent;
+            dto.ValidLetterName = null;
+            dto.InValidLetterName = null;
+            return Json(dto, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        [Route("Child/GetGameLetters")]
+        public JsonResult GetGameLetters(string Letter)
+        {
+            Console.WriteLine(Request.Url);
             
+            GameContentDto dto = new GameContentDto();
+            dto.Letter = Letter;
+
+            dto.Contents = null;
+            string folderPath = AppDomain.CurrentDomain.BaseDirectory;
+            string str = folderPath.Substring(0, folderPath.IndexOf("\\", System.StringComparison.InvariantCultureIgnoreCase) + "\\".Length);
+            str = str + "/";
+            str = str + folderPath.Substring(str.Length - 1).Replace("\\", "/");
+            folderPath = str + "Pictures/Alphabet";
+            DirectoryInfo di = new DirectoryInfo(folderPath);
+            dto.ValidLetterName = di.GetFiles("*.png").Where(f => f.Name.StartsWith(Letter)).Select(f => f.Name).ToList();
+            dto.InValidLetterName = di.GetFiles("*.png").Where(f => !f.Name.StartsWith(Letter)).Select(f => f.Name).ToList();
+            return Json(dto, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        [Route("Child/GetContentPath/{file}")]
+        public String GetContentPath(string file)
+        {
+            Console.WriteLine(Request.Url);
+            var localPath = "http://localhost:58432/ContentFiles/";
+            //var filePath = file.Code + "." + file.Extention;
+
+            return localPath;// + filePath;
+
+        }
         public ActionResult GoToGame(char letter, string name, string needContent)
         {
             Models.GameInformationModel m = new Models.GameInformationModel();

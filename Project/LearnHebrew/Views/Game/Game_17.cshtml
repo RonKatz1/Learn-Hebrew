@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LearnHebrew.Models.GameInformationModel
+@{
     Layout = null;
 }
 
@@ -14,81 +15,126 @@
         background-repeat: no-repeat;
         background-size: cover;
     }
+
     section {
         position: relative;
         width: 95%;
         height: 75%;
         margin: auto;
         cursor: url('../../Pictures/Game_8/target.png'),auto;
-    }  
+    }
+
     .enemy {
         width: 4%;
         height: 6%;
         position: absolute;
     }
+
     #endGameScreen {
         height: 50%;
     }
+
     .hidescreen {
         display: none;
-    } 
-    .balloon{
-        position:absolute;
-        border-radius:50%;
-        background-color:red;
-        width:50px;
-        height:50px;
     }
+
+    .balloon {
+        position: absolute;
+        border-radius: 50%;
+        background-color: red;
+        width: 50px;
+        height: 50px;
+    }
+
     .exploded {
         width: 20%;
         height: 20%;
         position: absolute;
     }
+
     .firework {
         width: 3%;
         height: 15%;
         position: absolute;
     }
+
+    .myButton {
+        box-shadow: inset 0px 1px 0px 0px #f9eca0;
+        background: linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
+        background-color: #f0c911;
+        border-radius: 6px;
+        border: 1px solid #e65f44;
+        cursor: pointer;
+        color: #c92200;
+        font-family: Arial;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 1px 6px;
+        text-decoration: none;
+        text-shadow: 0px 1px 0px #ded17c;
+    }
+
+        .myButton:hover {
+            background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
+            background-color: #f2ab1e;
+        }
+
+    #instructionId {
+        cursor: pointer;
+        color: goldenrod;
+        margin-bottom: 5px;
+    }
+
+    .gameOverBtn {
+        margin-top: 10px;
+    }
 </style>
 
 <script>
-    var validLetters;
-    var invalidLetters;
-    var timeout;//interval for fireball creation
-    var gameoverIndicator; //interval for spawning enemies until game is over
-    var spawnTimer = 700;//the time it takes for a letter to spawn
-    var removeLetterTimer = 3500;//the time it takes for a spawned letter to disappear
-    let poppingSize = 500;//the max size a ballon can get
-    var gameStarted = false; //indicator for game started for not letting pressed enter
-    var ballonReduction = 5;//the size of the balloon reduction per enemy spawned
-    var ballonEnlarge = 35;//the size of the balloon enlarges per using this var
-    var balloonPopped = false;
-    let fireworksInterval;
+    let validLetters = [];// array of valid letter for the game, baed on the user
+    var invalidLetters = [];// array of invalid letter for the game, baed on the user
+    var gameoverIndicator; // interval for spawning enemies until game is over
+    var spawnTimer = 700;// the time it takes for a letter to spawn
+    var removeLetterTimer = 3500;// the time it takes for a spawned letter to disappear
+    let poppingSize = 500;// the max size a ballon can get
+    var gameStarted = false; // indicator for game started for not letting pressed enter
+    var ballonReduction = 5;// the size of the balloon reduction per enemy spawned
+    var ballonEnlarge = 35;// the size of the balloon enlarges per using this var
+    var balloonPopped = false;// boolean for knowing if the user won the game
+    let fireworksInterval;// interval of firework animation
     $(document).ready(function () {
-
-        validLetters = ["/Pictures/Game_17/paay1.png","/Pictures/Game_17/paay2.png"];
-        //$("body").keydown(userKey_Options);
+        //LoadGameInstruction();
+        FillLetters();
+        //windowResize();
         var ballon = $("#balloonId");
         var section = $("#sectionId");
         ballon.css("left", (section.width() / 2) - ballon.width() / 2);
         ballon.css("top", (section.height() / 2) - ballon.height() / 2);
-
-        //var imge = $("<img>");
-        //imge.attr("src", "/Pictures/Game_17/paay1.png");
-        //imge.addClass("letter");
-        //imge.css("left", ballon.width() / 2);
-        //imge.css("top", ballon.height() / 2);
-        //ballon.append(imge);
-        
-        
     })
+    //This function gets the path of the selected letter images
+    function FillLetters() {
+        $.ajax({
+            url: '/Child/GetGameLetters' + '/' + '?Letter=@Model.Letter',
+            type: 'GET',
+            dataType: 'json',
+            error: function (e, ts, et) {
+                alert("error at GetGameLetters" + ts);
+            },
+            success: function (data) {
+                for (let i = 0; i < 5; i++)
+                    validLetters.push("/Pictures/Alphabet/" + data.ValidLetterName[i]);
+                for (let j = 0; j < data.InValidLetterName.length; j++)
+                    invalidLetters.push("/Pictures/Alphabet/" + data.InValidLetterName[j]);
+            }
+        });
+    }
     function EnlargeBalloon() {
         var ballon = $("#balloonId");
-        
+
         ballon.width(ballon.width() + ballonEnlarge);
         ballon.height(ballon.height() + ballonEnlarge);
         RealignBalloon();
-        
+
     }
     function RealignBalloon() {
         var ballon = $("#balloonId");
@@ -107,19 +153,20 @@
         gameStarted = true;
         $("#buttonId").addClass("hidescreen");
         $("#buttonRet").removeClass("hidescreen");
-        
         gameoverIndicator = setInterval(createEnemy, spawnTimer);
     }
     function createEnemy() {
         ReduceBalloon();//reducing the current size of the balloon
         var $enemy = $("<img>");
         var enemyType = Math.floor((Math.random() * 10) + 1);
+        var randomNumber;
         if (enemyType > 3) {//enemy will be a valid letter
-            var randomNumber = Math.floor((Math.random() * validLetters.length) + 0);
+            randomNumber = Math.floor((Math.random() * validLetters.length) + 0);
             $enemy.attr("src", validLetters[randomNumber]);
         }
         else {//enemy will be an invalid letter
-            $enemy.attr("src", "/Pictures/Game_17/raaish1.png");
+            randomNumber = Math.floor((Math.random() * invalidLetters.length) + 0);
+            $enemy.attr("src", invalidLetters[randomNumber]);
         }
         $enemy.addClass("enemy");
 
@@ -158,14 +205,14 @@
 
 
             }, {
-                    
+
                     duration: removeLetterTimer,
                     easing: "linear",
                     progress: Clicked,
                     complete: deleteObject
 
                 });
-        } 
+        }
     }
     function Clicked() {
         var indicator = false;//indicator for realizing the enemy was a valid letter
@@ -192,14 +239,14 @@
                     break;
                 }
             }
-            if (!indicator) {//enemy was an invalid letter             
+            if (!indicator) {//enemy was an invalid letter
                 var $error = $("<img>");
                 $error.addClass("enemy");
                 $error.attr("src", "/Pictures/Game_17/error.png");
                 $error.css("left", $(this).css("left"));
                 $error.css("top", $(this).css("top"));
                 $("#sectionId").append($error);
-               
+
                 $error.animate({
                     opacity: 0.4
 
@@ -214,7 +261,7 @@
                 $(this).finish();
 
             }
-            
+
         });
     }
     function ReduceBalloon() {
@@ -223,7 +270,7 @@
         ballon.height(ballon.height() - ballonReduction);
 
         RealignBalloon();
-        
+
     }
     function CreateEndingSound() {
         let $sound = $("<audio>");
@@ -302,13 +349,12 @@
     }
     function GameOver() {
         clearInterval(gameoverIndicator);
-        //do popoup here to let the user go back to alphabet
         $("#sectionId").addClass("hidescreen");
         $("#buttonRet").addClass("hidescreen");
         CreateEndingSound();
         if (balloonPopped) {
             $("#messageId").text("הבלון התפוצץ");
-            
+
             fireworksInterval = setInterval(CreateFirework, 800);
 
 
@@ -328,26 +374,18 @@
 
 <body>
     <div style="text-align:center">
-        <h1 style="color:gold"> פיצוץ בלון </h1>
-        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
-        <i id="explanationId" style="color:gold" class="fa fa-volume-up"></i>
-        <br />
-        
-        <input id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
-        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" />
-        <h2 style="color:gold"> אות משחק זה היא: פ</h2>
-
+        <h1 style="color:black"><b> פיצוץ בלון </b></h1>
+        <h2 style="color:black"><b> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה</b></h2>
+        <div><i id="instructionId" class="fa fa-volume-up"></i></div>
+        <input class="myButton" id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
+        <h2 style="color:black"><b>  אות משחק זה היא @Model.Letter </b></h2>
     </div>
     <section id="sectionId" class="w3-display-container	">
-
         <div id="balloonId" class="balloon"></div>
-        
     </section>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        
         <h3 style="color:green; font-size:100px" id="messageId"><b></b></h3>
-        <br />
-        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
-
+        <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
 </body>

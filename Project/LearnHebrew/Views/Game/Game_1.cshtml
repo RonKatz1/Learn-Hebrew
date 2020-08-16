@@ -2,6 +2,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -92,21 +93,24 @@
 </style>
 <script>
     let contentArray = [];
-
     let startFlipTimerInterval; //interval for spawning enemies until game is over
     let timeUntilFirstFlip = 3;
-
     let lives = 10; //number of times a user can choose wrong in the game
     let gameStarted = false; //indicator for game started for not letting pressed enter
     $(document).ready(function () {
-
-
-
-
-        $(window).resize(function () {
-
+        $.ajax({
+            url: '/Child/GetGameContent' +'/' + '?Letter=@Model.Letter',
+            //url: "Url.Action("GoToGame", "Child", new { letterForGame = "letter"})" ,
+            type: 'GET',
+            dataType: 'json',
+            error: function (e, ts, et) {
+                alert("error at getgamecontent"+ ts);
+            },
+            success: function (data) {
+                //alert("yes");
+                UpdateGameContent(data);
+            }
         })
-
 
     })
     function StartGame() {
@@ -116,54 +120,68 @@
         alert(@Model.Contents.Count);
 
     }
-    function FillContenArray_old() {
+    function UpdateGameContent(data) {
+        contentArray.length = 0;
+        let numberOfPairs = 1;
+        for (let i = 0; i < numberOfPairs; i++) {
+
+        //    $.ajax({
+        //    url: '/Child/GetContentPath' +'/' + data.Contents[i].Data.PhotoFile,
+        //    //url: "Url.Action("GoToGame", "Child", new { letterForGame = "letter"})" ,
+        //    type: 'GET',
+        //    dataType: 'json',
+        //    error: function (e, ts, et) {
+        //        alert("error at getcontentPath"+ ts);
+        //    },
+        //    success: function (path) {
+        //        alert("path restored");
+        //        contentArray.push(path);
+        //        contentArray.push(path);
+        //    }
+        //})
+            contentArray.push("http://localhost:58432/ContentFiles/" + data.Contents[i].Data.PhotoFile.Code + "." + data.Contents[i].Data.PhotoFile.Extention);
+            //contentArray.push(path);
+            //contentArray.push(BLL.Services.ContentServices.GetFilePath(data.Contents[i].Data.PhotoFile));
+            //contentArray.push(BLL.Services.ContentServices.GetFilePath(data.Contents[i].Data.PhotoFile));
+
+        }
+        let imageDiv = $(".flip-box-back");
+        for (var i = 0; i < imageDiv.length; i++) {
+            let image = $('<img>');
+
+            //alert(contentArray[0]);
+            image.attr("src", contentArray[0]);
+            //image.attr("src", "/ContentFiles" + "/" + data.Contents[0].Data.PhotoFile.Code + "." + data.Contents[0].Data.PhotoFile.Extention)
+            image.addClass("mysteryImg");
+            imageDiv[i].append(image);
+        }
+
+
+    }
+    @*function FillContenArray_old() {
         contentArray.length = 0;
         let numberOfPairs = 4;
-
-        //let list = Html.Raw(serializer.serialize(Model.Contents));
-        // var list2 = Json.parse(list);
         for (let i = 1; i <= numberOfPairs; i++) {
-            //let randomNumber = Math.floor((Math.random() * (@Model.Contents.Count - 1)) + 0);
             @{
                 var rnd = new Random();
                 var num = rnd.Next(0, Model.Contents.Count() - 1);
                 }
-            @*contentArray.push(@Model.Contents[@:randomNumber].Data.PhotoFile);*@
-            @*contentArray.push(@Model.Contents[@:randomNumber]);*@
-            @*contentArray.push('@Model.Contents[1].Data.PhotoFile.Code');*@
             contentArray.push("@(BLL.Services.ContentServices.GetFilePath(Model.Contents[num].Data.PhotoFile))");
-            //alert(list2[0].d);
-
         }
-    }
-    @{ 
-        var indexs = new List<int>();
-        for (int i = 0; i < 4; i++)
-        {
-            var rand = new Random();
-            var randNum = rnd.Next(0, Model.Contents.Count() - 1);
-            indexs.Add(randNum);
+    }*@
+    
 
-        }
-        var index = 0;
-        }
+        //function FillContenArray() {
+        //}
+        //function PutImages() {
+        //    let imageDiv = $(".flip-box-back");     
+        //    for (var i = 0; i < imageDiv.length; i++) {
+        //        let imge = $("<img>");
+        //        imge.attr("src", contentArray[i]);
+        //        imageDiv[i].append(imge);
+        //    }
 
-        function FillContenArray() {
-                @*contentArray.push("@(BLL.Services.ContentServices.GetFilePath(Model.Contents[indexs[0]].Data.PhotoFile))");
-                contentArray.push("@(BLL.Services.ContentServices.GetFilePath(Model.Contents[indexs[1]].Data.PhotoFile))");
-                contentArray.push("@(BLL.Services.ContentServices.GetFilePath(Model.Contents[indexs[2]].Data.PhotoFile))");
-                contentArray.push("@(BLL.Services.ContentServices.GetFilePath(Model.Contents[indexs[3]].Data.PhotoFile))");*@
-        }
-        function PutImages() {
-            let imageDiv = $(".flip-box-back");
-
-            for (var i = 0; i < imageDiv.length; i++) {
-                let imge = $("<img>");
-                imge.attr("src", contentArray[i]);
-                imageDiv[i].append(imge);
-            }
-
-        }
+        //}
 </script>
 <body>
     <div style="text-align:center">

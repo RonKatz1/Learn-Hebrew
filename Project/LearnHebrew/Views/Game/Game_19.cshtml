@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LearnHebrew.Models.GameInformationModel
+@{
     Layout = null;
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -18,16 +19,16 @@
         position: relative;
         padding-left: 0;
         padding-right: 0;
-        
         margin-left: auto;
         margin-right: auto;
         display: block;
     }
+
     body {
         background-image: url('../../Pictures/Game_19/background.jpg');
     }
+
     #endGameScreen {
-        
         height: 50%;
     }
 
@@ -41,18 +42,56 @@
     .hidescreen {
         display: none;
     }
+
     #heartId {
         width: 5%;
         height: 8%;
         z-index: 5;
-        
         position: absolute;
     }
+
     .dropper {
         width: 6%;
         height: 9%;
         position: absolute;
-        z-index:9;
+        z-index: 9;
+    }
+
+    .myButton {
+        box-shadow: inset 0px 1px 0px 0px #f9eca0;
+        background: linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
+        background-color: #f0c911;
+        border-radius: 6px;
+        border: 1px solid #e65f44;
+        cursor: pointer;
+        color: #c92200;
+        font-family: Arial;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 1px 6px;
+        text-decoration: none;
+        text-shadow: 0px 1px 0px #ded17c;
+    }
+
+        .myButton:hover {
+            background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
+            background-color: #f2ab1e;
+        }
+
+    #instructionId {
+        cursor: pointer;
+        color: goldenrod;
+        margin-bottom: 5px;
+    }
+
+    #gameOverh {
+        color: black;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .gameOverBtn {
+        margin-top: 10px;
     }
 </style>
 
@@ -61,17 +100,15 @@
     <div style="text-align:center">
         <h1> שבירת לבנים </h1>
         <h2>עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור אנטר</h2>
-        <i id="explanationId"  class="fa fa-volume-up"></i>
+        <div><i id="instructionId" class="fa fa-volume-up"></i></div>
+        <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
+
     </div>
     <canvas id="canvasId"></canvas>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <p style="left:45%"></p><p style="left:50%" >   ניקוד סופי  </p><p id="finalScore">0</p>
-        <br />
-        <br />
-        <br />
-        <br />
-        <input class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
-    </div>
+        <h3 id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>
+        <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+    </div>  
 </body>
 
 <script>
@@ -81,35 +118,48 @@
     var gameStarted = false;
     var $ctx = $canvas.getContext("2d");
     var pongW = 40, pongH = 7, pongX = ($canvas.width - pongW) / 2, pongY = $canvas.height - pongH; //pong coordinators and size
-    var ballR = 2, x = $canvas.width / 2, y = ($canvas.height - pongH) - ballR;//ball coordinators and size 
+    var ballR = 2, x = $canvas.width / 2, y = ($canvas.height - pongH) - ballR;//ball coordinators and size
     var move = 10;
     var brickW = 11, brickH = 5;
     var counter = 0;
     var heart;
-    var validLetters;
+    var validLetters = [];
     var destoyedBrickY, destoyedBrickX;
-    var lives = 99;
+    var lives = 2;
+    let drawInterval;
 
     $(document).ready(function () {
         //ClassicMode();
         //CreativeMode();
         //SilverMode();
-        
+
         ChooseMode();
         heart = $("<img>");
         heart.attr("src", "/Pictures/Game_19/heart.png");
         heart.attr("id", "heartId");
-
-        validLetters = ["/Pictures/Game_19/kuuf1.PNG", "/Pictures/Game_19/kuuf2.PNG", "/Pictures/Game_19/kuuf3.PNG"];
-
+        //LoadGameInstruction();
+        FillLetters();
         LoadSoundAndPicture();
-
-        setInterval(draw, 50);
+        drawInterval = setInterval(draw, 50);
         heart.css("left", $canvas.width + "px");
         heart.css("top", 5 + "px");
-        //$("body").append(heart);
         $("body").keydown(userKey_Options);
     })
+    //This function gets the path of the selected letter images
+    function FillLetters() {
+        $.ajax({
+            url: '/Child/GetGameLetters' + '/' + '?Letter=@Model.Letter',
+            type: 'GET',
+            dataType: 'json',
+            error: function (e, ts, et) {
+                alert("error at GetGameLetters" + ts);
+            },
+            success: function (data) {
+                for (let i = 0; i < 5; i++)
+                    validLetters.push("/Pictures/Alphabet/" + data.ValidLetterName[i]);              
+            }
+        });
+    }
     function ChooseMode() {
         var randNum = Math.floor((Math.random() * 3) + 1);
         switch (randNum) {
@@ -132,28 +182,28 @@
         for (let i = 0; i < validLetters.length; i++) {
             fetch(validLetters[i]);
         }
-        
+
     }
     function userKey_Options() {
         switch (window.event.keyCode) {
             case (37):// left keyboard was pressed = moving the user one move to the left
                 //if (gameStarted) {
                     MoveLeft();
-                //}  
+                //}
                 break;
             case (39):// right keyboard was pressed = moving the user one move to the right
                 //if (gameStarted) {
                     MoveRight();
-                //}               
+                //}
                 break;
             case (32)://release the ball
                 if (!gameStarted) {
                     gameStarted = true;
-                    
+
                     break;
-                }               
+                }
                 break;
-            
+
         }
     }
     function MoveLeft() {
@@ -174,9 +224,6 @@
         }
 
     }
-    
-       
-
     function drawBall() {
             $ctx.beginPath();
             $ctx.arc(x, y, ballR, 0, Math.PI * 2);
@@ -257,7 +304,7 @@
                         breakBar: 3
                     });
                 }
-                
+
                 if (!temp) {
                     lookAheadX = lookAheadX + brickW;
                     temp = true;
@@ -285,17 +332,17 @@
                     break;
                 case 2:
                     $ctx.beginPath();
-                    
+
                     $ctx.fillStyle = "#f08080";
                     $ctx.lineWidth = "1";
                     $ctx.strokeStyle = "black";
                     $ctx.rect(brick.x, brick.y, brickW, brickH);
                     $ctx.stroke();
                     $ctx.fill();
-                    
+
                     $ctx.closePath();
                 case 1:
-                    return;             
+                    return;
             }
         });
     }
@@ -314,8 +361,8 @@
                             directionY = -directionY;
                             brick.status = 1;
                         }
-                        
-                    }               
+
+                    }
                     break;
                 case 2:
                     //var inBrickColumn = x > brick.x && x < brick.x + brickW, inBrickRow = y > brick.y && y < brick.y + brickH;
@@ -337,11 +384,6 @@
     }
     function draw() {
         $ctx.clearRect(0, 0, $canvas.width, $canvas.height);
-        //alert($canvas.width);
-        //alert(heart.width);
-        //heart.css("left", 1350 + "px");
-        //heart.css("left", $canvas.height  + "px");
-        //heart.css("top", 5 + "px");
         drawBall();
         drawPong();
         drawBricks();
@@ -360,8 +402,8 @@
             if (lives == 0) {
                 $("#finalScore").text(counter);
                 $("#canvasId").addClass("hidescreen");
-                //$("#tableId").addClass("hidescreen");
-                //$("#finalScore").text($("#score").text());
+                $("#buttonRet").addClass("hidescreen");
+                clearInterval(drawInterval);
                 $("#endGameScreen").removeClass("hidescreen");
             }
             lives--;
@@ -372,7 +414,7 @@
             y = ($canvas.height - pongH) - ballR;
             directionY = -directionY;//check
         }
-        
+
 
         function HitSideWall() {
             return x + directionX > $canvas.width - ballR || x + directionX < ballR;
@@ -391,7 +433,7 @@
             return x > pongX && x < pongX + pongW;
         }
         function gameOver() {
-            
+
             return HitBottom() && !BallOverPong();
         }
 
@@ -413,6 +455,8 @@
     }
 
     function WinnerEndGame() {
+        $("#buttonRet").addClass("hidescreen");
+        clearInterval(drawInterval);
         $("#canvasId").addClass("hidescreen");
         $("#finalScore").text(counter);
         $("#endGameScreen").removeClass("hidescreen");
@@ -426,17 +470,15 @@
     function CreatDropper() {
         var randomNumber = Math.floor((Math.random() * 10) + 1);
         if (randomNumber <= 9) {
-            
+
             var pickedImg = Math.floor((Math.random() * validLetters.length) + 0);
             var $dropper = $("<img>");
             $dropper.attr("src", validLetters[pickedImg]);
             $dropper.addClass("dropper");
 
-            //var randomX = Math.floor((Math.random() * ($("body").width() - $dropper.width())) + $dropper.width());
             let axisX = random_PlaceX();
             $dropper.css("top", 0 + "px");
             $dropper.css("left", axisX + "px");
-            //$ctx.drawImage($dropper, destoyedBrickX, destoyedBrickY);
             $("body").append($dropper);
             $dropper.animate({
                 top: $canvas.height
@@ -452,7 +494,7 @@
                 });
         }
 
-        
+
     }
     function random_PlaceX() {
         var limitLeft = pongW * 8;

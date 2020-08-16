@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LearnHebrew.Models.GameInformationModel
+@{
     Layout = null;
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -20,7 +21,6 @@
         border: 1px solid black;
         position: relative;
         margin: auto;
-        
     }
 
     #rocketId {
@@ -63,17 +63,19 @@
         float: right;
         text-align: right;
     }
+
     #scoreId {
         margin-left: 15px;
         font-size: x-large;
         color: gold;
     }
+
     .myButton {
         box-shadow: inset 0px 1px 0px 0px #f9eca0;
         background: linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
         background-color: #f0c911;
         border-radius: 6px;
-        border: 1px solid #e65f44;       
+        border: 1px solid #e65f44;
         cursor: pointer;
         color: #c92200;
         font-family: Arial;
@@ -88,14 +90,16 @@
             background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
             background-color: #f2ab1e;
         }
+
     #instructionId {
         cursor: pointer;
     }
-        
-    
+    .gameOverBtn {
+        margin-top: 10px;
+    }
 </style>
 <script>
-    let validLetters;// array of valid letter for the game, baed on the user
+    let validLetters = [];// array of valid letter for the game, baed on the user
     let letterMovementRate = 800;// time in mili seconds for all letters to move
     let letterMovementInterval, enemyShootingInterval;//interval for movement, letter shooting
     let letterMover = 10;// movement value of each letter per movement action
@@ -114,19 +118,33 @@
     let rocketShotBol = true;// boolean variable for knowing the shot of the rocket is charged
 
 
-    $(document).ready(function () {        
+    $(document).ready(function () {
         $rocket = $("#rocketId");
         $rocket.css("bottom", 0);
         move = Math.floor(parseInt($rocket.css("width")) / 2);
         $rocket.css("left", Math.floor(parseInt($rocket.css("width")) / 2));
-        validLetters = ["/Pictures/Game_9/taat1.png", "/Pictures/Game_9/taat2.png", "/Pictures/Game_9/taat3.png", "/Pictures/Game_9/taat4.png"];
         rocketTop = parseInt($rocket.css("top"));
         LoadGameInstruction();
-        LoadSoundAndPicture();
+        FillLetters();
         windowResize();
         $("body").keyup(userKey_Options);
     })
-    // This function resizes objects of the game according to the current size of the screen 
+    //This function gets the path of the selected letter images
+    function FillLetters() {
+        $.ajax({
+            url: '/Child/GetGameLetters' + '/' + '?Letter=@Model.Letter',           
+            type: 'GET',
+            dataType: 'json',
+            error: function (e, ts, et) {
+                alert("error at GetGameLetters" + ts);
+            },
+            success: function (data) {              
+                for (let i = 0; i < 5; i++) 
+                    validLetters.push("/Pictures/Alphabet/" + data.ValidLetterName[i]);                                             
+            }
+        });
+    }
+    // This function resizes objects of the game according to the current size of the screen
     function windowResize() {
         $(window).resize(function () {//for window resizing
             $rocket.css("left", Math.floor(parseInt($rocket.css("width")) / 2));
@@ -154,10 +172,9 @@
     function LoadSoundAndPicture() {
         new Audio("/Audio/Game_9/lose_life.mp3").load();
         new Audio("/Audio/Game_9/SFX_Explosion_03.mp3").load();
-        //this may need to be changes once games become dynamic letter based
         for (let i = 0; i < validLetters.length; i++) {
             fetch(validLetters[i]);
-        }     
+        }
     }
     // This function enables certain audio files at certain events
     function CreateSound(number = 10) {
@@ -189,7 +206,7 @@
                 if(rocketShotBol){
                     RocketShooting();
                 }
-               
+
                 break;
         }
     }
@@ -212,6 +229,7 @@
     // This funcion sets up the game
     function StartGame() {
         gameStarted = true;
+        LoadSoundAndPicture();
         FillHearts();
         $("#buttonId").addClass("hidescreen");
         $("#buttonRet").removeClass("hidescreen");
@@ -255,18 +273,18 @@
                 $("#sectionId").append($letter);
 
                 $letterRow.push($letter);
-                
+
             }
             $letterMatrix.push($letterRow);
-            
-            
+
+
         }
     }
     // This funcion sets up the game hearts (lives)
     function FillHearts() {
         $heartDiv = $("#heartDiv");
-        for (var i = 0; i < lives; i++) {
-            var $image = $("<img>");
+        for (let i = 0; i < lives; i++) {
+            let $image = $("<img>");
             $image.attr("src", "/Pictures/Game_9/heart.png");
             $image.addClass("heart");
             $heartDiv.append($image);
@@ -275,14 +293,14 @@
     }
     // This funcion moves all the letters on screen right, left or down (depending on current state of them)
     function MoveLetters() {
-        
+
         let wall = false;
         $(".letter").each(function () {
             const $letter = $(this);
             if (letterMover > 0) {
 
-                var currentPosition = parseInt($letter.css("left"));//getting current position of letter
-                var newPosition = currentPosition + letterMover;//calculating new position of user
+                let currentPosition = parseInt($letter.css("left"));//getting current position of letter
+                let newPosition = currentPosition + letterMover;//calculating new position of user
 
                 if (newPosition >= 0 && newPosition <= (parseInt($("#sectionId").css("width")) - parseInt($letter.css("width"))))//need to be changed ifsection limits letter changes game
                     console.log()//moving letter to new position
@@ -291,8 +309,8 @@
                 }
             }
             else {//letterMover < 0
-                var currentPosition = parseInt($letter.css("left"));//getting current position of letter
-                var newPosition = currentPosition + letterMover;//calculating new position of user
+                let currentPosition = parseInt($letter.css("left"));//getting current position of letter
+                let newPosition = currentPosition + letterMover;//calculating new position of user
                 //alert(parseInt($("#sectionId").css("width")));
                 if (newPosition >= 0 && newPosition <= (parseInt($("#sectionId").css("width")) - parseInt($letter.css("width"))))//need to be changed ifsection limits letter changes game
                     console.log();//moving letter to new position
@@ -325,7 +343,7 @@
         });
 
 
-       
+
     }
     // This funcion creates and sends shot images from the rocket towards the letters
     function RocketShooting() {
@@ -360,7 +378,7 @@
 
             });
     }
-    // This funcion checks for a collision between a letter to a shot image from the rocket 
+    // This funcion checks for a collision between a letter to a shot image from the rocket
     function collisionCheck() {
         let $shot = $(this);//getting the current shot
 
@@ -369,7 +387,7 @@
             let $letter = $(this);
 
             if (checkIntersection($letter, $shot)) {
-                CreateSound(1);              
+                CreateSound(1);
                 $shot.stop();
                 $shot.remove();
                 RemoveLetter($letter);
@@ -380,11 +398,10 @@
                     GameOver();
                 }
             }
-
         });
 
     }
-    // This funcion checks for a collision between the rocket to a shot image from a letter 
+    // This funcion checks for a collision between the rocket to a shot image from a letter
     function collisionCheckLetterShot() {
         let $shot = $(this);//getting the current shot from letter
         if (checkIntersection($rocket, $shot)) {//rocket was hit
@@ -405,7 +422,7 @@
         $("#heartDiv").empty();
         FillHearts();
     }
-    // This funcion splices a destroyed letter (letter which is to be removed from the screen) from the letter matrix 
+    // This funcion splices a destroyed letter (letter which is to be removed from the screen) from the letter matrix
     function RemoveLetter(target) {
         for (let i = 0; i < letterAmountRow; i++) {
             for (let j = 0; j < $letterMatrix[i].length; j++) {
@@ -420,7 +437,7 @@
                         else {
                             $letterMatrix[i].splice(j, 1);
                             break;
-                        }                      
+                        }
                     }
                 }
             }
@@ -477,9 +494,7 @@
         }
         else {
             $("#messageId").text("לא נורא, נסו שוב בפעם הבאה");
-
         }
-
         clearInterval(letterMovementInterval);
         clearInterval(enemyShootingInterval);
         $("#sectionId").addClass("hidescreen");
@@ -506,10 +521,8 @@
     <div style="text-align:center">
         <h1 style="color:gold"> פולשי האותיות </h1>
         <h2 style="color:goldenrod"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
-        <i id="instructionId" style="color:gold" class="fa fa-volume-up"></i>
-        <br />
-        <br />
-        <input class="myButton"  id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <div><i style="color:goldenrod" id="instructionId" class="fa fa-volume-up"></i></div>      
+        <input class="myButton" id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
         <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
     </div>
     <section id="sectionId" class="w3-display-container	">
@@ -521,7 +534,6 @@
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
         <h1 style="color:gold" id="messageId"><b></b></h1>
         <h1 style="color:gold"><b>ניקוד: </b><span id="finalScore"><b></b></span></h1>
-        <br />
         <input class="myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
 
     </div>

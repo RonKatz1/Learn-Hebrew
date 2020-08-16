@@ -96,12 +96,12 @@
         <h1 style="color:gold"> הנחש הרעב </h1>
         <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתורי החיצים</h2>
         <div><i id="instructionId" class="fa fa-volume-up"></i></div>
-        <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()"/>
+        <input class="myButton" id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
+        <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
     </div>
     <div id="statsDiv" class="w3-display-container">
         <div id="heartDiv"></div>
         <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
-
     </div>
     <canvas class="center" id="canvasId" >
        
@@ -122,7 +122,7 @@
     let snake = [];// array of snake bits
     let $currentLetterImg;// the variable holding the current image for the current letter
     let $currentLetter;// the variable holding the current axis x and axis y for the current letter
-    let validLetters;// array of valid letter for the game, baed on the user
+    let validLetters = [];// array of valid letter for the game, baed on the user
     let movementSpeed = 100;// the movement of the snake
     let lives = 3;// the number of chances to play the game
     const starterHeight = 5, starterWidth = 5, starterX = 30, starterY = 30;// variables for the width, height, axis x and axis y of the snake at the start of the game
@@ -130,21 +130,41 @@
     let gameInterval;// interval variable for the game
     let letterWidth = 10, letterHeight = 10;// variables for the width and height of any letter
     $(document).ready(function () {
-        //FillValidLetters();
-        validLetters = ["/Pictures/Alphabet/ב1.png", "/Pictures/Alphabet/ב2.png", "/Pictures/Alphabet/ב3.png", "/Pictures/Alphabet/ב4.png", "/Pictures/Alphabet/ב5.png"];
-        LoadGameInstruction();
-        LoadSoundAndPicture();       
+        FillValidLetters();       
+        LoadGameInstruction();             
         snake.push({
             
             x: starterX,
             y: starterY
         });
         FillHearts();
+        
+    })
+    // This function enables the user to play a soon as the button "התחלה" is pressed 
+    function StartGame() {
+        $("#buttonId").addClass("hidescreen");
+        LoadSoundAndPicture();
         CreateFirstLetter();
         gameInterval = setInterval(draw, movementSpeed);
 
         $("body").keydown(userKey_Options);
-    })
+    }
+    //This function gets the path of the selected letter images
+    function FillValidLetters() {
+        $.ajax({
+            url: '/Child/GetGameLetters' + '/' + '?Letter=@Model.Letter',           
+            type: 'GET',
+            dataType: 'json',
+            error: function (e, ts, et) {
+                alert("error at GetGameLetters" + ts);
+            },
+            success: function (data) {              
+                for (let i = 0; i < 5; i++) {
+                    validLetters.push("/Pictures/Alphabet/" + data.ValidLetterName[i]);                
+                }
+            }
+        });
+    }
     // This funcion pre loads the instruction audio of the game
     function LoadGameInstruction() {
         let obj = document.createElement("audio");
@@ -165,6 +185,7 @@
         //this may need to be changes once games become dynamic letter based
         for (let i = 0; i < validLetters.length; i++) {
             fetch(validLetters[i]);
+            //alert("y");
         }
     }
     // This function enables certain audio files at certain events
@@ -348,35 +369,5 @@
     // This function return the player to "Alphabet" page
     function GoToAlphabet() {
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
-    }
-
-
-    // This function will fill dynamicly the validLetters array
-    //need TO RETURN TO THIS
-    function FillValidLetters() {
-        @*for (let i = 0; i < @Model.ValidLetterName.Count(); i++) {
-            validLetters.push(@Model.ValidLetterName[@:i]);
-        }*@
-
-        validLetters = '@Html.Raw(Json.Encode(Model.ValidLetterName))';
-        @*for (let i = 0; i < @Model.ValidLetterName.Count() - 1; i++) {
-            //validLetters[i] = "/Pictures/Alphabet/" + validLetters[i];
-            let temp = validLetters[i];
-            vvvvvvvvv.push("/Pictures/Alphabet/" + temp);
-        }*@
-        let i = 2;
-        let temp = [];
-        while (validLetters[i] != "]") {
-            if (validLetters[i] != '"') {
-                temp.push(validLetters[i]);
-                i = i + 3;
-            }
-            else {
-                vvvvvvvvv.push("/Pictures/Alphabet/" + temp);
-                i++
-                temp.length = 0;
-            }
-        }
-
-    }
+    }  
 </script>
