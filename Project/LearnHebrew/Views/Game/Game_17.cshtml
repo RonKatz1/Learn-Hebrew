@@ -57,7 +57,12 @@
         height: 15%;
         position: absolute;
     }
-
+    #ballonContainer {
+        position:absolute;
+        background-color: aqua;
+        width: 100px;
+        height: 100px;
+    }
     .myButton {
         box-shadow: inset 0px 1px 0px 0px #f9eca0;
         background: linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
@@ -103,13 +108,16 @@
     var balloonPopped = false;// boolean for knowing if the user won the game
     let fireworksInterval;// interval of firework animation
     $(document).ready(function () {
-        //LoadGameInstruction();
+        LoadGameInstruction();
         FillLetters();
         //windowResize();
         var ballon = $("#balloonId");
         var section = $("#sectionId");
         ballon.css("left", (section.width() / 2) - ballon.width() / 2);
         ballon.css("top", (section.height() / 2) - ballon.height() / 2);
+        //let ballonContainer = $("#ballonContainer");
+        //ballonContainer.css("left", (section.width() / 2) - ballon.width() / 2);
+        //ballonContainer.css("top", (section.height() / 2) - ballon.height() / 2);
     })
     //This function gets the path of the selected letter images
     function FillLetters() {
@@ -148,6 +156,18 @@
         if (ballon.width() < 20) {
             GameOver();
         }
+    }
+    function LoadGameInstruction() {
+        let obj = document.createElement("audio");
+        obj.src = "/Audio/Game_17/Game_17_instructions.mp3";
+        obj.volume = 0.3;
+        obj.autoPlay = false;
+        obj.preLoad = true;
+        obj.controls = true;
+
+        $("#instructionId").click(function () {
+            obj.play();
+        });
     }
     function StartGame() {
         gameStarted = true;
@@ -382,10 +402,13 @@
         <h2 style="color:black"><b>  אות משחק זה היא @Model.Letter </b></h2>
     </div>
     <section id="sectionId" class="w3-display-container	">
+        @*<div id="ballonContainer">
+            <div id="balloonId" class="balloon"></div>
+        </div>*@
         <div id="balloonId" class="balloon"></div>
     </section>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h3 style="color:green; font-size:100px" id="messageId"><b></b></h3>
+        <h3 style="color:green; font-size:100px; font-weight:bold" id="messageId"></h3>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
 </body>

@@ -269,5 +269,55 @@ namespace LearnHebrew.Controllers
             return View(view, m);
            
         }
+        public ActionResult GoToTest(char letter, string name, string needContent)
+        {
+            Models.TestModel m = new Models.TestModel();
+            m.Letter = letter;
+            m.gameName = name;
+            m.contentNeeded = needContent;
+            var specificContent = BLL.Services.ContentServices.LoadAllContents();
+            specificContent = specificContent.Where(c => c.Data.IsApproved && c.Data.UnDotedWord.StartsWith(Char.ToString(letter))).ToList();
+            specificContent = specificContent.OrderBy(x => Guid.NewGuid()).ToList();
+            m.questions = specificContent.Take(4).ToList();
+
+            //if (Auxiliray.Session.ChildInSession.ChildID != -1)
+            //{
+            //    BLL.LearnHebrewEntities.ChildProgress childProgress = new BLL.LearnHebrewEntities.ChildProgress();
+            //    childProgress.ChildID = Auxiliray.Session.ChildInSession.ChildID;
+            //    childProgress.Data.ChosenContents = m.questions.ToDictionary(k => k.ContentID, v => v);
+            //    childProgress.Data.Date = DateTime.Now;
+            //    var progressID = BLL.Services.ChildProgressServices.save(childProgress);
+            //}
+            var view = "~/Views/Child/Test.cshtml";
+            return View(view, m);
+
+        }
+
+        [HttpPost]
+        public ActionResult SaveChildProgress(string[] wrongAnswers, string[] wrongAnswersCorrection)
+        {
+            BLL.LearnHebrewEntities.Child child = new BLL.LearnHebrewEntities.Child();
+            try
+            {
+                child = Auxiliray.Session.ChildInSession;
+             
+                if (child == null)// the user is not found
+                    return Content("failed to find child");
+
+                //loop frew wrongAnswers
+                //  object (contentid : wrong word)
+                //  wrongAnswers dictionary .add (contentid, word) 
+
+                //load child progress by progress id
+                //insert wrongAnswers into wrongAnswers dictionary into progress
+                //save progress again with all relevent data
+            }
+            catch (Exception ex)
+            {
+                return Content("fail");
+            }
+
+            return Content("OK");
+        }
     }
 }

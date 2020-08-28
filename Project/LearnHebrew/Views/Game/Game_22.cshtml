@@ -20,7 +20,7 @@
         margin: auto;
         width: 60%;
         height: 35%;
-        background-color: whitesmoke;
+        
     }
 
     .heart {
@@ -99,7 +99,7 @@
     }
 
     #gameOverh {
-        color: gold;
+        color: orange;
         margin-top: 30px;
         margin-bottom: 30px;
     }
@@ -124,7 +124,7 @@
     let jumpSpeed = 500;
 
     $(document).ready(function () {
-        //LoadGameInstruction();
+        LoadGameInstruction();
         FillLetters();
         //validLetters = ["/Pictures/Game_22/taaf1.png", "/Pictures/Game_22/taaf2.png", "/Pictures/Game_22/taaf3.png"];
         //invalidLetters = ["/Pictures/Game_22/taat1.png", "/Pictures/Game_22/shin1.png"];
@@ -170,6 +170,18 @@
                 for (let j = 0; j < data.InValidLetterName.length; j++)
                     invalidLetters.push("/Pictures/Alphabet/" + data.InValidLetterName[j]);
             }
+        });
+    }
+    function LoadGameInstruction() {
+        let obj = document.createElement("audio");
+        obj.src = "/Audio/Game_22/Game_22_instructions.mp3";
+        obj.volume = 0.3;
+        obj.autoPlay = false;
+        obj.preLoad = true;
+        obj.controls = true;
+
+        $("#instructionId").click(function () {
+            obj.play();
         });
     }
     function LoadSoundAndPicture() {
@@ -510,8 +522,8 @@
 
 <body>
     <div style="text-align:center">
-        <h1 style="color:gold"> האיש הרץ </h1>
-        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
+        <h1 style="color:orange"> האיש הרץ </h1>
+        <h2 style="color:orange"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
         <div><i id="instructionId" class="fa fa-volume-up"></i></div>
         <input class="myButton" id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
         <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
@@ -522,7 +534,7 @@
         <img id="manId" src="~/Pictures/Game_22/man1.png" />
     </section>
     <div id="instructionDiv" style="text-align:center;padding-top:5px">
-        <h2 style="color:gold"><b>  אות משחק זה היא @Model.Letter </b></h2>
+        <h2 style="color:darkorange"><b>  אות משחק זה היא @Model.Letter </b></h2>
     </div>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
         <h3 id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>

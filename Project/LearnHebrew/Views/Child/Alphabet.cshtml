@@ -96,7 +96,9 @@
 
         window.location.href = "@(Url.Action("GoToGame", "Child"))" + "?letter=" + letterForGame + "&name=" + gameName + "&needContent=" + gameContenNeededBolArray[parseInt(gameName)];
     }
-    
+    function GoToTest() {
+                window.location.href = "@(Url.Action("GoToTest", "Child"))" + "?letter=" + letterForGame + "&name=" + gameName + "&needContent=" + gameContenNeededBolArray[parseInt(gameName)];
+    }
     function RemoveGamePreviewDiv() {
         $(".gameImg").each(function () {
             let $currentGameImg = $(this);
@@ -262,5 +264,6 @@
         </table>
         <input id="buttonGo" type="button" value="מעבר" onclick="GoToGame()" />
         <input id="buttonCancel" type="button" value="ביטול" onclick="RemoveGamePreviewDiv()" />
+        <input id="buttonTest" type="button" value="מעבר למבחן" onclick="GoToTest()" />
     </div>
 </body>

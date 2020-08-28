@@ -231,6 +231,7 @@
     <Compile Include="Models\GameInformationModel.cs" />
     <Compile Include="Models\messageModel.cs" />
     <Compile Include="Models\AdultModel.cs" />
+    <Compile Include="Models\TestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -244,11 +245,13 @@
     <Content Include="Audio\Game_17\bang2.mp3" />
     <Content Include="Audio\Game_17\bang3.mp3" />
     <Content Include="Audio\Game_17\bang4.mp3" />
+    <Content Include="Audio\Game_17\Game_17_instructions.mp3" />
     <Content Include="Audio\Game_19\bounce.mp3" />
     <Content Include="Audio\Game_19\silver_bounce.mp3" />
     <Content Include="Audio\Game_21\doh.mp3" />
     <Content Include="Audio\Game_21\slash.mp3" />
     <Content Include="Audio\Game_22\blast.mp3" />
+    <Content Include="Audio\Game_22\Game_22_instructions.mp3" />
     <Content Include="Audio\Game_22\jump.mp3" />
     <Content Include="Audio\Game_2\Game_2_instructions.mp3" />
     <Content Include="Audio\Game_2\snakeError.mp3" />
@@ -601,6 +604,7 @@
     <Content Include="Views\Adult\ChildProgress.cshtml" />
     <Content Include="Views\Game\Game_2.cshtml" />
     <Content Include="Views\Adult\_ChildProgressInfo.cshtml" />
+    <Content Include="Views\Child\Test.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

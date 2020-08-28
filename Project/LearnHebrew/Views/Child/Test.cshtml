@@ -1,0 +1,146 @@
+﻿@model LearnHebrew.Models.TestModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<style>
+    .hidescreen {
+        display: none;
+    }
+</style>
+<script>
+    const gameLetter = '@Model.Letter';
+    const gameName = '@Model.gameName';
+    const contentNeeded ='@Model.contentNeeded';
+    const questionAmount = @Model.questions.Count();
+    let questionCounter = 0;
+    let wrongAnswers = [];// array of wronged answers the child gave
+    let wrongAnswersCorrection = [];// array of the right answers the child did not know
+    //let correctAnswers = [];// array of the correct answers the child gave
+    let words = [];
+    let points = 0;
+
+   
+    function SendAnswer(correctWord, answerTextBox, answerButtonId) {
+        $("#" + answerButtonId).attr("disabled", true);
+        $("#" + answerButtonId).attr("value", "תשובתך נשלחה");
+        let currentAnswer = $("#" + answerTextBox).val().trim();
+        if (correctWord == currentAnswer) {
+            points++;
+        }
+        else {
+            //add wrong answer to wrongAnswerDiv and array of wrong answers and array of wrong Answers Correction 
+            wrongAnswers.push(currentAnswer);
+            wrongAnswersCorrection.push(correctWord);
+        }
+        words.push(correctWord);
+        questionCounter++;
+        if (questionCounter == questionAmount) {// the end of the test
+            //remove question div and reveal result div and send results to db
+            AddToWrongAnswerDiv();
+            $("#pointsId").text(points);
+            $("#resultDiv").removeClass("hidescreen");
+            $("#questionsDiv").addClass("hidescreen");
+            SaveChildProgress();
+
+        }
+    }
+    function SaveChildProgress() {
+        //here we will send the data , only if child is not guest
+        $.post("@Url.Action("SaveChildProgress", "Child")" + "?wrongAnswers=" + wrongAnswers + "&wrongAnswersCorrection=" + wrongAnswersCorrection, function (data) {
+            
+        });
+    }
+    function AddToWrongAnswerDiv() {
+        if (wrongAnswers.length == 0)
+            return
+        else {
+            for (let i = 0; i < wrongAnswers.length; i++) {
+                let sentenceWrong = $("<span>");
+                let sentenceRight = $("<span>");               
+                let wrong = wrongAnswers[i];
+                let right = wrongAnswersCorrection[i];
+                sentenceWrong.text("התשובה שנרשמה היא: " + wrong + "   ");
+                sentenceWrong.css('color', 'red');
+                sentenceRight.text("התשובה הנכונה היא: " + right);
+                sentenceRight.css('color', 'green');
+                $("#wrongAnswerDiv").append(sentenceWrong);
+                $("#wrongAnswerDiv").append(sentenceRight);
+                $("#wrongAnswerDiv").append("<br/>");
+            }
+        }
+    }
+    function GoToGame() {
+        window.location.href = "@(Url.Action("GoToGame", "Child"))" + "?letter=" + gameLetter + "&name=" + gameName + "&needContent=" + contentNeeded;
+
+    }
+</script>
+
+<body>
+    @if (Model.questions != null && Model.questions.Count() > 0)
+    {
+        
+    <div id="questionsDiv">
+        <div><h1>רשום את תשובותיך</h1></div>
+        @for (int i = 0; i < Model.questions.Count(); i++)
+        {
+
+            <div class="contentToDisplay">
+                <div>
+                    <input type="text" id='textbox_@i' placeholder="רשום את תשובתך כאן" />
+                </div>
+                <div class="ContentPhoto" style="width:100px; height:100px; background-image:url('@(BLL.Services.ContentServices.GetFilePath(Model.questions[i].Data.PhotoFile))')">
+
+                </div>
+                <div>
+                    <audio controls>
+                        <source src="@Url.Content(BLL.Services.ContentServices.GetFilePath(Model.questions[i].Data.VoiceFile))" type="audio/ogg">
+                    </audio>
+                </div>
+
+
+                <input type="button" value="אשר" class="confirmBtn slick-next" id='button_@i' onclick="SendAnswer('@Model.questions[i].Data.UnDotedWord', 'textbox_@i','button_@i')" />
+
+            </div>
+        }
+    </div>
+    }
+    else
+    {
+        <h3>אין שאלות </h3>
+    }
+        <div id="resultDiv" class="hidescreen">
+            <h3>זהו סוף המבחן, במידה וטעית בשאלה מסויימת היא תופיע למטה</h3>
+            <h3>ציונך במבחן:<span id="pointsId"></span></h3>
+
+            <div id="wrongAnswerDiv"></div>
+            <input id="buttonGo" type="button" value="מעבר למשחק" onclick="GoToGame()" />
+
+        </div>
+</body>   
+<style>
+    .ContentPhoto {
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    #ConfirmContentsContainer {
+        width: 80%;
+        margin: auto;
+        text-align: center;
+        direction: ltr;
+    }
+
+    .ContentPhoto {
+        margin: auto;
+    }
+
+    .contentToDisplay {
+        width: 100%;
+    }
+    
+</style>

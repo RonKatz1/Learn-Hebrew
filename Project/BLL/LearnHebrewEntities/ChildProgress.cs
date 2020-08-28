@@ -12,23 +12,25 @@ namespace BLL.LearnHebrewEntities
         public int ProgressID { get; set; }
         public int ChildID { get; set; }
 
-        public ProgressDate Data { get; set; }
+        public ProgressData Data { get; set; }
 
 
-        public class ProgressDate
+        public class ProgressData
         {
             public char Letter { get; set; }
-            //public string Word { get; set; }
-            public Dictionary<int, BLL.LearnHebrewEntities.Content> ChosenContents { get; set; }
 
-            public Dictionary<int, bool> ContentSucceess { get; set; }
+            public Dictionary<int, string> WrongAnswers { get; set; } //real contentID with wrong answer 
+
+            public Dictionary<int, BLL.LearnHebrewEntities.Content> ChosenContents { get; set; }//all chosen content for child learning session
+
+            //public Dictionary<int, bool> ContentSucceess { get; set; }//all contentIDs with bool to define if answerd correctly
             
             public DateTime Date { get; set; }
 
-            public ProgressDate()
+            public ProgressData()
             {
                 this.ChosenContents = new Dictionary<int, Content>();
-                this.ContentSucceess = new Dictionary<int, bool>();
+                this.WrongAnswers = new Dictionary<int, string>();
             }
 
         }
