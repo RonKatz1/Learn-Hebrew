@@ -39,7 +39,17 @@ namespace BLL.Services
             }
             return progresses;
         }
-
+        public static ChildProgress LoadSpecificChildProgressesByChildID(int progressID)
+        {
+            var entityProgress = new Domain.Entity.ChildProgress();
+            var childProgress = new ChildProgress();
+            using (Domain.Repositories.ChildProgressRepository repo = new Domain.Repositories.ChildProgressRepository())
+            {
+                entityProgress = repo.LoadSpecificChildProgressesByprogressID(progressID);
+            }
+            childProgress = ConvertEntityToBusiness(entityProgress);
+            return childProgress; 
+        }
         public static ChildProgress ConvertEntityToBusiness(Domain.Entity.ChildProgress EProg)
         {
             ChildProgress BProg = new ChildProgress();
@@ -47,7 +57,7 @@ namespace BLL.Services
             {
                 BProg.ProgressID = EProg.ProgressID;
                 BProg.ChildID = EProg.ChildID;
-                BProg.Data = Serialization.Deserialize2<ChildProgress.ProgressDate>(EProg.Data);
+                BProg.Data = Serialization.Deserialize2<ChildProgress.ProgressData>(EProg.Data);
                 return BProg;
             }
             catch (Exception ex)

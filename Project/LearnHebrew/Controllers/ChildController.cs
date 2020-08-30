@@ -280,44 +280,155 @@ namespace LearnHebrew.Controllers
             specificContent = specificContent.OrderBy(x => Guid.NewGuid()).ToList();
             m.questions = specificContent.Take(4).ToList();
 
-            //if (Auxiliray.Session.ChildInSession.ChildID != -1)
+            Auxiliray.Dictionaries d = new Auxiliray.Dictionaries();
+            
+            var words = d.Words;
+            var wordsToDisplay = new List<string>();
+            //words.OrderBy(x => Guid.NewGuid()).ToList();
+            var j = 0;
+            Random rnd = new Random();
+            var number = -1;
+            while (j < 13)// 13 means the amounts of words in wordsToDisplay
+            {
+                number = rnd.Next(words.Count);//NEED TO ADD ARRAY OF NUMBERS ALREADY PICKED THEN CONTINUE FOR WHILE LOOP
+                var word = words[number];
+                var wordIsInQuestions = false;
+                foreach (var q in m.questions)
+                {
+                    if (word == q.Word || wordsToDisplay.Contains(word))// if word is question answer or already in wordsToDisplay
+                    {
+                        wordIsInQuestions = true;
+                        break;
+                    }
+                }
+                if (!wordIsInQuestions)
+                {
+                    j++;
+                    wordsToDisplay.Add(word);
+                }
+            }
+            //for (var i=0; i<4; i++)
             //{
-            //    BLL.LearnHebrewEntities.ChildProgress childProgress = new BLL.LearnHebrewEntities.ChildProgress();
-            //    childProgress.ChildID = Auxiliray.Session.ChildInSession.ChildID;
-            //    childProgress.Data.ChosenContents = m.questions.ToDictionary(k => k.ContentID, v => v);
-            //    childProgress.Data.Date = DateTime.Now;
-            //    var progressID = BLL.Services.ChildProgressServices.save(childProgress);
+
+            //    //take random from words
+            //    //check if word different from m.quwstions
+            //    //if different - save it
+            //    // else take another random word
+            //    //insert to model
+                
             //}
+
+            var wordWithWrongToLearn = new Dictionary<int, List<string>>();
+            foreach(var q in m.questions)
+            {
+                var temp = new List<string>();
+                temp.Add(q.Word);
+                number = rnd.Next(wordsToDisplay.Count);
+                var placeholderNumber = number;          
+                temp.Add(wordsToDisplay[number]);
+                number = rnd.Next(wordsToDisplay.Count);
+                while (number == placeholderNumber)
+                    number = rnd.Next(wordsToDisplay.Count);
+                temp.Add(wordsToDisplay[number]);
+                //temp.Add(wordsToDisplay.FirstOrDefault());
+                //temp.Add(wordsToDisplay.FirstOrDefault());
+                //order by random
+                temp = temp.OrderBy(x => Guid.NewGuid()).ToList();
+                wordWithWrongToLearn.Add(q.ContentID, temp);
+            }
+            m.ContentOptions = wordWithWrongToLearn;
+            if (Auxiliray.Session.ChildInSession.ChildID != -1)// if child is not a guest
+            {
+                BLL.LearnHebrewEntities.ChildProgress childProgress = new BLL.LearnHebrewEntities.ChildProgress();
+                childProgress.ChildID = Auxiliray.Session.ChildInSession.ChildID;
+                childProgress.Data.ChosenContents = m.questions.ToDictionary(k => k.ContentID, v => v);
+                childProgress.Data.Date = DateTime.Now;
+                childProgress.Data.EndDate = DateTime.MaxValue;
+                var progressID = BLL.Services.ChildProgressServices.Save(childProgress);
+                m.childProgressID = childProgress.ProgressID;
+            }
             var view = "~/Views/Child/Test.cshtml";
             return View(view, m);
 
         }
 
+        //[HttpPost]
+        //public ActionResult SaveChildProgressOLD(string[] wrongAnswers,string[] corresponsingContentID, string[] wrongAnswersCorrection, int progressID, char gameLetter)
+        //{
+        //    BLL.LearnHebrewEntities.Child child = new BLL.LearnHebrewEntities.Child();
+        //    try
+        //    {
+        //        child = Auxiliray.Session.ChildInSession;
+             
+        //        if (child == null)// the user is not found
+        //            return Content("failed to find child");
+
+        //        var childProgress = BLL.Services.ChildProgressServices.LoadSpecificChildProgressesByChildID(child.ChildID, progressID);
+        //        if (childProgress == null)
+        //            return Content("failed to find specific child progress");
+        //        childProgress.Data.Letter = gameLetter;
+        //        //childProgress.Data.EndDate = DateTime.Now;
+        //        int j = 0;
+        //        var temp = wrongAnswers.ToArray();
+        //        var temp2 = wrongAnswers.ToList();
+        //        foreach (var str in temp)
+        //        {
+        //            j++;
+
+        //        }
+        //        for (var i = 0; i < wrongAnswers.Length; i++)
+        //        {
+        //            //childProgress.Data.WrongAnswers.Add(Int32.Parse(corresponsingContentID[i]), wrongAnswers[i]);
+        //        }
+        //        //var savingProgress = BLL.Services.ChildProgressServices.Save(childProgress);
+
+
+        //        //loop frew wrongAnswers
+        //        //  object (contentid : wrong word)
+        //        //  wrongAnswers dictionary .add (contentid, word) 
+
+        //        //load child progress by progress id
+        //        //insert wrongAnswers into wrongAnswers dictionary into progress
+        //        //save progress again with all relevent data
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Content("fail");
+        //    }
+
+        //    return Content("OK");
+        //}
+
         [HttpPost]
-        public ActionResult SaveChildProgress(string[] wrongAnswers, string[] wrongAnswersCorrection)
+        public string SaveChildProgress(TestResultDto result)
         {
             BLL.LearnHebrewEntities.Child child = new BLL.LearnHebrewEntities.Child();
             try
             {
                 child = Auxiliray.Session.ChildInSession;
-             
+
                 if (child == null)// the user is not found
-                    return Content("failed to find child");
+                     return ("failed to find child");
 
-                //loop frew wrongAnswers
-                //  object (contentid : wrong word)
-                //  wrongAnswers dictionary .add (contentid, word) 
-
-                //load child progress by progress id
-                //insert wrongAnswers into wrongAnswers dictionary into progress
-                //save progress again with all relevent data
+                var childProgress = BLL.Services.ChildProgressServices.LoadSpecificChildProgressesByChildID(result.ProgressID);
+                childProgress.Data.Letter = result.GameLetter;
+                childProgress.Data.EndDate = DateTime.Now;
+                if (result.WrongAnswers != null)
+                {
+                    for (var i = 0; i < result.WrongAnswers.Length; i++)
+                    {
+                        childProgress.Data.WrongAnswers.Add(result.CorresponsingContentID[i], result.WrongAnswers[i]);
+                    }
+                }
+                var savingProgress = BLL.Services.ChildProgressServices.Save(childProgress);
+                
             }
             catch (Exception ex)
             {
-                return Content("fail");
+                return ("fail");
             }
+            return ("OK");
 
-            return Content("OK");
         }
     }
 }

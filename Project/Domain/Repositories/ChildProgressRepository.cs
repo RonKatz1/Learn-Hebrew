@@ -43,6 +43,16 @@ namespace Domain.Repositories
             var temp = this.LearnHebrewDB.ChildProgresses.Where(p => p.ChildID == ChildID);
             return temp != null && temp.Count() > 0 ? temp.ToList() : new List<ChildProgress>();
         }
+        public ChildProgress LoadSpecificChildProgressesByChildID(int childID, int progressID)
+        {
+            var temp = this.LearnHebrewDB.ChildProgresses.Where(p => p.ChildID == childID && p.ProgressID == progressID);
+            return temp != null && temp.Count() > 0 ? temp.FirstOrDefault() : new ChildProgress();
+        }
+        public ChildProgress LoadSpecificChildProgressesByprogressID(int progressID)
+        {
+            var temp = this.LearnHebrewDB.ChildProgresses.Where(p => p.ProgressID == progressID);
+            return temp != null && temp.Count() > 0 ? temp.FirstOrDefault() : new ChildProgress();
+        }
 
     }
 }

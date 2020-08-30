@@ -14,7 +14,10 @@ namespace BLL.LearnHebrewEntities
 
         public ProgressData Data { get; set; }
 
-
+        public ChildProgress()
+        {
+            Data = new ProgressData();
+        }
         public class ProgressData
         {
             public char Letter { get; set; }
@@ -27,10 +30,12 @@ namespace BLL.LearnHebrewEntities
             
             public DateTime Date { get; set; }
 
+            public DateTime EndDate { get; set; }
+
             public ProgressData()
             {
                 this.ChosenContents = new Dictionary<int, Content>();
-                this.WrongAnswers = new Dictionary<int, string>();
+                this.WrongAnswers = new Dictionary<int, string>();               
             }
 
         }
