@@ -280,17 +280,19 @@ namespace LearnHebrew.Controllers
             specificContent = specificContent.OrderBy(x => Guid.NewGuid()).ToList();
             m.questions = specificContent.Take(4).ToList();
 
-            Auxiliray.Dictionaries d = new Auxiliray.Dictionaries();
-            
+            //get the words from class "Dictionaries"
+            Auxiliray.Dictionaries d = new Auxiliray.Dictionaries();           
             var words = d.Words;
-            var wordsToDisplay = new List<string>();
-            //words.OrderBy(x => Guid.NewGuid()).ToList();
-            var j = 0;
+
+            var wordsToDisplay = new List<string>();// Variable for listing random words 
+            var j = 0;// Variable to know how many words in wordsToDisplay
+
             Random rnd = new Random();
-            var number = -1;
+            var number = -1;// Variable to get random position in "words"
+            // While loop to add words to wordsToDisplay
             while (j < 13)// 13 means the amounts of words in wordsToDisplay
             {
-                number = rnd.Next(words.Count);//NEED TO ADD ARRAY OF NUMBERS ALREADY PICKED THEN CONTINUE FOR WHILE LOOP
+                number = rnd.Next(words.Count);
                 var word = words[number];
                 var wordIsInQuestions = false;
                 foreach (var q in m.questions)
@@ -306,18 +308,7 @@ namespace LearnHebrew.Controllers
                     j++;
                     wordsToDisplay.Add(word);
                 }
-            }
-            //for (var i=0; i<4; i++)
-            //{
-
-            //    //take random from words
-            //    //check if word different from m.quwstions
-            //    //if different - save it
-            //    // else take another random word
-            //    //insert to model
-                
-            //}
-
+            }            
             var wordWithWrongToLearn = new Dictionary<int, List<string>>();
             foreach(var q in m.questions)
             {
@@ -330,9 +321,6 @@ namespace LearnHebrew.Controllers
                 while (number == placeholderNumber)
                     number = rnd.Next(wordsToDisplay.Count);
                 temp.Add(wordsToDisplay[number]);
-                //temp.Add(wordsToDisplay.FirstOrDefault());
-                //temp.Add(wordsToDisplay.FirstOrDefault());
-                //order by random
                 temp = temp.OrderBy(x => Guid.NewGuid()).ToList();
                 wordWithWrongToLearn.Add(q.ContentID, temp);
             }

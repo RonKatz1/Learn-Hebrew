@@ -7,12 +7,35 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <style>
+    body{
+        background-color:aqua;
+
+    }
     label {
         margin-right: 5px;
         margin-left: 5px;
     }
     .hidescreen {
         display: none;
+    }
+    .contentToDisplay {
+        width: 100%;
+        text-align: center;
+        margin:45px;
+    }
+    #titleId {
+        text-align: center;
+        color:darkorange;
+    }
+    #questionsDiv {
+        text-align: center;
+        margin:auto;
+        width:100%;
+    }
+    #resultDiv {
+        text-align: center;
+        margin: auto;
+        width: 100%;
     }
 </style>
 <script>
@@ -164,8 +187,11 @@
     @if (Model.questions != null && Model.questions.Count() > 0)
     {
         
-    <div id="questionsDiv">
-        <div><h1>רשום את תשובותיך</h1></div>
+    <section id="questionsDiv">
+        <div id="titleId">
+            <h1>מבחן מילים</h1>
+            <h2>עבור כל שאלה בחר במילה המתאימה לתמונה</h2>
+        </div>
         @for (int i = 0; i < Model.questions.Count(); i++)
         {
 
@@ -209,12 +235,12 @@
 
 
             @*<input type="button" value="אשר" class="confirmBtn slick-next" id='button_@i' onclick="SendAnswer('@Model.questions[i].Data.UnDotedWord', 'textbox_@i','button_@i')" />*@
-            <input type="button" value="אישור עם רדיו"  id='button_@i' onclick="RadioSendAnswer('@Model.questions[i].Word', 'button_@i', '@Model.questions[i].ContentID','radio_@i')" />
+            <input type="button" value="שליחת תשובה"  id='button_@i' onclick="RadioSendAnswer('@Model.questions[i].Word', 'button_@i', '@Model.questions[i].ContentID','radio_@i')" />
 
 
         </div>
         }
-    </div>
+    </section>
     }
     else
     {
@@ -235,6 +261,7 @@
         background-position: center center;
         background-repeat: no-repeat;
         background-size: cover;
+        
     }
 
     #ConfirmContentsContainer {
@@ -248,8 +275,6 @@
         margin: auto;
     }
 
-    .contentToDisplay {
-        width: 100%;
-    }
+    
     
 </style>

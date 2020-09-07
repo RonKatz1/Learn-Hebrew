@@ -97,16 +97,17 @@
 
 <script>
     let validLetters = [];// array of valid letter for the game, baed on the user
-    var invalidLetters = [];// array of invalid letter for the game, baed on the user
-    var gameoverIndicator; // interval for spawning enemies until game is over
-    var spawnTimer = 700;// the time it takes for a letter to spawn
-    var removeLetterTimer = 3500;// the time it takes for a spawned letter to disappear
+    let invalidLetters = [];// array of invalid letter for the game, baed on the user
+    let gameoverIndicator; // interval for spawning enemies until game is over
+    let spawnTimer = 700;// the time it takes for a letter to spawn
+    let removeLetterTimer = 3500;// the time it takes for a spawned letter to disappear
     let poppingSize = 500;// the max size a ballon can get
-    var gameStarted = false; // indicator for game started for not letting pressed enter
-    var ballonReduction = 5;// the size of the balloon reduction per enemy spawned
-    var ballonEnlarge = 35;// the size of the balloon enlarges per using this var
-    var balloonPopped = false;// boolean for knowing if the user won the game
+    let gameStarted = false; // indicator for game started for not letting pressed enter
+    let ballonReduction = 5;// the size of the balloon reduction per enemy spawned
+    let ballonEnlarge = 35;// the size of the balloon enlarges per using this var
+    let balloonPopped = false;// boolean for knowing if the user won the game
     let fireworksInterval;// interval of firework animation
+
     $(document).ready(function () {
         LoadGameInstruction();
         FillLetters();
@@ -136,17 +137,19 @@
             }
         });
     }
+    // Function increases the size of the ballon
     function EnlargeBalloon() {
-        var ballon = $("#balloonId");
+        let ballon = $("#balloonId");
 
         ballon.width(ballon.width() + ballonEnlarge);
         ballon.height(ballon.height() + ballonEnlarge);
         RealignBalloon();
 
     }
+    // This function realigns the ballon to the center of the screen
     function RealignBalloon() {
-        var ballon = $("#balloonId");
-        var section = $("#sectionId");
+        let ballon = $("#balloonId");
+        let section = $("#sectionId");
         ballon.css("left", (section.width() / 2) - ballon.width() / 2);
         ballon.css("top", (section.height() / 2) - ballon.height() / 2);
         if (ballon.width() > poppingSize) {
@@ -157,6 +160,7 @@
             GameOver();
         }
     }
+    // This function pre loads the game instructions
     function LoadGameInstruction() {
         let obj = document.createElement("audio");
         obj.src = "/Audio/Game_17/Game_17_instructions.mp3";
@@ -169,17 +173,19 @@
             obj.play();
         });
     }
+    // This function starts the game
     function StartGame() {
         gameStarted = true;
         $("#buttonId").addClass("hidescreen");
         $("#buttonRet").removeClass("hidescreen");
         gameoverIndicator = setInterval(createEnemy, spawnTimer);
     }
+    // This function creates an "enemy" letter
     function createEnemy() {
         ReduceBalloon();//reducing the current size of the balloon
-        var $enemy = $("<img>");
-        var enemyType = Math.floor((Math.random() * 10) + 1);
-        var randomNumber;
+        let $enemy = $("<img>");
+        let enemyType = Math.floor((Math.random() * 10) + 1);
+        let randomNumber;
         if (enemyType > 3) {//enemy will be a valid letter
             randomNumber = Math.floor((Math.random() * validLetters.length) + 0);
             $enemy.attr("src", validLetters[randomNumber]);
@@ -190,19 +196,20 @@
         }
         $enemy.addClass("enemy");
 
-        var limitLeft = 0;//the next 6 lines determine random axis X and Y of enemy spawn
-        var limitRight = $("#sectionId").width() - $enemy.width();
-        var axisX = Math.floor((Math.random() * limitRight) + limitLeft);
-        var limitUp = 0;
-        var limitDown = $("#sectionId").height();
-        var axisY = Math.floor((Math.random() * limitDown) + limitUp);
+        let limitLeft = 0;//the next 6 lines determine random axis X and Y of enemy spawn
+        let limitRight = $("#sectionId").width() - $enemy.width();
+        let axisX = Math.floor((Math.random() * limitRight) + limitLeft);
+        let limitUp = 0;
+        let limitDown = $("#sectionId").height() - 60;
+        let axisY = Math.floor((Math.random() * limitDown) + limitUp);
 
         $enemy.css("top", axisY + "px");
         $enemy.css("left", axisX + "px");
 
         $("section").append($enemy);
 
-        var animationType = Math.floor((Math.random() * 2) + 1);
+        let animationType = Math.floor((Math.random() * 2) + 1);
+        
         if (animationType == 1) {//falling down animation
             $enemy.animate({
                 top: (parseInt($("section").css("height"))) - (parseInt($enemy.css("height"))) + "px"
@@ -234,14 +241,15 @@
                 });
         }
     }
+    // This function is called when a "letter" is clicked
     function Clicked() {
-        var indicator = false;//indicator for realizing the enemy was a valid letter
+        let indicator = false;//indicator for realizing the enemy was a valid letter
         $(this).unbind().click(function () {
             for (var i = 0; i < validLetters.length; i++) {
                 if ($(this).attr('src') == validLetters[i]) {
                     indicator = true;
                     EnlargeBalloon();
-                    var $checkMark = $("<img>");
+                    let $checkMark = $("<img>");
                     $checkMark.addClass("enemy");
                     $checkMark.attr("src", "/Pictures/Game_17/checkmark.png");
                     $checkMark.css("left", $(this).css("left"));
@@ -284,14 +292,16 @@
 
         });
     }
+    // Function reduces the size of the ballon per every creation of "enemy" letter
     function ReduceBalloon() {
-        var ballon = $("#balloonId");
+        let ballon = $("#balloonId");
         ballon.width(ballon.width() - ballonReduction);
         ballon.height(ballon.height() - ballonReduction);
 
         RealignBalloon();
 
     }
+    // This function creates the "ending sound" when the game ends
     function CreateEndingSound() {
         let $sound = $("<audio>");
         if (balloonPopped == false) {
@@ -302,6 +312,7 @@
         }
         $sound[0].play();
     }
+    // This function crates the "fireworks" display at the end of the game if the ballon "popped"
     function CreateFirework() {
         let $firework = $("<img>");
         $firework.addClass("firework");
@@ -324,6 +335,7 @@
 
             });
     }
+    // This function creates the sound of a "firework"
     function CreateFireworkSound() {
         let $sound = $("<audio>");
         let ExplodedSound = Math.floor((Math.random() * 4) + 1);
@@ -343,6 +355,7 @@
         }
         $sound[0].play();
     }
+    // This function crates the "fireworks" display at the end of the game if the ballon "popped"
     function FireworkExploded() {
         let $exploded = $(this);
         CreateFireworkSound();
@@ -362,11 +375,13 @@
             });
 
     }
+    // This function return a random axisX position
     function randomEnemy_PlaceX(element) {
-        var limitLeft = 0;
-        var limitRight = parseInt($("#sectionId").css("width")) - ((parseInt(element.css("height"))) * 2);
+        let limitLeft = 0;
+        let limitRight = parseInt($("#sectionId").css("width")) - ((parseInt(element.css("height"))) * 2);
         return Math.floor((Math.random() * limitRight) + limitLeft);
     }
+    // This function ends the game
     function GameOver() {
         clearInterval(gameoverIndicator);
         $("#sectionId").addClass("hidescreen");
@@ -374,19 +389,18 @@
         CreateEndingSound();
         if (balloonPopped) {
             $("#messageId").text("הבלון התפוצץ");
-
             fireworksInterval = setInterval(CreateFirework, 800);
-
-
         }
         else {
             $("#messageId").text("לא נורא, הבלון יתפוצץ בפעם הבאה");
         }
         $("#endGameScreen").removeClass("hidescreen");
     }
+    // This function removes an object
     function deleteObject() {
         $(this).remove();
     }
+    // This function redirects user to the alphabet view
     function GoToAlphabet() {
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
     }

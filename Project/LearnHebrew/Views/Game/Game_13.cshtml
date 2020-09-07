@@ -199,7 +199,14 @@
         $("#buttonId").addClass("hidescreen");
         $("#buttonRet").removeClass("hidescreen");
         FillHearts();
+        LoadSoundAndPicture();
         gameoverIndicator = setInterval(createCockroach, cockroachSpawn);
+    }
+    // This function pre loads the sounds and pictures that are used in the game
+    function LoadSoundAndPicture() {
+        new Audio("/Audio/Game_13/gun_fire2.mp3").load();
+        for (let i = 0; i < validLetters.length; i++) 
+            fetch(validLetters[i]);              
     }
     // This funcion sets up the game hearts (lives)
     function FillHearts() {
@@ -245,7 +252,6 @@
                     });
                 break;
             case (2)://right to left
-                //alert("this 2");
                 if (cockroachImage == 1) {
                     $cockroach.attr("src", "/Pictures/Game_13/cockroach1RL.png");
                 }
@@ -271,7 +277,6 @@
                 break;
 
             case (3)://up to down
-                //alert("this 3");
                 if (cockroachImage == 1) {
                     $cockroach.attr("src", "/Pictures/Game_13/cockroach1UD.png");
                 }
@@ -279,9 +284,9 @@
                     $cockroach.attr("src", "/Pictures/Game_13/cockroach2UD.png");
 
                 }
-                axisx = randomEnemy_PlaceX($cockroach);
+                axisX = randomEnemy_PlaceX($cockroach);
                 $cockroach.css("top", 0 + "px");
-                $cockroach.css("left", axisx + "px");
+                $cockroach.css("left", axisX + "px");
                 $("#sectionId").append($cockroach);
                 $cockroach.animate({
                     top: (parseInt($("#sectionId").css("height"))) - (parseInt($cockroach.css("height"))) + "px"
@@ -297,7 +302,6 @@
                 break;
 
             case (4)://down to up
-                //alert("this 4");
                 if (cockroachImage == 1) {
                     $cockroach.attr("src", "/Pictures/Game_13/cockroach1DU.png");
                 }
@@ -305,9 +309,9 @@
                     $cockroach.attr("src", "/Pictures/Game_13/cockroach2DU.png");
 
                 }
-                axisx = randomEnemy_PlaceX($cockroach);
-                $cockroach.css("top", (parseInt($("#sectionId").css("height"))) - (parseInt($cockroach.css("height"))) + "px");
-                $cockroach.css("left", axisx + "px");
+                axisX = randomEnemy_PlaceX($cockroach);
+                $cockroach.css("top", (parseInt($("#sectionId").css("height"))) - (parseInt($("#heartDiv").css("height")) * 2) + "px");
+                $cockroach.css("left", axisX + "px");
                 $("#sectionId").append($cockroach);
                 $cockroach.animate({
                     top: 0 + "px"
@@ -453,7 +457,7 @@
         <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
     </section>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h3 id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>
+        <h3 style="font-size:50px" id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
 </body>

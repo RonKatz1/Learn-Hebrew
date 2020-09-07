@@ -32,12 +32,6 @@
         display: none;
     }
 
-
-    .hole {
-        display: block;
-        width: 300px;
-    }
-
     .letter {
         width: 50px;
     }
@@ -53,29 +47,8 @@
         position: absolute;
         bottom: 0;
     }
-
-    .holeClass {
-        display: block;
-        background-image: url('../../Pictures/Game_8/dirt.png');
-        background-size: contain;
-        content: '';
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        z-index: 2;
-        bottom: -30px;
-        top: 0;
-    }
-
-    .moleClass {
-        background-image: url('../../Pictures/Game_8/chaat1.png');
-        background-size: 60%;
-        position: absolute;
-        top: 100%;
-        width: 100%;
-        height: 100%;
-    }
-
+   
+ 
     #imageId {
         width: 100px;
         height: 100px;
@@ -111,13 +84,16 @@
         }
 </style>
 <script>
-    var gameoverIndicator;// interval animation of spawning enemies
-    var validLetters = [];// array of valid letter for the game, baed on the user
-    var invalidLetters = [];// array of ןמvalid letter for the game, baed on the user
-    var gameoverIndicator;//interval animation of spawning enemies
+    let gameoverIndicator;// interval animation of spawning enemies
+    let validLetters = [];// array of valid letter for the game, baed on the user
+    let invalidLetters = [];// array of ןמvalid letter for the game, baed on the user
+    let gameLetter = '@Model.Letter';// getting this game's letter
+    let signPath;// this game's sign image path
+
     $(document).ready(function () {
         FillLetters();  
         LoadSoundAndPicture();
+        GetSignPath();
         $("#imageId").click(function () {
             $("#imageId").slideUp();
             setTimeout(function () {
@@ -125,6 +101,80 @@
             },2000)
         });
     })
+    // This function gets this game's sign path
+    function GetSignPath() {
+        switch (gameLetter) {
+            case 'א':
+                signPath = "/Pictures/Game_8/signא.png";
+                break;
+            case 'ב':
+                signPath = "/Pictures/Game_8/signב.png";
+                break;
+            case 'ג':
+                signPath = "/Pictures/Game_8/signג.png";
+                break;
+            case 'ד':
+                signPath = "/Pictures/Game_8/signד.png";
+                break;
+            case 'ה':
+                signPath = "/Pictures/Game_8/signה.png";
+                break;
+            case 'ו':
+                signPath = "/Pictures/Game_8/signו.png";
+                break;
+            case 'ז':
+                signPath = "/Pictures/Game_8/signז.png";
+                break;
+            case 'ח':
+                signPath = "/Pictures/Game_8/signח.png";
+                break;
+            case 'ט':
+                signPath = "/Pictures/Game_8/signט.png";
+                break;
+            case 'י':
+                signPath = "/Pictures/Game_8/signי.png";
+                break;
+            case 'כ':
+                signPath = "/Pictures/Game_8/signכ.png";
+                break;
+            case 'ל':
+                signPath = "/Pictures/Game_8/signל.png";
+                break;
+            case 'מ':
+                signPath = "/Pictures/Game_8/signמ.png";
+                break;
+            case 'נ':
+                signPath = "/Pictures/Game_8/signנ.png";
+                break;
+            case 'ס':
+                signPath = "/Pictures/Game_8/signס.png";
+                break;
+            case 'ע':
+                signPath = "/Pictures/Game_8/signע.png";
+                break;
+            case 'פ':
+                signPath = "/Pictures/Game_8/signפ.png";
+                break;
+            case 'צ':
+                signPath = "/Pictures/Game_8/signצ.png";
+                break;
+            case 'ק':
+                signPath = "/Pictures/Game_8/signק.png";
+                break;
+            case 'ר':
+                signPath = "/Pictures/Game_8/signר.png";
+                break;
+            case 'ש':
+                signPath = "/Pictures/Game_8/signש.png";
+                break;
+            case 'ת':
+                signPath = "/Pictures/Game_8/signת.png";
+                break;
+            default:
+                signPath = "/Pictures/Game_8/cheese.png";
+                break;
+        }
+    }
     //This function gets the path of the selected letter images
     function FillLetters() {
         $.ajax({
@@ -149,19 +199,22 @@
         for (let i = 0; i < validLetters.length; i++) {
             fetch(validLetters[i]);
         }
+        for (let j = 0; j < invalidLetters.length; j++) {
+            fetch(invalidLetters[j]);
+        }
     }
+    // This function starts the game
     function StartGame() {
-        gameoverIndicator = setInterval(CreateHole, 500);
+        gameoverIndicator = setInterval(CreateEnemy, 500);
         $("#buttonId").addClass("hidescreen");
     }
-    function CreateHole() {
-        var imageType = Math.floor((Math.random() * 2) + 1);
-        var $enemy = $("<img>");
-        //$enemy.attr('id', "imageId");
-        
+    // This function creates an "enemy" letter
+    function CreateEnemy() {
+        let imageType = Math.floor((Math.random() * 2) + 1);
+        let $enemy = $("<img>");
         $enemy.addClass("slideUp");
-        var x = Math.floor((Math.random() * (parseInt($("#reverse").css("width")) - 100) + 1));//100 is image size so need to be dinamic later
-        var y = Math.floor((Math.random() * (parseInt($("#reverse").css("height")) - 100) + 1));
+        let x = Math.floor((Math.random() * (parseInt($("#reverse").css("width")) - 100) + 1));//100 is image size so need to be dynamic later
+        let y = Math.floor((Math.random() * (parseInt($("#reverse").css("height")) - 100) + 1));
         $enemy.css("top", y + "px");
         $enemy.css("left", x + "px");
         $enemy.css("bottom", 0 + "px");
@@ -169,11 +222,11 @@
         if (imageType == 1) {// the enemy is a letter
             $enemy.addClass("letter");
             var imagesrc = Math.floor((Math.random() * 10) + 1);
-            if (imagesrc > 3) {
+            if (imagesrc > 5) {// enemy is an image of a valid letter
                 imagesrc = Math.floor((Math.random() * validLetters.length) + 0);
                 $enemy.attr("src", validLetters[imagesrc]);
             }
-            else {
+            else {// enemy is an image of a invalid letter
                 imagesrc = Math.floor((Math.random() * invalidLetters.length) + 0);
                 $enemy.attr("src", invalidLetters[imagesrc]);
             }
@@ -190,50 +243,23 @@
                 });
         }
         else {// the enemy is a sign
-            let enemySign = enemySrcSign();
-            $enemy.attr("src", enemySign);
+            $enemy.attr("src", signPath);
             $enemy.addClass("sign");
             $enemy.unbind().click(function () {
                 CreateSound();
-                var indicator = false;
-                for (var i = 0; i < validLetters.length; i++) {
-                    if ($(this).attr('src') == validLetters[i]) {
-                        var temp = parseInt($("#scoreId").text()) + 1;
-                        $("#scoreId").text(temp);
-                        indicator = true;
-                        break;
-                    }
-
-                }
-                if (!indicator) {
-                    $("#lifeId").text(parseInt($("#lifeId").text()) - 1);
-                }
-                if ($("#lifeId").text() == '0') {
-                    GameOver();
-                }
+                var temp = parseInt($("#scoreId").text()) + 1;
+                $("#scoreId").text(temp);              
                 $(this).remove();
             })
             setTimeout(function () {
-                //$enemy.removeClass("hidescreen");
                 $enemy.slideUp(1500);
             }, 500)
         }
 
     }
-    function enemySrcSign() {
-        let src;
-        switch ('@Model.Letter') {
-            case 'א':
-                src = 'א';
-                break;
-            default:
-                src = "/Pictures/Game_8/chaat1board.png";
-                break;
-        }
-        return src;
-    }
+   // This function enables a click on an enemy letter
     function Clicked() {
-        var indicator = false;
+        let indicator = false;
 
         $(this).unbind().click(function () {
             CreateSound();
@@ -256,18 +282,21 @@
         });
 
     }
+    // This function removes an object from the screen
     function deleteObject() {
         $(this).remove();
     }
     function GoToAlphabet() {
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
     }
+    // This function creates sounds for the game
     function CreateSound() {
         let $sound = $("<audio>");
         $sound.attr("src", "/Audio/Game_8/gun_fire.mp3");
 
         $sound[0].play();
     }
+    // This function ends the game
     function GameOver() {
         clearInterval(gameoverIndicator);
         $("#buttonRet").addClass("hidescreen");
@@ -298,7 +327,6 @@
     <section id="reverse"></section>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
         <input class="myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
-
     </div>
 
 

@@ -144,7 +144,16 @@
         $("body").keydown(userKey_Options);
         gameoverIndicator = setInterval(createEnemy, letterSpawnTime);
         FillHearts();
+        LoadSoundAndPicture();
         $("#buttonId").addClass("hidescreen");
+    }
+    // This function pre loads the sounds and pictures that are used in the game
+    function LoadSoundAndPicture() {
+        new Audio("/Audio/Game_12/eat.mp3").load();
+        for (let i = 0; i < validLetters.length; i++)
+            fetch(validLetters[i]);
+        for (let i = 0; i < invalidLetters.length; i++)
+            fetch(invalidLetters[i]);
     }
     //This function enables the user movement
     function userKey_Options() {
