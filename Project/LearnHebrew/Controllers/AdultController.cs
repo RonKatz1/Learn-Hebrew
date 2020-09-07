@@ -316,7 +316,7 @@ namespace LearnHebrew.Controllers
             {
                 var progresses = BLL.Services.ChildProgressServices.LoadAllChildProgressesByChildID(ChildID);
 
-                m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p=>p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p=>p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
             }
             catch(Exception ex)
             {

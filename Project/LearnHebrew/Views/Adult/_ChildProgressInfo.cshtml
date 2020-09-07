@@ -4,18 +4,74 @@
 @if (Model.ChildProgresses != null && Model.ChildProgresses.Count() > 0)
 {
     <table>
+
         <tr>
-            <th>אות</th>
+
             <th>תאריך למידה</th>
+            <th>אות</th>
+            <th>מילים נלמדות</th>
+            <th>מילים שלא הצליח</th>
             <th>ניקוד</th>
+
         </tr>
 
         @foreach (var p in Model.ChildProgresses)
         {
+
             <tr>
-                <td>@p.Data.Letter</td>
-                <td>@p.Data.Date.ToShortDateString()</td>
-                <td>points</td>
+                <td>@(p.Data.Date.ToShortDateString())</td>
+                <td>@(p.Data.Letter)</td>
+
+                @if (p.Data.ChosenContents != null && p.Data.ChosenContents.Count() > 0)
+                {
+                    <td>
+
+                        @foreach (var content in p.Data.ChosenContents)
+                        {
+                            <span>
+                                @(content.Value.Word + ", ")
+                            </span>
+                        }
+
+                    </td>
+                }
+                else
+                {
+                    <td>אין תכנים</td>
+                }
+
+                @if (p.Data.WrongAnswers != null && p.Data.WrongAnswers.Count() > 0)
+                {
+                    <td>
+                        @foreach (var content in p.Data.WrongAnswers)
+                        {
+                            <span>הילד בחר במילה: @(content.Value)</span>
+                            if (p.Data.ChosenContents != null && p.Data.ChosenContents.Count() > 0 && p.Data.ChosenContents.ContainsKey(content.Key))
+                            {
+                                <span>במקום במילה: @(p.Data.ChosenContents[content.Key])</span>
+                            }
+                            else
+                            {
+                                <span>במקום במילה: </span>
+                            }
+                        }
+                    </td>
+                }
+                else
+                {
+                    <td>אין תשובות לא נכונות</td>
+                }
+
+                <td>
+                    @{ 
+                        var amountOfContents = p.Data.ChosenContents != null ? p.Data.ChosenContents.Count() : 0;
+                        var failedAmount = p.Data.WrongAnswers != null ? p.Data.WrongAnswers.Count() : 0;
+                        var totalPoints = (amountOfContents - failedAmount);
+                    }
+
+                    @(totalPoints)
+                </td>
+
             </tr>
         }
     </table>
