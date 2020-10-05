@@ -7,9 +7,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <style>
+    
     section {
-        width: 58%;
-        height: 64%;
+        width: 48%;
+        height: 50%;
         background-color: white;
         position: relative;
         margin: auto;
@@ -24,8 +25,8 @@
     }
 
     .enemy {
-        width: 6%;
-        height: 6%;
+        width: 7%;
+        height: 8%;
         position: absolute;
     }
 
@@ -48,7 +49,8 @@
         border-radius: 12px;
         color: gold;
         font-size: large;
-        background-color: hotpink
+        background-color: hotpink;
+        outline: none;
     }
 
     #scoreId {
@@ -77,12 +79,41 @@
     }
     .gameOverBtn {
         margin-top: 10px;
+        outline: none;
     }
+
     #instructionId {
         color: forestgreen;
         cursor: pointer;
+        font-size: 30px;
+    }
+    #silenceDiv {
+        text-align: center;
     }
 
+    #silenceBtn {
+        margin: 15px;
+        border-radius: 30px;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: transparent;
+        outline: none;
+    }
+
+    .arrow {
+        height: 30px;
+        position: absolute;
+    }
+
+    #arrowDiv {
+        position: relative;
+    }
+
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%
+    }
     .myButton {
         box-shadow: inset 0px 1px 0px 0px blueviolet;
         background: linear-gradient(to bottom, #f0c911 5%, blueviolet 100%);
@@ -99,6 +130,7 @@
         text-shadow: 0px 1px 0px #ded17c;
         margin-top: 10px;
         margin-bottom: 10px;
+        outline: none;
     }
 
         .myButton:hover {
@@ -109,17 +141,37 @@
 <script>
     let move = 25;// setting moving distance per move for user
     let $User;// placeholder  for the user in every new game
-    let letterTime = 10000;// the time it takes a letter to remove itself
-    let letterSpawnTime = 2000;// time of spawning letters
+    let letterTime = 5000;// the time it takes a letter to remove itself
+    let letterSpawnTime = 1700;// time of spawning letters
     let gameoverIndicator;// interval animation of spawning enemies
-    let validLetters = [];// array of valid letter for the game, baed on the user
-    let invalidLetters = [];// array of invalid letter for the game, baed on the user
+    let validLetters = [];// array of valid letter for the game, based on the user
+    let invalidLetters = [];// array of invalid letter for the game, based on the user
     let savedBottom;// saved height of user
     let lives = 3;// the amount of times a user can play
+    let arrowInterval;// the interval variable of the arrow animation
+
     $(document).ready(function () {
         //LoadGameInstruction();
         FillLetters();
+        windowResize();
+        SetArrows();
+        arrowInterval = setInterval(MoveArrows, 1000);
     })
+    // This function resizes objects on the screen  
+    function windowResize() {
+        $(window).resize(function () {
+            $("#leftArrow").stop();
+            $("#rightArrow").stop();
+            $("#leftArrow").addClass("hidescreen");
+            $("#rightArrow").addClass("hidescreen");
+            setTimeout(
+                function () {
+                    $("#leftArrow").removeClass("hidescreen");
+                    $("#rightArrow").removeClass("hidescreen");
+                }, 2100);
+            SetArrows();
+        })
+    }
     //This function gets the path of the selected letter images
     function FillLetters() {
         $.ajax({
@@ -140,6 +192,7 @@
     // This funcion sets up the game
     function StartGame() {
         $User = $("#user");//linking placeholder to user in current game
+        RemoveArrows();
         savedBottom = parseInt($User.css("top"));
         $("body").keydown(userKey_Options);
         gameoverIndicator = setInterval(createEnemy, letterSpawnTime);
@@ -324,12 +377,15 @@
     }
     // This funcion creates "eating" sound
     function CreateSound() {
-        let $sound = $("<audio>");
-        $sound.attr("src", "/Audio/Game_12/eat.mp3");
-        $sound[0].play();
+        if ($("#silenceBtn").val() == "🔔") {
+            let $sound = $("<audio>");
+            $sound.attr("src", "/Audio/Game_12/eat.mp3");
+            $sound[0].play();
+        }            
     }
     // This function ends all intervals of the game and allows the player to return to "Alphabet" page
     function GameOver() {
+        $("#silenceBtn").remove();
         clearInterval(gameoverIndicator);
         $("#sectionId").addClass("hidescreen");
         $("#buttonRet").addClass("hidescreen");
@@ -340,13 +396,71 @@
     function GoToAlphabet() {
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
     }
+    // This function changes the slience button's appearance
+    function ChangeSilenceBtn() {
+        if ($("#silenceBtn").val() == "🔔") {
+            $("#silenceBtn").val("🔕");
+        }
+        else {
+            $("#silenceBtn").val("🔔");
+        }
+        $("#silenceBtn").blur();
+    }
+    // This function sets the location of the image arrows
+    function SetArrows() {
+        let x = $("#instructionId").position();
+        x = x.left - $("#leftArrow").width() - $("#instructionId").width();
+        let x2 = $("#instructionId").position();
+        x2 = x2.left + ($("#instructionId").width() * 2);
+        $("#leftArrow").css("left", x + "px");
+        $("#rightArrow").css("left", x2 + "px");
+    }
+    // This function enables the movement of the image arrows
+    function MoveArrows() {
+        let $leftArrow = $("#leftArrow");
+        let left = $("#instructionId").width();
+        let leftTarget = parseInt($leftArrow.css("left")) + left;
+        $leftArrow.animate({
+
+            left: leftTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+        let $rightArrow = $("#rightArrow");
+        let right = $("#instructionId").width();
+        let rightTarget = parseInt($rightArrow.css("left")) - right;
+        $rightArrow.animate({
+
+            left: rightTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+    }
+    // This function stops the arrow animations and removes the arrows
+    function RemoveArrows() {
+        clearInterval(arrowInterval);
+        $("#leftArrow").remove();
+        $("#rightArrow").remove();
+    }
 </script>
 
 <body>
     <div style="text-align:center">
         <h1 style="color:forestgreen"> אכילת אותיות </h1>
         <h2 style="color:forestgreen">עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה</h2>
-        <div><i id="instructionId" class="fa fa-volume-up"></i></div>
+        <div id="arrowDiv">
+            <img id="leftArrow" class="arrow" src="~/Pictures/Game_12/arrowLeft.png" />
+            <i id="instructionId" class="fa fa-volume-up"></i>
+            <img id="rightArrow" class="arrow" src="~/Pictures/Game_12/arrowRight.png" />
+        </div>
         <h2 style="color:green"><b>  אות משחק זה היא @Model.Letter </b></h2>
         <input id="buttonId" class="myButton" type="button" value="התחלה" onclick="StartGame()" />
         <input id="buttonRet" class="myButton" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
@@ -356,9 +470,12 @@
         <p id="scoreId">0</p>
         <img id="user" src="~/Pictures/Game_12/mouth.png" />
     </section>
+    <div id="silenceDiv">
+        <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
+    </div>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h3 id="gameOverh">ניקוד: <span id="finalScore"></span></h3>
+        <h1 style="color:forestgreen; font-size:60px"><b>ניקוד: </b><b><span id="finalScore"></span></b></h1>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
-
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
 </body>

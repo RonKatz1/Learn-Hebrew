@@ -24,6 +24,10 @@
         bottom: 0;
     }
 
+    footer {
+        bottom: 0;
+        width: 100%
+    }
     #endGameScreen {
         height: 50%;
     }
@@ -55,10 +59,33 @@
     }
     .gameOverBtn {
         margin-top: 10px;
+        outline: none;
     }
     #instructionId {
         color: gold;
         cursor: pointer;
+        font-size: 30px;
+    }
+    #silenceDiv{
+        
+        text-align:center;
+    }
+    #silenceBtn {
+        margin: 15px;
+        border-radius: 30px;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: transparent;
+        outline: none;
+    }
+
+    .arrow {
+        height: 30px;
+        position: absolute;
+    }
+
+    #arrowDiv {
+        position: relative;
     }
     .myButton {
         box-shadow: inset 0px 1px 0px 0px #f9eca0;
@@ -76,24 +103,32 @@
         text-shadow: 0px 1px 0px #ded17c;
         margin-top: 10px;
         margin-bottom: 10px;
+        outline: none;
     }
 
         .myButton:hover {
             background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
             background-color: #f2ab1e;
         }
+
+
 </style>
 <script>
     let gameoverIndicator;// interval animation of spawning enemies
-    let validLetters = [];// array of valid letter for the game, baed on the user
+    let validLetters = [];// array of valid letter for the game, based on the user
     let invalidLetters = [];// array of ןמvalid letter for the game, baed on the user
     let gameLetter = '@Model.Letter';// getting this game's letter
     let signPath;// this game's sign image path
+    let arrowInterval;// the interval variable of the arrow animation
+
 
     $(document).ready(function () {
         FillLetters();  
         LoadSoundAndPicture();
         GetSignPath();
+        windowResize();
+        SetArrows();
+        arrowInterval = setInterval(MoveArrows, 1000);
         $("#imageId").click(function () {
             $("#imageId").slideUp();
             setTimeout(function () {
@@ -205,6 +240,7 @@
     }
     // This function starts the game
     function StartGame() {
+        RemoveArrows();
         gameoverIndicator = setInterval(CreateEnemy, 500);
         $("#buttonId").addClass("hidescreen");
     }
@@ -291,10 +327,13 @@
     }
     // This function creates sounds for the game
     function CreateSound() {
-        let $sound = $("<audio>");
-        $sound.attr("src", "/Audio/Game_8/gun_fire.mp3");
+        if ($("#silenceBtn").val() == "🔔") {
+            let $sound = $("<audio>");
+            $sound.attr("src", "/Audio/Game_8/gun_fire.mp3");
 
-        $sound[0].play();
+            $sound[0].play();
+        }    
+        
     }
     // This function ends the game
     function GameOver() {
@@ -305,19 +344,92 @@
         $("#finalScore").text($("#scoreId").text());
         $("#endGameScreen").removeClass("hidescreen");
     }
+    // This function changes the slience button's appearance
+    function ChangeSilenceBtn() {
+        if ($("#silenceBtn").val() == "🔔") {
+            $("#silenceBtn").val("🔕");
+        }
+        else {
+            $("#silenceBtn").val("🔔");
+        }
+        $("#silenceBtn").blur();       
+    }
+    // This function sets the location of the image arrows
+    function SetArrows() {
+        let x = $("#instructionId").position();
+        x = x.left - $("#leftArrow").width() - $("#instructionId").width();
+        let x2 = $("#instructionId").position();
+        x2 = x2.left + ($("#instructionId").width() * 2);
+        $("#leftArrow").css("left", x + "px");
+        $("#rightArrow").css("left", x2 + "px");
+    }
+    // This function enables the movement of the image arrows
+    function MoveArrows() {
+        let $leftArrow = $("#leftArrow");
+        let left = $("#instructionId").width();
+        let leftTarget = parseInt($leftArrow.css("left")) + left;
+        $leftArrow.animate({
 
+            left: leftTarget
 
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
 
+            });
+        let $rightArrow = $("#rightArrow");
+        let right = $("#instructionId").width();
+        let rightTarget = parseInt($rightArrow.css("left")) - right;
+        $rightArrow.animate({
+
+            left: rightTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+    }
+    // This function stops the arrow animations and removes the arrows
+    function RemoveArrows() {
+        clearInterval(arrowInterval);
+        $("#leftArrow").remove();
+        $("#rightArrow").remove();
+    }
+    // This function resizes objects on the screen  
+    function windowResize() {
+        $(window).resize(function () {
+            $("#leftArrow").stop();
+            $("#rightArrow").stop();
+            $("#leftArrow").addClass("hidescreen");
+            $("#rightArrow").addClass("hidescreen");
+            setTimeout(
+                function () {
+                    $("#leftArrow").removeClass("hidescreen");
+                    $("#rightArrow").removeClass("hidescreen");
+                }, 2100);
+            SetArrows();          
+        })
+    }
 
 </script>
 <body>
     <div style="text-align:center">
         <h1 style="color:gold"> פגיעת אותיות מהאדמה </h1>
         <h2 style="color:gold">עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה</h2>
-        <div><i id="instructionId" class="fa fa-volume-up"></i></div>
+        <div id="arrowDiv">
+            <img id="leftArrow" class="arrow" src="~/Pictures/Game_8/arrowLeft.png" />
+            <i id="instructionId" class="fa fa-volume-up"></i>
+            <img id="rightArrow" class="arrow" src="~/Pictures/Game_8/arrowRight.png" />
+        </div>
         <input id="buttonId" class="myButton" type="button" value="התחלה" onclick="StartGame()" />
-        <input id="buttonRet" class="myButton"  type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
+        <input id="buttonRet" class="myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
 
+    </div>
+    <div id="silenceDiv">
+        <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
     </div>
     <div id="info" style="text-align:center;padding-bottom:12%">
         <h2 style="color:goldenrod">  אות משחק זה היא @Model.Letter </h2>
@@ -328,7 +440,5 @@
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
         <input class="myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
-
-
-
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
 </body>

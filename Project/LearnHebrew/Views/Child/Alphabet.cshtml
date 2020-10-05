@@ -4,74 +4,177 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+@*<link href="Font/fonts.css" rel="stylesheet">*@
+
 
 <style>
+ 
     #gameDiv {
         top: 50%;
         left: 50%;
-        text-align:center;
-        z-index:2;
+        text-align: center;
+        z-index: 2;
     }
-    #gameTable{
-        margin-left:auto;
-        margin-right:auto;
+
+    body {
+        background-image: url('../../Pictures/Alphabet/children_by _tree.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
-    #gameTable td{
-        padding:40px;
+
+    /*.footerClass {
+        position: absolute;
+        bottom: 0;
+        width: 100%
     }
+
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%
+    }*/
+
+    #letterTable tr{
+       height:70px;
+    }
+    #gameTable, #letterTable {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+        #gameTable td {
+            padding: 40px;
+        }
+
     .gameImg {
         width: 100px;
         height: 100px;
         cursor: pointer;
     }
+
         .gameImg:hover {
             box-shadow: 0 0 2px 1px rgba(0,140,186,0.5);
         }
+
     .letterImg {
         max-width: 50%;
         max-height: 50%;
-        border: 1px solid #ddd;
-        cursor:pointer;
+        /*border: 1px solid #ddd;*/
+        /*width:50%;*/
+        cursor: pointer;
     }
+
         .letterImg:hover {
             box-shadow: 0 0 2px 1px rgba(0,140,186,0.5);
         }
+
     .hidescreen {
         display: none;
     }
-    #buttonGo{
-        background-color: blue;
 
+    #buttonGo {
+        background-color: blue;
+        color: white;
     }
+
     #buttonCancel {
         background-color: red;
+        color: white;
     }
+
     .letter {
         max-width: 50%;
         max-height: 50%;
-        border: 1px solid #ddd;
-     }
+        /*border: 1px solid #ddd;*/
+    }
 
         .letter:hover {
             box-shadow: 0 0 2px 1px rgba(0,140,186,0.5);
         }
+
+    #ג {
+        max-width: 40%;
+        max-height: 40%;
+    }
+    #ו {
+        max-width: 40%;
+        max-height: 40%;
+    }
+    #י {
+        max-width: 25%;
+        max-height: 25%;
+    }
+    #ט {
+        max-width: 40%;
+        max-height: 40%;
+    }
+    #ס {
+        max-width: 40%;
+        max-height: 40%;
+    }
+    #נ {
+        max-width: 40%;
+        max-height: 40%;
+    }
+    #gameTextDiv {
+        height: 60px;
+    }
+
+    #gameTextId {
+        /*font-family:dana_yad_alefalefalefnormal;*/
+    }
 </style>
 <script>
     let letterForGame;// the letter char which will eventually be transported to the selected game
     let gameName;//the name of the selected game
     let gameContenNeededBolArray;
+    let isBig = false;
+    let textInterval;
+
+
     $(document).ready(function () {
         gameContenNeededBolArray = ["false", "true", "false", "false", "false", "false", "false", "false",
             "false", "false", "false", "false", "false", "false", "false", "false",
             "false", "false", "false", "false", "false", "false", "false"];
         $("#buttonGo").prop('disabled', true);
+
+
+        //var originalBG = $("<body>").css("background-color");
+        //let lightColor = "rgba(255,255,255,0.75)";
+        //let gradientSize = 100;
+        //    $('<body>').mousemove(function (e) {
+        //        let x = e.pageX - this.offsetLeft;
+        //        let y = e.pageY - this.offsetTop;
+        //        let xy = x + " " + y;
+        //        let bgWebKit = "-webkit-gradient(radial, " + xy + ", 0, " + xy + ", 100, from(rgba(255,255,255,0.8)), to(rgba(255,255,255,0.0))), " + originalBG;
+        //        let bgMoz = "-moz-radial-gradient(" + x + "px " + y + "px 45deg, circle, " + lightColor + " 0%, " + originalBG + " " + gradientSize + "px)";
+
+        //        $(this)
+        //            .css({ background: bgWebKit })
+        //            .css({ background: bgMoz });
+        //    }).mouseleave(function () {
+        //        $(this).css({
+        //            background: originalBG
+        //        });
+        //    });
+
+
+        textInterval = setInterval(textSize, 50);
+
+
+
+
+
         $(".letterImg").click(function () {
             $letterId = $(this).attr("id");
 
             letterForGame = $letterId;
             $("#letterTable").addClass("hidescreen");
             $("#gameDiv").removeClass("hidescreen");
- 
+            //$("<footer>").addClass("footerClass");
+
+
         });
         $(".gameImg").click(function () {
             $gameId = $(this).attr("id");
@@ -80,12 +183,24 @@
             MarkGameImg($(this));
         });
     })
+    function textSize() {
+        if (!isBig) {
+            $("#gameTextId").css("font-size", parseInt($("#gameTextId").css("font-size")) + 1 + "px");
+            if (parseInt($("#gameTextId").css("font-size")) > 50)
+                isBig = true;
+        }
+        else {
+            $("#gameTextId").css("font-size", parseInt($("#gameTextId").css("font-size")) - 1 + "px");
+            if (parseInt($("#gameTextId").css("font-size")) < 35)
+                isBig = false;
+        }
+    }
     function GoToGame() {
         @*$.ajax({
             dataType: "json",
             url: "@Url.Action("GoToGame", "Child", new { letterForGame = "letter" , gameName = "name" })" ,
             contentType: "application/json; charset=utf-8",
-            type: "post",          
+            type: "post",
             error: function (err) {
                 console.error(err);
             }
@@ -102,8 +217,14 @@
     function RemoveGamePreviewDiv() {
         $(".gameImg").each(function () {
             let $currentGameImg = $(this);
-            $currentGameImg.css('box-shadow', '0px 0px 2px 1px #ffff');
+            $currentGameImg.css('box-shadow', 'none');
         });
+        //$(".gameImg").hover(function () {
+        //    $(this).css('box-shadow', '0 0 2px 1px rgba(0,140,186,0.5)');
+        //}, function () {
+        //    $(this).css('box-shadow', 'none');
+        //    });
+
         $("#buttonGo").prop('disabled', true);
         $("#gameDiv").addClass("hidescreen");
         $("#letterTable").removeClass("hidescreen");
@@ -111,9 +232,9 @@
     function MarkGameImg($gameImg) {
         $(".gameImg").each(function () {
             let $currentGameImg = $(this);
-            $currentGameImg.css('box-shadow', '0px 0px 2px 1px #ffff');
+            $currentGameImg.css('box-shadow', 'none');
         });
-        $gameImg.css('box-shadow', '0px 0px 2px 1px #888');
+        $gameImg.css('box-shadow', '0px 0px 2px 1px rgba(0,140,186,0.5)');
     }
     function goToIndexPage() {
          window.location.href = "@(Url.Action("ReturnToIndex", "Child"))";
@@ -128,88 +249,85 @@
     <table id="letterTable">
         <tr>
             <td>
-                <a href="@(Url.Action("GoToGame_6", "Child"))">
-                    <img id="ו" class="letter" src="~/Pictures/Alphabet/vaav.jpeg" />
-                </a>
-            </td>
-            <td>              
-                <img id="ה" class="letterImg" src="~/Pictures/Alphabet/haay.jpeg" />              
+                <img id="א" class="letterImg" src="~/Pictures/Alphabet/alef.jpeg" />
             </td>
             <td>
-                <img id="ד" class="letterImg" src="~/Pictures/Alphabet/daled.jpeg" />
+                <img id="ב" class="letterImg" src="~/Pictures/Alphabet/bet.jpeg" />
             </td>
             <td>
                 <img id="ג" class="letterImg" src="~/Pictures/Alphabet/gimal.jpeg" />
             </td>
             <td>
-                <img id="ב" class="letterImg" src="~/Pictures/Alphabet/bet.png" />
+                <img id="ד" class="letterImg" src="~/Pictures/Alphabet/daled.jpeg" />
             </td>
             <td>
-                <img id="א"  class="letterImg" src="~/Pictures/Alphabet/alef.png" />
+                <img id="ה" class="letterImg" src="~/Pictures/Alphabet/haay.jpeg" />
+            </td>
+            <td>
+                <img id="ו" class="letterImg" src="~/Pictures/Alphabet/vaav.jpeg" />
             </td>
         </tr>
         <tr>
             <td>
-                <img id="ל" class="letterImg" src="~/Pictures/Alphabet/lamad.jpeg" />
-            </td>
-            <td>
-                <img id="כ" class="letterImg" src="~/Pictures/Alphabet/chaaf.jpeg" />
-            </td>
-            <td>
-                <img id="י" class="letterImg" src="~/Pictures/Alphabet/yuud.jpeg" />
-            </td>
-            <td>
-                <img id="ט" class="letterImg" src="~/Pictures/Alphabet/taat.jpeg" />
+                <img id="ז" class="letterImg" src="~/Pictures/Alphabet/zaain.jpeg" />
             </td>
             <td>
                 <img id="ח" class="letterImg" src="~/Pictures/Alphabet/chaat.jpeg" />
             </td>
             <td>
-                <img id="ז" class="letterImg" src="~/Pictures/Alphabet/zaain.jpeg" />
+                <img id="ט" class="letterImg" src="~/Pictures/Alphabet/taat.jpeg" />
+            </td>
+            <td>
+                <img id="י" class="letterImg" src="~/Pictures/Alphabet/yuud.jpeg" />
+            </td>
+            <td>
+                <img id="כ" class="letterImg" src="~/Pictures/Alphabet/chaaf.jpeg" />
+            </td>
+            <td>
+                <img id="ל" class="letterImg" src="~/Pictures/Alphabet/lamad.jpeg" />
             </td>
         </tr>
         <tr>
             <td>
-                <img id="צ" class="letterImg" src="~/Pictures/Alphabet/tchadik.jpeg" />
-            </td>
-            <td>
-                <img id="פ" class="letterImg" src="~/Pictures/Alphabet/paay.jpeg" />
-            </td>
-            <td>
-                <img id="ע" class="letterImg" src="~/Pictures/Alphabet/aaiin.jpeg" />
-            </td>
-            <td>
-                <a href="@(Url.Action("GoToGame_7_Hangman", "Child"))">
-                    <img id="ס" class="letter" src="~/Pictures/Alphabet/samach.jpeg" />
-                </a>
+                <img id="מ" class="letterImg" src="~/Pictures/Alphabet/maam.jpeg" />
             </td>
             <td>
                 <img id="נ" class="letterImg" src="~/Pictures/Alphabet/nuun.jpeg" />
             </td>
             <td>
-                <img id="מ" class="letterImg" src="~/Pictures/Alphabet/maam.jpeg" />
+                <img id="ס" class="letterImg" src="~/Pictures/Alphabet/samach.jpeg" />
+            </td>
+            <td>
+                <img id="ע" class="letterImg" src="~/Pictures/Alphabet/aaiin.jpeg" />
+            </td>
+            <td>
+                <img id="פ" class="letterImg" src="~/Pictures/Alphabet/paay.jpeg" />
+            </td>
+            <td>
+                <img id="צ" class="letterImg" src="~/Pictures/Alphabet/tchadik.jpeg" />
             </td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
             <td>
-                <img id="ת" class="letterImg" src="~/Pictures/Alphabet/taaf.jpeg" />
-            </td>
-            <td>
-                <img id="ש" class="letterImg" src="~/Pictures/Alphabet/shin.jpeg" />
+                <img id="ק" class="letterImg" src="~/Pictures/Alphabet/kuuf.jpeg" />
             </td>
             <td>
                 <img id="ר" class="letterImg" src="~/Pictures/Alphabet/raaish.jpeg" />
             </td>
             <td>
-                <img id="ק" class="letterImg" src="~/Pictures/Alphabet/kuuf.jpeg" />
+                <img id="ש" class="letterImg" src="~/Pictures/Alphabet/shin.jpeg" />
             </td>
+            <td>
+                <img id="ת" class="letterImg" src="~/Pictures/Alphabet/taaf.jpeg" />
+            </td>
+            <td></td>
+            <td></td>
 
         </tr>
     </table>
     <div class="hidescreen" id="gameDiv">
-        <h1>בחרו במשחק </h1>
+        <div id="gameTextDiv"><h1 id="gameTextId">בחרו במשחק</h1></div>
+
         <table id="gameTable">
             <tr>
                 <td>

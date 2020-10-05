@@ -21,6 +21,11 @@
         background-color: deepskyblue;
     }
 
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%
+    }
     .cloud {
         position: absolute;
         z-index: 2;
@@ -94,37 +99,64 @@
         cursor: pointer;
         color: goldenrod;
         margin-bottom: 5px;
+        font-size: 30px;
     }
 
     #gameOverh {
-        color: black;
+        color: gold;
         margin-top: 30px;
         margin-bottom: 30px;
+        font-size:60px;
     }
 
     .gameOverBtn {
         margin-top: 10px;
+        outline: none;
+    }
+    #silenceDiv {
+        text-align: center;
+    }
+
+    #silenceBtn {
+        margin: 15px;
+        border-radius: 30px;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: transparent;
+        outline: none;
+    }
+
+    .arrow {
+        height: 30px;
+        position: absolute;
+    }
+
+    #arrowDiv {
+        position: relative;
     }
 </style>
 <script>
 
-    var validLetters = [];// array of valid src of letter images per the user choosing before picking this game
-    var flappingBirdIndicator;// interval changing of flying bird
-    var flappingSpeed = 200;// time it takes to change the src of the bird image
-    var obstacleIndicator;// interval of obstacle spawning
-    var obstacleSpawn = 2000;// time it takes to create a new obstacle in mili secomds
-    var obstacleRunwayTimer = 2000;// time it takes to an obstacle to move and disappear
-    var $bird; // variable for bird image
-    var lives = 5;// the number of times a user can mess up before he losses the game
-    var move = 25;// the movement size the bird can make going up or down
-    var freeFall = 5;// falling distance per change of bird image
-    var gameStarted = false; // indicator for game started for not letting pressed enter
+    let validLetters = [];// array of valid src of letter images per the user choosing before picking this game
+    let flappingBirdIndicator;// interval changing of flying bird
+    let flappingSpeed = 200;// time it takes to change the src of the bird image
+    let obstacleIndicator;// interval of obstacle spawning
+    let obstacleSpawn = 2000;// time it takes to create a new obstacle in mili secomds
+    let obstacleRunwayTimer = 2000;// time it takes to an obstacle to move and disappear
+    let $bird; // variable for bird image
+    let lives = 5;// the number of times a user can mess up before he losses the game
+    let move = 25;// the movement size the bird can make going up or down
+    let freeFall = 5;// falling distance per change of bird image
+    let gameStarted = false; // indicator for game started for not letting pressed enter
+    let arrowInterval;// the interval variable of the arrow animation
 
     $(document).ready(function () {
         //LoadGameInstruction();
         FillLetters();
-        //LoadSoundAndPicture();
-        //validLetters = ["/Pictures/Game_20/raaish1.png", "/Pictures/Game_20/raaish2.png", "/Pictures/Game_20/raaish3.png"];
+        LoadSoundAndPicture();
+        windowResize();
+        SetArrows();
+        arrowInterval = setInterval(MoveArrows, 1000);
         flappingBirdIndicator = setInterval(ChangeBird, flappingSpeed);
 
         $bird = $("#birdId");
@@ -132,6 +164,29 @@
 
         CreateClouds();
     })
+    // This function resizes objects of the game according to the current size of the screen
+    function windowResize() {
+        $(window).resize(function () {
+            $("#leftArrow").stop();
+            $("#rightArrow").stop();
+            $("#leftArrow").addClass("hidescreen");
+            $("#rightArrow").addClass("hidescreen");
+            setTimeout(
+                function () {
+                    $("#leftArrow").removeClass("hidescreen");
+                    $("#rightArrow").removeClass("hidescreen");
+                }, 2100);
+            SetArrows();
+        })
+    }
+    // This funcion pre loads the sound and pictures of the game
+    function LoadSoundAndPicture() {
+        new Audio("/Audio/Game_20/good_sound.mp3").load();
+        new Audio("/Audio/Game_20/doh.mp3").load();
+        for (let i = 0; i < validLetters.length; i++) {
+            fetch(validLetters[i]);
+        }
+    }
     //This function gets the path of the selected letter images
     function FillLetters() {
         $.ajax({
@@ -147,8 +202,10 @@
             }
         });
     }
+    // This function starts the game
     function StartGame() {
         gameStarted = true;
+        RemoveArrows();
         $("#buttonId").addClass("hidescreen");
         $("#buttonRet").removeClass("hidescreen");
         FillHearts();
@@ -157,8 +214,9 @@
         obstacleIndicator = setInterval(CreateObstacle, obstacleSpawn);
 
     }
+    // This function creates the "cloud" images
     function CreateClouds() {
-        var $cloudUp = $("<img>");
+        let $cloudUp = $("<img>");
         $cloudUp.attr("src", "/Pictures/Game_20/cloud.png");
         $cloudUp.addClass("cloud");
         $cloudUp.css("top", 0 + "px");
@@ -167,7 +225,7 @@
         $cloudUp.css("height", 30 + "px");
         $("#sectionId").append($cloudUp);
 
-        var $cloudDown = $("<img>");
+        let $cloudDown = $("<img>");
         $cloudDown.attr("src", "/Pictures/Game_20/cloud.png");
         $cloudDown.addClass("cloud");
         $cloudDown.css("bottom", 0 + "px");
@@ -177,6 +235,7 @@
         $("#sectionId").append($cloudDown);
 
     }
+    // This function enables the movement of the user and the start of the game
     function userKey_Options() {
         switch (window.event.keyCode) {
             case (13):// enter was pressed
@@ -197,12 +256,14 @@
 
         }
     }
+    // This function moves the bird user image
     function MoveBird(movement) {
-        var currentPosition = parseInt($bird.css("top"));//getting current position of user
-        var newPosition = currentPosition + movement;//calculating new position of user
+        let currentPosition = parseInt($bird.css("top"));//getting current position of user
+        let newPosition = currentPosition + movement;//calculating new position of user
         $bird.css("top", newPosition + "px");
         if (!(newPosition >= 0 && newPosition <= (parseInt($("#sectionId").css("height")) - parseInt($bird.css("height"))))) {
             lives--;
+            CreateSound();
             if (lives > 0) {
                 RemoveHeart();
                 RestartGame();
@@ -214,6 +275,20 @@
         }
 
     }
+    // This function creates sound for the game
+    function CreateSound(number) {
+        if ($("#silenceBtn").val() == "🔔") {
+            let $sound;
+            if (number == 1) {
+                $sound = new Audio("/Audio/Game_20/good_sound.mp3");
+            }
+            else {
+                $sound = new Audio("/Audio/Game_20/doh.mp3");
+            }
+            $sound.play();
+        }    
+    }
+    //This function changes the bird image src
     function ChangeBird() {
         switch ($bird.attr("src")) {
             case ("/Pictures/Game_20/bird1.png"):
@@ -229,48 +304,59 @@
 
     function FillHearts() {
         $heartDiv = $("#heartDiv");
-        for (var i = 0; i < lives; i++) {
-            var $image = $("<img>");
+        for (let i = 0; i < lives; i++) {
+            let $image = $("<img>");
             $image.attr("src", "/Pictures/Game_20/heart.png");
             $image.addClass("heart");
             $heartDiv.append($image);
 
         }
     }
-
+    // This function makes the game harder
+    function MoreChallenge() {
+        clearInterval(obstacleIndicator);
+        let timeObstacleSpawn = Math.floor(obstacleSpawn / 4);
+        let timeObstacleRunwayTimer = Math.floor(obstacleRunwayTimer / 4);
+        obstacleSpawn = obstacleSpawn - timeObstacleSpawn;
+        obstacleRunwayTimer = obstacleRunwayTimer - timeObstacleRunwayTimer;
+        obstacleIndicator = setInterval(CreateObstacle, obstacleSpawn);
+    }
     function RemoveHeart() {
         $("#heartDiv").empty();
         FillHearts();
     }
+    // This function resets the bird image 
     function RestartGame() {
         $bird.css("top", ($("#sectionId").height() / 2) - $bird.height());
-        //need to add stop and restart process of creating obstacles
     }
+    // This function creates the "obstacle" images
     function CreateObstacle() {
-        var axisX = parseInt($("#sectionId").css("width")) - parseInt($bird.css("width"));
-        var originalHeight = 200;
-        var birdH = parseInt($bird.css("height"));
-        var randomHeight = Math.floor((Math.random() * 150) + 100);
+        let axisX = parseInt($("#sectionId").css("width")) - parseInt($bird.css("width"));
+        let originalHeight = 200;
+        let birdH = parseInt($bird.css("height"));
+        let randomHeight = Math.floor((Math.random() * 150) + 100);
 
-        var $pipeUp = $("<img>");
+        let $pipeUp = $("<img>");
         $pipeUp.attr("src", "/Pictures/Game_20/pipe1.png");
         $pipeUp.addClass("pipe");
         $pipeUp.css("bottom", 0 + "px");
         $pipeUp.css("left", axisX + "px");
 
-        var $pipeDown = $("<img>");
+        let $pipeDown = $("<img>");
         $pipeDown.attr("src", "/Pictures/Game_20/pipe2.png");
         $pipeDown.addClass("pipe");
         $pipeDown.css("top", 0 + "px");
         $pipeDown.css("left", axisX + "px");
 
-        var $letter = $("<img>");
-        var randomNumber = Math.floor((Math.random() * validLetters.length) + 0);
+        let $letter = $("<img>");
+        let randomNumber = Math.floor((Math.random() * validLetters.length) + 0);
         $letter.attr("src", validLetters[randomNumber]);
         $letter.addClass("letter");
         $letter.css("left", axisX + "px");
 
-        var dificulty = Math.floor((Math.random() * 2) + 2); //determine dificulty of the would be spawned obstacle
+        // the next line will always create the "hard mode" outcome, we will do this as an option in the future to create more game modes
+        let dificulty = Math.floor((Math.random() * 2) + 2); 
+        // currently "easy mode" will never be picked
 
         if (dificulty == 1) {//easy dificulty
             randomHeight = Math.floor((Math.random() * 3) + 1);
@@ -283,7 +369,7 @@
             $("#sectionId").append($pipeDown);
 
 
-            var randMiddle = Math.floor((Math.random() * ($pipeDown.height() - $letter.height())) + (parseInt($pipeDown.css("top")) + $pipeDown.height()));
+            let randMiddle = Math.floor((Math.random() * ($pipeDown.height() - $letter.height())) + (parseInt($pipeDown.css("top")) + $pipeDown.height()));
 
             if ($pipeUp.height() == $pipeDown.height()) {//spawn case where letter top is dificult to predict randomly
                 randMiddle = $pipeDown.height() + Math.floor(birdH / 2);
@@ -293,9 +379,9 @@
             $("#sectionId").append($letter);
         }
         else {//hard dificulty
-            var totHeight = parseInt($("#sectionId").css("height")) - (birdH*2) - ($("#heartDiv").height()*2) ;
+            let totHeight = parseInt($("#sectionId").css("height")) - (birdH*2) - ($("#heartDiv").height()*2) ;
 
-            var randomUpH = Math.floor((Math.random() * totHeight) + birdH);
+            let randomUpH = Math.floor((Math.random() * totHeight) + birdH);
 
 
             $pipeUp.css("height", randomUpH + "px");
@@ -304,7 +390,7 @@
 
             $pipeDown.css("height", (totHeight - $pipeUp.height() + birdH) + "px");
 
-            var middle = $pipeDown.height() + Math.floor(birdH/2);
+            let middle = $pipeDown.height() + Math.floor(birdH/2);
             $letter.css("top", middle + "px")
 
             $("#sectionId").append($letter);
@@ -348,9 +434,10 @@
 
     }
     function collisionCheckPipe() {
-        var $pipe = $(this);//getting the current pipe
+        let $pipe = $(this);//getting the current pipe
         if (checkIntersection($bird, $pipe)) {
             lives--;
+            CreateSound();
             $(".pipe").stop();
             $(".pipe").remove();
             $(".letter").stop();
@@ -365,9 +452,12 @@
         }
     }
     function collisionCheckLetter() {
-        var $letter = $(this);//getting the current letter
+        let $letter = $(this);//getting the current letter
         if (checkIntersection($bird, $letter)) {
             $("#scoreId").text(parseInt($("#scoreId").text()) + 1);
+            CreateSound(1);
+            if (parseInt($("#scoreId").text()) == 10 || parseInt($("#scoreId").text()) == 20 )
+                MoreChallenge();
             $(".letter").stop();
             $(".letter").remove();
 
@@ -390,6 +480,7 @@
     function GameOver() {
         clearInterval(flappingBirdIndicator);
         clearInterval(obstacleIndicator);
+        $("#silenceBtn").remove();
         $("#sectionId").addClass("hidescreen");
         $("#buttonRet").addClass("hidescreen");
         $("#finalScore").text($("#scoreId").text());
@@ -401,12 +492,70 @@
     function GoToAlphabet() {
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
     }
+    // This function changes the slience button's appearance
+    function ChangeSilenceBtn() {
+        if ($("#silenceBtn").val() == "🔔") {
+            $("#silenceBtn").val("🔕");
+        }
+        else {
+            $("#silenceBtn").val("🔔");
+        }
+        $("#silenceBtn").blur();
+    }
+    // This function sets the location of the image arrows
+    function SetArrows() {
+        let x = $("#instructionId").position();
+        x = x.left - $("#leftArrow").width() - $("#instructionId").width();
+        let x2 = $("#instructionId").position();
+        x2 = x2.left + ($("#instructionId").width() * 2);
+        $("#leftArrow").css("left", x + "px");
+        $("#rightArrow").css("left", x2 + "px");
+    }
+    // This function enables the movement of the image arrows
+    function MoveArrows() {
+        let $leftArrow = $("#leftArrow");
+        let left = $("#instructionId").width();
+        let leftTarget = parseInt($leftArrow.css("left")) + left;
+        $leftArrow.animate({
+
+            left: leftTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+        let $rightArrow = $("#rightArrow");
+        let right = $("#instructionId").width();
+        let rightTarget = parseInt($rightArrow.css("left")) - right;
+        $rightArrow.animate({
+
+            left: rightTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+    }
+    // This function stops the arrow animations and removes the arrows
+    function RemoveArrows() {
+        clearInterval(arrowInterval);
+        $("#leftArrow").remove();
+        $("#rightArrow").remove();
+    }
 </script>
 <body>
     <div style="text-align:center">
         <h1 style="color:gold"> פלאפי הציפור </h1>
         <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה  </h2>
-        <div><i id="instructionId" class="fa fa-volume-up"></i></div>
+        <div id="arrowDiv">
+            <img id="leftArrow" class="arrow" src="~/Pictures/Game_20/arrowLeft.png" />
+            <i id="instructionId" class="fa fa-volume-up"></i>
+            <img id="rightArrow" class="arrow" src="~/Pictures/Game_20/arrowRight.png" />
+        </div>
         <input class="myButton" id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
         <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
     </div>
@@ -415,8 +564,11 @@
         <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
         <img id="birdId" src="~/Pictures/Game_20/bird1.png" />
     </section>
+    <div id="silenceDiv">
+        <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
+    </div>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h3 id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>
+        <h1 id="gameOverh"><b>ניקוד: </b><b><span id="finalScore"></span></b></h1>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
 </body>

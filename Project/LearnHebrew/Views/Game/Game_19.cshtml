@@ -28,6 +28,11 @@
         background-image: url('../../Pictures/Game_19/background.jpg');
     }
 
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%
+    }
     #endGameScreen {
         height: 50%;
     }
@@ -71,6 +76,8 @@
         padding: 1px 6px;
         text-decoration: none;
         text-shadow: 0px 1px 0px #ded17c;
+        outline: none;
+        margin-bottom:10px;
     }
 
         .myButton:hover {
@@ -82,6 +89,7 @@
         cursor: pointer;
         color: goldenrod;
         margin-bottom: 5px;
+        font-size: 30px;
     }
 
     #gameOverh {
@@ -92,59 +100,103 @@
 
     .gameOverBtn {
         margin-top: 10px;
+        outline: none;
+    }
+    #silenceDiv {
+        text-align: center;
+    }
+
+    #silenceBtn {
+        margin: 15px;
+        border-radius: 30px;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: transparent;
+        outline: none;
+    }
+
+    .arrow {
+        height: 30px;
+        position: absolute;
+    }
+
+    #arrowDiv {
+        position: relative;
     }
 </style>
 
 
 <body>
     <div style="text-align:center">
-        <h1> שבירת לבנים </h1>
-        <h2>עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור אנטר</h2>
-        <div><i id="instructionId" class="fa fa-volume-up"></i></div>
+        <h1 style="color:goldenrod"> שבירת לבנים </h1>
+        <h2 style="color:goldenrod">עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, לשחרו רכדור המשחק לחץ על כפתור רווח</h2>
+        <div id="arrowDiv">
+            <img id="leftArrow" class="arrow" src="~/Pictures/Game_19/arrowLeft.png" />
+            <i id="instructionId" class="fa fa-volume-up"></i>
+            <img id="rightArrow" class="arrow" src="~/Pictures/Game_19/arrowRight.png" />
+        </div>
         <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
 
     </div>
     <canvas id="canvasId"></canvas>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h3 id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>
+        <h3 style="color:goldenrod; font-size:60px; font-weight:bold" id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
-    </div>  
+    </div>
+    <div id="silenceDiv">
+        <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
+    </div>
 </body>
 
 <script>
-    var $canvas = document.getElementById("canvasId");
-    var directionX = 3, directionY = -3;
-    var $bricks = [];
-    var gameStarted = false;
-    var $ctx = $canvas.getContext("2d");
-    var pongW = 40, pongH = 7, pongX = ($canvas.width - pongW) / 2, pongY = $canvas.height - pongH; //pong coordinators and size
-    var ballR = 2, x = $canvas.width / 2, y = ($canvas.height - pongH) - ballR;//ball coordinators and size
-    var move = 10;
-    var brickW = 11, brickH = 5;
-    var counter = 0;
-    var heart;
-    var validLetters = [];
-    var destoyedBrickY, destoyedBrickX;
-    var lives = 2;
-    let drawInterval;
+    let $canvas = document.getElementById("canvasId");// game canvas
+    let directionX = 3, directionY = -3;// direction of the ball
+    let $bricks = [];// array of bricks
+    let gameStarted = false;// var for knowing the game has started
+    let $ctx = $canvas.getContext("2d");// game canvas context
+    let pongW = 40, pongH = 7, pongX = ($canvas.width - pongW) / 2, pongY = $canvas.height - pongH; //pong coordinators and size
+    let ballR = 2, x = $canvas.width / 2, y = ($canvas.height - pongH) - ballR;//ball coordinators and size
+    let move = 10;// movement of pong
+    let brickW = 11, brickH = 5;// brick size
+    let counter = 0;// counter for bricks "destroyed" by user
+    let heart;// image heart
+    let validLetters = [];// array of valid letter for the game, based on the user
+    let destoyedBrickY, destoyedBrickX;// temp location of "destoyed" brick
+    let lives = 2;// number of times a user can die in the game
+    let drawInterval;// interval for calling the draw function
+    let arrowInterval;// the interval variable of the arrow animation
 
     $(document).ready(function () {
-        //ClassicMode();
-        //CreativeMode();
-        //SilverMode();
-
         ChooseMode();
         heart = $("<img>");
         heart.attr("src", "/Pictures/Game_19/heart.png");
         heart.attr("id", "heartId");
         //LoadGameInstruction();
         FillLetters();
+        windowResize();
+        SetArrows();
+        arrowInterval = setInterval(MoveArrows, 1000);
         LoadSoundAndPicture();
         drawInterval = setInterval(draw, 50);
         heart.css("left", $canvas.width + "px");
         heart.css("top", 5 + "px");
         $("body").keydown(userKey_Options);
     })
+    // This function resizes objects of the game according to the current size of the screen
+    function windowResize() {
+        $(window).resize(function () {
+            $("#leftArrow").stop();
+            $("#rightArrow").stop();
+            $("#leftArrow").addClass("hidescreen");
+            $("#rightArrow").addClass("hidescreen");
+            setTimeout(
+                function () {
+                    $("#leftArrow").removeClass("hidescreen");
+                    $("#rightArrow").removeClass("hidescreen");
+                }, 2100);
+            SetArrows();           
+        })
+    }
     //This function gets the path of the selected letter images
     function FillLetters() {
         $.ajax({
@@ -160,8 +212,9 @@
             }
         });
     }
+    // This function decides the game mode
     function ChooseMode() {
-        var randNum = Math.floor((Math.random() * 3) + 1);
+        let randNum = Math.floor((Math.random() * 3) + 1);
         switch (randNum) {
             case 3:
                 ClassicMode();
@@ -175,15 +228,15 @@
 
         }
     }
+    // This funcion pre loads the sound and pictures of the game
     function LoadSoundAndPicture() {
         new Audio("/Audio/Game_19/silver_bounce.mp3").load();
         new Audio("/Audio/Game_19/bounce.mp3").load();
-        //this may need to be changes once games become dynamic letter based
         for (let i = 0; i < validLetters.length; i++) {
             fetch(validLetters[i]);
         }
-
     }
+    // This function enables the movement of the user and the start of the game
     function userKey_Options() {
         switch (window.event.keyCode) {
             case (37):// left keyboard was pressed = moving the user one move to the left
@@ -198,6 +251,7 @@
                 break;
             case (32)://release the ball
                 if (!gameStarted) {
+                    RemoveArrows();
                     gameStarted = true;
 
                     break;
@@ -213,8 +267,8 @@
         MoveUserAxisX(move);
     }
     function MoveUserAxisX(axisX) {
-        var currentPosition = pongX;//getting current position of user
-        var newPosition = currentPosition + axisX;//calculating new position of user
+        let currentPosition = pongX;//getting current position of user
+        let newPosition = currentPosition + axisX;//calculating new position of user
 
         if (newPosition >= 0 && newPosition <= ($canvas.width - pongW)) {
             pongX = newPosition;//moving user to new position
@@ -238,9 +292,10 @@
         $ctx.fill();
         $ctx.closePath();
     }
+    //Game mode 
     function ClassicMode() {
-        var lookAheadX = -2 + move;
-        var lookAheadY = 2*move;
+        let lookAheadX = -2 + move;
+        let lookAheadY = 2*move;
         while (lookAheadY< ($canvas.height/2)) {
             while (lookAheadX < $canvas.width - (1*move)) {
                 $bricks.push({
@@ -254,10 +309,11 @@
             lookAheadY = lookAheadY + brickH + move;
         }
     }
+    //Game mode 
     function CreativeMode() {
-        var lookAheadX = -5 + move;
-        var lookAheadY = 2 * move;
-        var temp = 0;
+        let lookAheadX = -5 + move;
+        let lookAheadY = 2 * move;
+        let temp = 0;
         while (lookAheadY < ($canvas.height / 2)) {
             while (lookAheadX < $canvas.width - (1 * move)) {
                 $bricks.push({
@@ -280,11 +336,12 @@
         }
 
     }
+    //Game mode 
     function SilverMode() {
-        var lookAheadX = -5 + move;
-        var lookAheadY = 2 * move;
+        let lookAheadX = -5 + move;
+        let lookAheadY = 2 * move;
         counter = 0;
-        var temp = false;
+        let temp = false;
         while (lookAheadY < ($canvas.height / 2)) {
             while (lookAheadX < $canvas.width - (1 * move)) {
                 if (!temp) {
@@ -314,7 +371,6 @@
                     lookAheadX = lookAheadX + brickW + (2 * move);
                     temp = false;
                 }
-                //lookAheadX = lookAheadX + brickW + move;
             }
             lookAheadX = -5 + move;
             lookAheadY = lookAheadY + move;
@@ -348,7 +404,7 @@
     }
     function collisionDetection() {
         $bricks.forEach(function (brick) {
-            var inBrickColumn = x > brick.x && x < brick.x + brickW, inBrickRow = y > brick.y && y < brick.y + brickH;
+            let inBrickColumn = x > brick.x && x < brick.x + brickW, inBrickRow = y > brick.y && y < brick.y + brickH;
             switch (brick.status) {
                 case 3:
                     if (inBrickColumn && inBrickRow) {
@@ -365,11 +421,9 @@
                     }
                     break;
                 case 2:
-                    //var inBrickColumn = x > brick.x && x < brick.x + brickW, inBrickRow = y > brick.y && y < brick.y + brickH;
                     if (inBrickColumn && inBrickRow) {
                         CreateSound(brick.status);
                         directionY = -directionY;
-                        //alert(directionY);
                         brick.status = 1;
                         counter++;
                         destoyedBrickY = brick.y;
@@ -382,6 +436,7 @@
             }
         });
     }
+    // This function draws on canvas the objects of the game
     function draw() {
         $ctx.clearRect(0, 0, $canvas.width, $canvas.height);
         drawBall();
@@ -401,6 +456,7 @@
         if (gameOver()) {
             if (lives == 0) {
                 $("#finalScore").text(counter);
+                $("#silenceBtn").remove();
                 $("#canvasId").addClass("hidescreen");
                 $("#buttonRet").addClass("hidescreen");
                 clearInterval(drawInterval);
@@ -453,26 +509,28 @@
             y += directionY;
         }
     }
-
+    // This function enables screen of victory
     function WinnerEndGame() {
         $("#buttonRet").addClass("hidescreen");
+        $("#silenceBtn").remove();
         clearInterval(drawInterval);
         $("#canvasId").addClass("hidescreen");
         $("#finalScore").text(counter);
         $("#endGameScreen").removeClass("hidescreen");
     }
+    //This function return user to Alphabet page
     function GoToAlphabet() {
 
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
 
         }
-
+    //This function creates a letter and drops it at the top of the screen
     function CreatDropper() {
-        var randomNumber = Math.floor((Math.random() * 10) + 1);
+        let randomNumber = Math.floor((Math.random() * 10) + 1);
         if (randomNumber <= 9) {
 
-            var pickedImg = Math.floor((Math.random() * validLetters.length) + 0);
-            var $dropper = $("<img>");
+            let pickedImg = Math.floor((Math.random() * validLetters.length) + 0);
+            let $dropper = $("<img>");
             $dropper.attr("src", validLetters[pickedImg]);
             $dropper.addClass("dropper");
 
@@ -483,36 +541,88 @@
             $dropper.animate({
                 top: $canvas.height
 
-
             }, {
                     duration: 2000,
                     easing: "linear",
                     complete: deleteObject
 
-
-
                 });
         }
-
-
     }
+    //This function returns a random axis X location
     function random_PlaceX() {
-        var limitLeft = pongW * 8;
-        var limitRight = pongW * 20;
+        let limitLeft = pongW * 8;
+        let limitRight = pongW * 20;
         return Math.floor((Math.random() * limitRight) + limitLeft);
     }
     function deleteObject() {
         $(this).remove();
     }
     function CreateSound(number) {
-        let $sound;
-        if (number == 3) {
-            $sound = new Audio("/Audio/Game_19/silver_bounce.mp3");
+        if ($("#silenceBtn").val() == "🔔") {
+            let $sound;
+            if (number == 3) {
+                $sound = new Audio("/Audio/Game_19/silver_bounce.mp3");
+            }
+            else {
+                $sound = new Audio("/Audio/Game_19/bounce.mp3");
+            }
+            $sound.play();
+        }             
+    }
+    // This function changes the slience button's appearance
+    function ChangeSilenceBtn() {
+        if ($("#silenceBtn").val() == "🔔") {
+            $("#silenceBtn").val("🔕");
         }
         else {
-            $sound = new Audio("/Audio/Game_19/bounce.mp3");
+            $("#silenceBtn").val("🔔");
         }
-        $sound.play();
+        $("#silenceBtn").blur();
+    }
+    // This function sets the location of the image arrows
+    function SetArrows() {
+        let x = $("#instructionId").position();
+        x = x.left - $("#leftArrow").width() - $("#instructionId").width();
+        let x2 = $("#instructionId").position();
+        x2 = x2.left + ($("#instructionId").width() * 2);
+        $("#leftArrow").css("left", x + "px");
+        $("#rightArrow").css("left", x2 + "px");
+    }
+    // This function enables the movement of the image arrows
+    function MoveArrows() {
+        let $leftArrow = $("#leftArrow");
+        let left = $("#instructionId").width();
+        let leftTarget = parseInt($leftArrow.css("left")) + left;
+        $leftArrow.animate({
+
+            left: leftTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+        let $rightArrow = $("#rightArrow");
+        let right = $("#instructionId").width();
+        let rightTarget = parseInt($rightArrow.css("left")) - right;
+        $rightArrow.animate({
+
+            left: rightTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+    }
+    // This function stops the arrow animations and removes the arrows
+    function RemoveArrows() {
+        clearInterval(arrowInterval);
+        $("#leftArrow").remove();
+        $("#rightArrow").remove();
     }
 </script>
 

@@ -250,6 +250,8 @@
     <Content Include="Audio\Game_17\Game_17_instructions.mp3" />
     <Content Include="Audio\Game_19\bounce.mp3" />
     <Content Include="Audio\Game_19\silver_bounce.mp3" />
+    <Content Include="Audio\Game_20\doh.mp3" />
+    <Content Include="Audio\Game_20\good_sound.mp3" />
     <Content Include="Audio\Game_21\doh.mp3" />
     <Content Include="Audio\Game_21\slash.mp3" />
     <Content Include="Audio\Game_22\blast.mp3" />
@@ -281,10 +283,11 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Pictures\Alphabet\aaiin.jpeg" />
-    <Content Include="Pictures\Alphabet\alef.png" />
-    <Content Include="Pictures\Alphabet\bet.png" />
+    <Content Include="Pictures\Alphabet\alef.jpeg" />
+    <Content Include="Pictures\Alphabet\bet.jpeg" />
     <Content Include="Pictures\Alphabet\chaaf.jpeg" />
     <Content Include="Pictures\Alphabet\chaat.jpeg" />
+    <Content Include="Pictures\Alphabet\children_by _tree.jpg" />
     <Content Include="Pictures\Alphabet\daled.jpeg" />
     <Content Include="Pictures\Alphabet\gimal.jpeg" />
     <Content Include="Pictures\Alphabet\haay.jpeg" />
@@ -413,6 +416,8 @@
     <Content Include="Pictures\Alphabet\ת4.png" />
     <Content Include="Pictures\Alphabet\ת5.png" />
     <Content Include="Pictures\class.jpeg" />
+    <Content Include="Pictures\Game_12\arrowLeft.png" />
+    <Content Include="Pictures\Game_12\arrowRight.png" />
     <Content Include="Pictures\Game_12\chef_kitchen.PNG" />
     <Content Include="Pictures\Game_12\heart.png" />
     <Content Include="Pictures\Game_12\lamad1.png" />
@@ -420,6 +425,8 @@
     <Content Include="Pictures\Game_12\lamad3.png" />
     <Content Include="Pictures\Game_12\mouth.png" />
     <Content Include="Pictures\Game_12\mouth_closed.png" />
+    <Content Include="Pictures\Game_13\arrowLeft.png" />
+    <Content Include="Pictures\Game_13\arrowRight.png" />
     <Content Include="Pictures\Game_13\cockroach1DU.png" />
     <Content Include="Pictures\Game_13\cockroach1LR.png" />
     <Content Include="Pictures\Game_13\cockroach1RL.png" />
@@ -438,12 +445,16 @@
     <Content Include="Pictures\Game_16\aaiin2.png" />
     <Content Include="Pictures\Game_16\aaiin3.png" />
     <Content Include="Pictures\Game_16\aaiin4.png" />
+    <Content Include="Pictures\Game_16\arrowLeft.png" />
+    <Content Include="Pictures\Game_16\arrowRight.png" />
     <Content Include="Pictures\Game_16\bucket.png" />
     <Content Include="Pictures\Game_16\bucketFull.png" />
     <Content Include="Pictures\Game_16\bucket_background.png" />
     <Content Include="Pictures\Game_16\dropStation.png" />
     <Content Include="Pictures\Game_16\heart.png" />
     <Content Include="Pictures\Game_16\paay1.png" />
+    <Content Include="Pictures\Game_17\arrowLeft.png" />
+    <Content Include="Pictures\Game_17\arrowRight.png" />
     <Content Include="Pictures\Game_17\ballon_background.png" />
     <Content Include="Pictures\Game_17\checkmark.png" />
     <Content Include="Pictures\Game_17\error.png" />
@@ -452,6 +463,8 @@
     <Content Include="Pictures\Game_17\paay1.png" />
     <Content Include="Pictures\Game_17\paay2.png" />
     <Content Include="Pictures\Game_17\raaish1.png" />
+    <Content Include="Pictures\Game_19\arrowLeft.png" />
+    <Content Include="Pictures\Game_19\arrowRight.png" />
     <Content Include="Pictures\Game_19\background.jpg" />
     <Content Include="Pictures\Game_19\background_2.jpg" />
     <Content Include="Pictures\Game_19\heart.png" />
@@ -460,6 +473,8 @@
     <Content Include="Pictures\Game_19\kuuf3.png" />
     <Content Include="Pictures\Game_1\hidden.jpeg" />
     <Content Include="Pictures\Game_1\mystery.jpeg" />
+    <Content Include="Pictures\Game_20\arrowLeft.png" />
+    <Content Include="Pictures\Game_20\arrowRight.png" />
     <Content Include="Pictures\Game_20\bird1.png" />
     <Content Include="Pictures\Game_20\bird2.png" />
     <Content Include="Pictures\Game_20\cloud.png" />
@@ -472,6 +487,8 @@
     <Content Include="Pictures\Game_20\raaish2.png" />
     <Content Include="Pictures\Game_20\raaish3.png" />
     <Content Include="Pictures\Game_20\sun.png" />
+    <Content Include="Pictures\Game_21\arrowLeft.png" />
+    <Content Include="Pictures\Game_21\arrowRight.png" />
     <Content Include="Pictures\Game_21\error.png" />
     <Content Include="Pictures\Game_21\fireball.png" />
     <Content Include="Pictures\Game_21\maam3.png" />
@@ -479,6 +496,8 @@
     <Content Include="Pictures\Game_21\taat1.png" />
     <Content Include="Pictures\Game_21\woodwall1.png" />
     <Content Include="Pictures\Game_21\woodwall2.png" />
+    <Content Include="Pictures\Game_22\arrowLeft.png" />
+    <Content Include="Pictures\Game_22\arrowRight.png" />
     <Content Include="Pictures\Game_22\brickwall.png" />
     <Content Include="Pictures\Game_22\fireattack.png" />
     <Content Include="Pictures\Game_22\jump.png" />
@@ -490,7 +509,11 @@
     <Content Include="Pictures\Game_22\taaf2.png" />
     <Content Include="Pictures\Game_22\taaf3.png" />
     <Content Include="Pictures\Game_22\taat1.png" />
+    <Content Include="Pictures\Game_2\arrowLeft.png" />
+    <Content Include="Pictures\Game_2\arrowRight.png" />
     <Content Include="Pictures\Game_2\heart.png" />
+    <Content Include="Pictures\Game_5\arrowLeft.png" />
+    <Content Include="Pictures\Game_5\arrowRight.png" />
     <Content Include="Pictures\Game_5\haay1.png" />
     <Content Include="Pictures\Game_5\haay2.png" />
     <Content Include="Pictures\Game_5\haay3.png" />
@@ -503,6 +526,8 @@
     <Content Include="Pictures\Game_5\ship.png" />
     <Content Include="Pictures\Game_5\shot.png" />
     <Content Include="Pictures\Game_5\space.jpg" />
+    <Content Include="Pictures\Game_8\arrowLeft.png" />
+    <Content Include="Pictures\Game_8\arrowRight.png" />
     <Content Include="Pictures\Game_8\black_hole.png" />
     <Content Include="Pictures\Game_8\cartoon_grass.png" />
     <Content Include="Pictures\Game_8\chaat1.png" />
@@ -536,6 +561,8 @@
     <Content Include="Pictures\Game_8\signת.png" />
     <Content Include="Pictures\Game_8\target.png" />
     <Content Include="Pictures\Game_8\tempimg.jpeg" />
+    <Content Include="Pictures\Game_9\arrowLeft.png" />
+    <Content Include="Pictures\Game_9\arrowRight.png" />
     <Content Include="Pictures\Game_9\greenBall.png" />
     <Content Include="Pictures\Game_9\heart.png" />
     <Content Include="Pictures\Game_9\rocket.png" />

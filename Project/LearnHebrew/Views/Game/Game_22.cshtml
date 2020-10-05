@@ -23,6 +23,11 @@
         
     }
 
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%
+    }
     .heart {
         opacity: 0.7;
         width: 25px;
@@ -96,6 +101,7 @@
         cursor: pointer;
         color: goldenrod;
         margin-bottom: 5px;
+        font-size: 30px;
     }
 
     #gameOverh {
@@ -106,6 +112,27 @@
 
     .gameOverBtn {
         margin-top: 10px;
+    }
+    #silenceDiv {
+        text-align: center;
+    }
+
+    #silenceBtn {
+        margin: 15px;
+        border-radius: 30px;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: transparent;
+        outline: none;
+    }
+
+    .arrow {
+        height: 30px;
+        position: absolute;
+    }
+
+    #arrowDiv {
+        position: relative;
     }
 </style>
 <script>
@@ -120,24 +147,37 @@
     let obstacleSpawn = 1200;// time it takes to create a new obstacle in mili secomds
     let obstacleRunwayTimer = 2000;// time it takes to an obstacle to move and disappear
     let lives = 9;// the number of times a user can mess up before he losses the game
-    let shotSpeed = 2000;
-    let jumpSpeed = 500;
+    let shotSpeed = 2000;// the speed of the "shot"
+    let jumpSpeed = 500;// the time it takes for the user to "jump"
+    let arrowInterval;// the interval variable of the arrow animation
 
     $(document).ready(function () {
         LoadGameInstruction();
         FillLetters();
-        //validLetters = ["/Pictures/Game_22/taaf1.png", "/Pictures/Game_22/taaf2.png", "/Pictures/Game_22/taaf3.png"];
-        //invalidLetters = ["/Pictures/Game_22/taat1.png", "/Pictures/Game_22/shin1.png"];
         runningManIndicator = setInterval(ChangeMan, runningSpeed);
         LoadSoundAndPicture();
         windowResize();
+        SetArrows();
+        arrowInterval = setInterval(MoveArrows, 1000);
         $man = $("#manId");
         $man.css("bottom", 0);
         $man.css("left", Math.floor(parseInt($man.css("width"))/2));
         $("body").keyup(userKey_Options);        
     })
+    // This function resizes objects on the screen
     function windowResize() {
         $(window).resize(function () {
+            $("#leftArrow").stop();
+            $("#rightArrow").stop();
+            $("#leftArrow").addClass("hidescreen");
+            $("#rightArrow").addClass("hidescreen");
+            setTimeout(
+                function () {
+                    $("#leftArrow").removeClass("hidescreen");
+                    $("#rightArrow").removeClass("hidescreen");
+                }, 2100);
+            SetArrows();
+
             $(".wall").each(function () {
                 let $wall = $(this);
                 $wall.stop();
@@ -172,6 +212,7 @@
             }
         });
     }
+    // This function pre loads the game instructions
     function LoadGameInstruction() {
         let obj = document.createElement("audio");
         obj.src = "/Audio/Game_22/Game_22_instructions.mp3";
@@ -184,6 +225,7 @@
             obj.play();
         });
     }
+    // This function pre loads the sound and pictures of this game
     function LoadSoundAndPicture() {
         new Audio("/Audio/Game_22/blast.mp3").load();
         new Audio("/Audio/Game_22/jump.mp3").load();
@@ -194,26 +236,30 @@
             fetch(invalidLetters[j]);
         }
     }
+    // This function creates sounds for the game
     function CreateSound(number) {
-        let $sound;
-        if (number == 1) {
-            $sound = new Audio("/Audio/Game_22/blast.mp3");
-        }
-        else {
-            $sound = new Audio("/Audio/Game_22/jump.mp3");
-        }
-        $sound.play();
+        if ($("#silenceBtn").val() == "🔔") {
+            let $sound;
+            if (number == 1) {
+                $sound = new Audio("/Audio/Game_22/blast.mp3");
+            }
+            else {
+                $sound = new Audio("/Audio/Game_22/jump.mp3");
+            }
+            $sound.play();
+        }           
     }
+    // This function starts the game
     function StartGame() {
         gameStarted = true;
+        RemoveArrows();
         $("#buttonId").addClass("hidescreen");
         $("#buttonRet").removeClass("hidescreen");
         FillHearts();
 
         obstacleIndicator = setInterval(CreateObstacle, obstacleSpawn);
-        //CreateObstacle();
-
     }
+    //This function enables the user movement and start of the game
     function userKey_Options() {
         switch (window.event.keyCode) {
             case (13):// enter was pressed
@@ -235,6 +281,7 @@
 
         }
     }
+    // This function creates the "running" affect on the user
     function ChangeMan() {
         switch ($man.attr("src")) {
             case ("/Pictures/Game_22/man1.png"):
@@ -245,6 +292,7 @@
                 break;
         }
     }
+    // This function increases the difficulty of the game
     function IncreaseChallenge() {
         if (parseInt($("#scoreId").text()) == 10) {
             clearInterval(obstacleIndicator);
@@ -261,6 +309,7 @@
 
         }
     }
+    // This funcion sets up the game hearts (lives)
     function FillHearts() {
         $heartDiv = $("#heartDiv");
         for (let i = 0; i < lives; i++) {
@@ -271,6 +320,7 @@
 
         }
     }
+    // This function creates a "shot" object
     function Shooting() {
         let $shot = $("<img>");
         CreateSound(1);
@@ -298,6 +348,7 @@
 
             });
     }
+    // This function creates an "obtacle"
     function CreateObstacle() {
         let obstacleType = Math.floor((Math.random() * 3) + 1);
         let letterType = Math.floor((Math.random() * 3) + 1);
@@ -391,6 +442,7 @@
 
         }
     }
+    // This function checks for a collision between and "obstacle" and a "shot"
     function collisionCheck() {
         let $wall = $(this);//getting the current wall
 
@@ -419,6 +471,7 @@
             }
         }
     }
+    // This function checks for a collision between and "obstacle" letter and the user
     function collisionCheckLetter() {
         let $letter = $(this);//getting the current letter
         let indicator = false;
@@ -447,6 +500,7 @@
             }
         }
     }
+    // This functions checks for an Intersection between 2 objects
     function checkIntersection($x, $y) {
         if ($x == undefined || $y == undefined) return false;
         xLeft = parseInt($x.css("left"));
@@ -461,6 +515,7 @@
 
         return ((xLeft >= yLeft && xLeft <= yRight || yLeft >= xLeft && yLeft <= xRight) && (xTop <= yBottom && xTop >= yTop || yTop <= xBottom && yTop >= xTop));
     }
+    // This function creates the "jumping" animation
     function Jump() {
         CreateSound(2);
         $('*').off('keyup');
@@ -477,8 +532,6 @@
         }, {
                 duration: jumpSpeed,
                 easing: "linear",
-                //progress: collisionCheck,
-                //complete: deleteObject
 
             });
 
@@ -489,22 +542,19 @@
         }, {
                 duration: jumpSpeed,
                 easing: "linear",
-                //progress: collisionCheck,
-                //complete: deleteObject
 
             });
     }
-
-
+    // This funcion removes remaining hearts on screen and replaces them with an updated heart amount
     function RemoveHeart() {
         $("#heartDiv").empty();
         FillHearts();
     }
-
-
+    // This function ends the game
     function GameOver() {
         clearInterval(runningManIndicator);
         clearInterval(obstacleIndicator);
+        $("#silenceBtn").remove();
         $("#sectionId").addClass("hidescreen");
         $("#buttonRet").addClass("hidescreen");
         $("#instructionDiv").addClass("hidescreen");
@@ -512,11 +562,67 @@
         $("#endGameScreen").removeClass("hidescreen");
         $('*').off('keyup');
     }
+    // this function removes an object 
     function deleteObject() {
         $(this).remove();
     }
+    // This function return the user to "Alphabet" page
     function GoToAlphabet() {
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
+    }
+    // This function changes the slience button's appearance
+    function ChangeSilenceBtn() {
+        if ($("#silenceBtn").val() == "🔔") {
+            $("#silenceBtn").val("🔕");
+        }
+        else {
+            $("#silenceBtn").val("🔔");
+        }
+        $("#silenceBtn").blur();
+    }
+    // This function sets the location of the image arrows
+    function SetArrows() {
+        let x = $("#instructionId").position();
+        x = x.left - $("#leftArrow").width() - $("#instructionId").width();
+        let x2 = $("#instructionId").position();
+        x2 = x2.left + ($("#instructionId").width() * 2);
+        $("#leftArrow").css("left", x + "px");
+        $("#rightArrow").css("left", x2 + "px");
+    }
+    // This function enables the movement of the image arrows
+    function MoveArrows() {
+        let $leftArrow = $("#leftArrow");
+        let left = $("#instructionId").width();
+        let leftTarget = parseInt($leftArrow.css("left")) + left;
+        $leftArrow.animate({
+
+            left: leftTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+        let $rightArrow = $("#rightArrow");
+        let right = $("#instructionId").width();
+        let rightTarget = parseInt($rightArrow.css("left")) - right;
+        $rightArrow.animate({
+
+            left: rightTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+    }
+    // This function stops the arrow animations and removes the arrows
+    function RemoveArrows() {
+        clearInterval(arrowInterval);
+        $("#leftArrow").remove();
+        $("#rightArrow").remove();
     }
 </script>
 
@@ -524,7 +630,11 @@
     <div style="text-align:center">
         <h1 style="color:orange"> האיש הרץ </h1>
         <h2 style="color:orange"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
-        <div><i id="instructionId" class="fa fa-volume-up"></i></div>
+        <div id="arrowDiv">
+            <img id="leftArrow" class="arrow" src="~/Pictures/Game_22/arrowLeft.png" />
+            <i id="instructionId" class="fa fa-volume-up"></i>
+            <img id="rightArrow" class="arrow" src="~/Pictures/Game_22/arrowRight.png" />
+        </div>
         <input class="myButton" id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
         <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
     </div>
@@ -536,8 +646,11 @@
     <div id="instructionDiv" style="text-align:center;padding-top:5px">
         <h2 style="color:darkorange"><b>  אות משחק זה היא @Model.Letter </b></h2>
     </div>
+    <div id="silenceDiv">
+        <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
+    </div>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h3 id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>
+        <h1 id="gameOverh" style="font-size:60px"><b>ניקוד: </b><b><span id="finalScore"></span></b></h1>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
 </body>

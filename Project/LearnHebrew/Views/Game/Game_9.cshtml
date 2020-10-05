@@ -23,6 +23,10 @@
         margin: auto;
     }
 
+    footer {
+        bottom: 0;
+        width: 100%
+    }
     #rocketId {
         position: absolute;
         width: 10%;
@@ -84,6 +88,7 @@
         padding: 1px 6px;
         text-decoration: none;
         text-shadow: 0px 1px 0px #ded17c;
+        outline: none;
     }
 
         .myButton:hover {
@@ -93,10 +98,33 @@
 
     #instructionId {
         cursor: pointer;
-        margin-bottom:5px;
+        margin-bottom: 5px;
+        font-size: 30px;
     }
     .gameOverBtn {
         margin-top: 10px;
+        outline: none;
+    }
+    #silenceDiv {
+        text-align: center;
+    }
+
+    #silenceBtn {
+        margin: 15px;
+        border-radius: 30px;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: transparent;
+        outline: none;
+    }
+
+    .arrow {
+        height: 30px;
+        position: absolute;
+    }
+
+    #arrowDiv {
+        position: relative;
     }
 </style>
 <script>
@@ -117,6 +145,7 @@
     let letterShootingRate = 1000;// the time it takes a letter to shoot
     let rocketShotTimer = 500;// the time it takes for the rocket to recharge shot
     let rocketShotBol = true;// boolean variable for knowing the shot of the rocket is charged
+    let arrowInterval;// the interval variable of the arrow animation
 
 
     $(document).ready(function () {
@@ -128,6 +157,8 @@
         LoadGameInstruction();
         FillLetters();
         windowResize();
+        SetArrows();
+        arrowInterval = setInterval(MoveArrows, 1000);
         $("body").keyup(userKey_Options);
     })
     //This function gets the path of the selected letter images
@@ -148,6 +179,17 @@
     // This function resizes objects of the game according to the current size of the screen
     function windowResize() {
         $(window).resize(function () {//for window resizing
+            $("#leftArrow").stop();
+            $("#rightArrow").stop();
+            $("#leftArrow").addClass("hidescreen");
+            $("#rightArrow").addClass("hidescreen");
+            setTimeout(
+                function () {
+                    $("#leftArrow").removeClass("hidescreen");
+                    $("#rightArrow").removeClass("hidescreen");
+                }, 2100);
+            SetArrows(); 
+
             $rocket.css("left", Math.floor(parseInt($rocket.css("width")) / 2));
             move = Math.floor(parseInt($rocket.css("width")) / 2);
             rocketTop = parseInt($rocket.css("top"));
@@ -179,14 +221,16 @@
     }
     // This function enables certain audio files at certain events
     function CreateSound(number = 10) {
-        let $sound;
-        if (number == 1) {//letter destroyed
-            $sound = new Audio("/Audio/Game_9/SFX_Explosion_03.mp3");
-        }
-        else {//rocket was hit
-            $sound = new Audio("/Audio/Game_9/lose_life.mp3");
-        }
-        $sound.play();
+        if ($("#silenceBtn").val() == "🔔") {
+            let $sound;
+            if (number == 1) {//letter destroyed
+                $sound = new Audio("/Audio/Game_9/SFX_Explosion_03.mp3");
+            }
+            else {//rocket was hit
+                $sound = new Audio("/Audio/Game_9/lose_life.mp3");
+            }
+            $sound.play();
+        }           
     }
     // This funcion enables pressed keyboard events
     function userKey_Options() {
@@ -230,6 +274,7 @@
     // This funcion sets up the game
     function StartGame() {
         gameStarted = true;
+        RemoveArrows();
         LoadSoundAndPicture();
         FillHearts();
         $("#buttonId").addClass("hidescreen");
@@ -490,6 +535,7 @@
     }
     // This function ends all intervals of the game and allows the player to return to "Alphabet" page
     function GameOver() {
+        $("#silenceBtn").remove();
         if (gameWonBol) {
             $("#messageId").text("כל הכבוד");
         }
@@ -515,6 +561,60 @@
     function GetRandomLetter(letterList) {
         return letterList[Math.floor(Math.random() * letterList.length)];
     }
+    // This function changes the slience button's appearance
+    function ChangeSilenceBtn() {
+        if ($("#silenceBtn").val() == "🔔") {
+            $("#silenceBtn").val("🔕");
+        }
+        else {
+            $("#silenceBtn").val("🔔");
+        }
+        $("#silenceBtn").blur();       
+    }
+    // This function sets the location of the image arrows
+    function SetArrows() {
+        let x = $("#instructionId").position();
+        x = x.left - $("#leftArrow").width() - $("#instructionId").width();
+        let x2 = $("#instructionId").position();
+        x2 = x2.left + ($("#instructionId").width() * 2);
+        $("#leftArrow").css("left", x + "px");
+        $("#rightArrow").css("left", x2 + "px");
+    }
+    // This function enables the movement of the image arrows
+    function MoveArrows() {
+        let $leftArrow = $("#leftArrow");
+        let left = $("#instructionId").width();
+        let leftTarget = parseInt($leftArrow.css("left")) + left;
+        $leftArrow.animate({
+
+            left: leftTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+        let $rightArrow = $("#rightArrow");
+        let right = $("#instructionId").width();
+        let rightTarget = parseInt($rightArrow.css("left")) - right;
+        $rightArrow.animate({
+
+            left: rightTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+    }
+    // This function stops the arrow animations and removes the arrows
+    function RemoveArrows() {
+        clearInterval(arrowInterval);
+        $("#leftArrow").remove();
+        $("#rightArrow").remove();
+    }
 </script>
 
 
@@ -522,20 +622,27 @@
     <div style="text-align:center">
         <h1 style="color:gold"> פולשי האותיות </h1>
         <h2 style="color:goldenrod"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
-        <div><i style="color:goldenrod" id="instructionId" class="fa fa-volume-up"></i></div>      
+        <div id="arrowDiv">
+            <img id="leftArrow" class="arrow" src="~/Pictures/Game_9/arrowLeft.png" />
+            <i style="color:goldenrod" id="instructionId" class="fa fa-volume-up"></i>
+            <img id="rightArrow" class="arrow" src="~/Pictures/Game_9/arrowRight.png" />
+        </div>
         <input class="myButton" id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
-        <input class="hidescreen" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
+        <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
     </div>
     <section id="sectionId" class="w3-display-container	">
-
         <div id="heartDiv"></div>
         <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
         <img id="rocketId" src="~/Pictures/Game_9/rocket.png" />
     </section>
+    <div id="silenceDiv">
+        <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
+    </div>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
         <h1 style="color:gold" id="messageId"><b></b></h1>
         <h1 style="color:gold"><b>ניקוד: </b><span id="finalScore"><b></b></span></h1>
         <input class="myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
-
     </div>
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>

@@ -14,6 +14,11 @@
         background-size: cover;
     }
 
+    .footerClass {
+        position: absolute;
+        bottom: 0;
+        width: 100%
+    }
     section {
         position: relative;
         width: 95%;
@@ -130,6 +135,7 @@
         padding: 1px 6px;
         text-decoration: none;
         text-shadow: 0px 1px 0px #ded17c;
+        outline: none;
     }
 
         .myButton:hover {
@@ -139,8 +145,9 @@
 
     #instructionId {
         cursor: pointer;
-        color:goldenrod;
-        margin-bottom:5px;
+        color: goldenrod;
+        margin-bottom: 5px;
+        font-size: 30px;
     }
     #gameOverh {
         color: gold;
@@ -149,10 +156,33 @@
     }
     .gameOverBtn {
         margin-top: 10px;
+        outline: none;
     }
+    #silenceDiv {
+        text-align: center;
+    }
+
+    #silenceBtn {
+        margin: 15px;
+        border-radius: 30px;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: transparent;
+        outline: none;
+    }
+
+    .arrow {
+        height: 30px;
+        position: absolute;
+    }
+
+    #arrowDiv {
+        position: relative;
+    }
+    
 </style>
 <script>
-    let validLetters = [];// array of valid letter for the game, baed on the user
+    let validLetters = [];// array of valid letter for the game, based on the user
     let cockroaches;// array of cockroach images
     let gameoverIndicator; // interval for spawning enemies until game is over
     let cockroachSpawn = 2000;// the time it takes for a cockroach to be created
@@ -160,13 +190,32 @@
     let lives = 10; // number of times a user can die in the game
     let gameStarted = false; // indicator for game started for not letting pressed enter
     let letterSpeed = 10000;// the time it takes a letter to remove itself
+    let arrowInterval;// the interval variable of the arrow animation
 
     $(document).ready(function () {
         //LoadGameInstruction();
         FillLetters();
+        windowResize();
+        SetArrows();
+        arrowInterval = setInterval(MoveArrows, 1000);
         cockroaches = ["/Pictures/Game_13/cockroach1UD.png","/Pictures/Game_13/cockroach2UD.png"];
         $("body").keydown(userKey_Options);
     })
+    // This function resizes objects on the screen  
+    function windowResize() {
+        $(window).resize(function () {
+            $("#leftArrow").stop();
+            $("#rightArrow").stop();
+            $("#leftArrow").addClass("hidescreen");
+            $("#rightArrow").addClass("hidescreen");
+            setTimeout(
+                function () {
+                    $("#leftArrow").removeClass("hidescreen");
+                    $("#rightArrow").removeClass("hidescreen");
+                }, 2100);
+            SetArrows();
+        })
+    }
     //This function gets the path of the selected letter images
     function FillLetters() {
         $.ajax({
@@ -196,6 +245,7 @@
     // This funcion starts the game when the "התחלה" button is clicked
     function StartGame() {
         gameStarted = true;
+        RemoveArrows();
         $("#buttonId").addClass("hidescreen");
         $("#buttonRet").removeClass("hidescreen");
         FillHearts();
@@ -409,15 +459,18 @@
     }
     // This function creates a sound 
     function CreateSound() {
-        let $sound = $("<audio>");
-        $sound.attr("src", "/Audio/Game_13/gun_fire2.mp3");
-
-        $sound[0].play();
+        if ($("#silenceBtn").val() == "🔔") {
+            let $sound = $("<audio>");
+            $sound.attr("src", "/Audio/Game_13/gun_fire2.mp3");
+            $sound[0].play();
+        }     
+        
     }
     // This function ends all intervals of the game and allows the player to return to "Alphabet" page
     function GameOver() {
+        $("#footerId").addClass("footerClass");
+        $("#silenceBtn").remove();
         clearInterval(gameoverIndicator);
-        //do popoup here to let the user go back to alphabet
         $("#sectionId").addClass("hidescreen");
         $("#buttonRet").addClass("hidescreen");
         $("#finalScore").text($("#scoreId").text());
@@ -442,13 +495,71 @@
     function GoToAlphabet() {
          window.location.href = "@(Url.Action("ReturnToAlphabet", "Child"))";
     }
+    // This function changes the slience button's appearance
+    function ChangeSilenceBtn() {
+        if ($("#silenceBtn").val() == "🔔") {
+            $("#silenceBtn").val("🔕");
+        }
+        else {
+            $("#silenceBtn").val("🔔");
+        }
+        $("#silenceBtn").blur();
+    }
+    // This function sets the location of the image arrows
+    function SetArrows() {
+        let x = $("#instructionId").position();
+        x = x.left - $("#leftArrow").width() - $("#instructionId").width();
+        let x2 = $("#instructionId").position();
+        x2 = x2.left + ($("#instructionId").width() * 2);
+        $("#leftArrow").css("left", x + "px");
+        $("#rightArrow").css("left", x2 + "px");
+    }
+    // This function enables the movement of the image arrows
+    function MoveArrows() {
+        let $leftArrow = $("#leftArrow");
+        let left = $("#instructionId").width();
+        let leftTarget = parseInt($leftArrow.css("left")) + left;
+        $leftArrow.animate({
+
+            left: leftTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+        let $rightArrow = $("#rightArrow");
+        let right = $("#instructionId").width();
+        let rightTarget = parseInt($rightArrow.css("left")) - right;
+        $rightArrow.animate({
+
+            left: rightTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+    }
+    // This function stops the arrow animations and removes the arrows
+    function RemoveArrows() {
+        clearInterval(arrowInterval);
+        $("#leftArrow").remove();
+        $("#rightArrow").remove();
+    }
 </script>
 
 <body>
     <div style="text-align:center">
         <h1 style="color:gold"> תפיסת מקקים </h1>
         <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
-        <div><i id="instructionId" class="fa fa-volume-up"></i></div>     
+        <div id="arrowDiv">
+            <img id="leftArrow" class="arrow" src="~/Pictures/Game_13/arrowLeft.png" />
+            <i id="instructionId" class="fa fa-volume-up"></i>
+            <img id="rightArrow" class="arrow" src="~/Pictures/Game_13/arrowRight.png" />
+        </div>
         <input class="myButton" id="buttonId" type="button" value="התחלה" onclick="StartGame()" />
         <input class="myButton" id="buttonRet" type="button" value="חזור לאותיות" onclick="GoToAlphabet()" />
     </div>
@@ -456,8 +567,13 @@
         <div id="heartDiv"></div>
         <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
     </section>
+    <div id="silenceDiv">
+        <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
+    </div>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h3 style="font-size:50px" id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>
+        <h1 style="color:gold; font-size:60px"><b>ניקוד: </b><b><span id="finalScore"></span></b></h1>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
+    <footer id="footerId" style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>

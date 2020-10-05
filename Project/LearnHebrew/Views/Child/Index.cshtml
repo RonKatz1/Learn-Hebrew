@@ -16,9 +16,62 @@
 
 </script>
 <style>
+    /** {
+        box-sizing: border-box
+    }*/
+
+    /* Container needed to position the overlay. Adjust the width as needed */
+    .container {
+        position: relative;
+        /*width: 50%;*/
+        max-width: 300px;
+        max-height: 300px;
+    }
+
+    /* Make the image to responsive */
+    .image {
+        /*display: block;*/
+        width: 100%;
+        /*height: auto;*/
+    }
+
+    /* The overlay effect - lays on top of the container and over the image */
+    .overlay {
+        position: absolute;
+        bottom: 0;
+        background: rgb(0, 0, 0);
+        background: rgba(0, 0, 0, 0.5); /* Black see-through */
+        color: #f1f1f1;
+        width: 90%;
+        transition: .5s ease;
+        opacity: 0;
+        color: white;
+        font-size: 20px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    /* When you mouse over the container, fade in the overlay title */
+    .container:hover .overlay {
+        opacity: 1;
+    }
+
+    #optionsTable{
+        text-align:center;
+        margin:auto;
+    }
+
+    footer{
+        position:absolute;
+        bottom:0;
+        width:100%
+    }
+
     img {
-        max-width: 50%;
-        max-height: 50%;
+        /*max-width: 50%;
+        max-height: 50%;*/
+        width: 200px;
+        height: 200px;
         border: 1px solid #ddd;
     }
 
@@ -29,20 +82,27 @@
 
 <h1>עמוד משתמש של ילד</h1>
 <div style="display:block">
-    <input type="button" value="התנתקות" onclick="goToStarterPage()" /><p id="childName">@Model.child.Name</p><p> שלום</p>
+    <input type="button" value="התנתקות" onclick="goToStarterPage()" /><p id="childName">  שלום @Model.child.Name</p>
 </div>
-<table>
+<table id="optionsTable">
     <tr>
         <td id="tdLetters">
-            <a href="@(Url.Action("ChildLetters", "Child"))">
-                <img src="~/Pictures/teacher.jpeg" />
-            </a>
+            
+            <div class="container">
+                <a href="@(Url.Action("ChildLetters", "Child"))">
+                    <img class="image" src="~/Pictures/teacher.jpeg" />
+                </a>
+                <div class="overlay">למידת אותיות</div>
+            </div>
         </td>
         <td id="tdHelp">
-            <a href="@(Url.Action("HelpPage", "Child"))">
-                <img src="~/Pictures/questionMark.jpeg" />
-            </a>
             
+            <div class="container">
+                <a href="@(Url.Action("HelpPage", "Child"))">
+                    <img class="image" src="~/Pictures/questionMark.jpeg" />
+                </a>
+                <div class="overlay">עזרה והסברים</div>
+            </div>
             
         </td>
         <td id="tdTest">

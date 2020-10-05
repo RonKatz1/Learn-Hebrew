@@ -15,11 +15,15 @@
         margin-right: 5px;
         margin-left: 5px;
     }
+
+    footer {
+        bottom: 0;
+        width: 100%
+    }
     .hidescreen {
         display: none;
     }
     .contentToDisplay {
-        width: 100%;
         text-align: center;
         margin:45px;
     }
@@ -37,6 +41,55 @@
         margin: auto;
         width: 100%;
     }
+    .soundBtn {
+        margin: 15px;
+        border-radius: 30px;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: transparent;
+        outline: none;
+    }
+    .arrow {
+        height: 30px;
+        position: absolute;
+    }
+
+    #arrowDiv {
+        position: relative;
+    }
+    #instructionId {
+        cursor: pointer;
+        color: goldenrod;
+        margin-bottom: 5px;
+        font-size: 30px;
+    }
+    #controlsDiv{
+        margin:10px;
+        display:none;
+    }
+    .myButton {
+        box-shadow: inset 0px 1px 0px 0px #f9eca0;
+        background: linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
+        background-color: #f0c911;
+        border-radius: 6px;
+        border: 1px solid #e65f44;
+        cursor: pointer;
+        color: #c92200;
+        font-family: Arial;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 1px 6px;
+        text-decoration: none;
+        text-shadow: 0px 1px 0px #ded17c;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        outline: none;
+    }
+
+        .myButton:hover {
+            background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
+            background-color: #f2ab1e;
+        }
 </style>
 <script>
     const gameLetter = '@Model.Letter';
@@ -48,11 +101,38 @@
     let wrongAnswers = [];// object array of: { correct content id of current question, wrong answer the child gave to current question 
     let corresponsingContentID = [];
     let wrongAnswersCorrection = [];// array of the right answers the child did not know
-    //let correctAnswers = [];// array of the correct answers the child gave
-    let words = [];
+    let words = [];// array of the words of the Test
     let points = 0;
+    let arrowInterval;// the interval variable of the arrow animation
+    
+    $(document).ready(function () {
+        windowResize();
+        SetArrows();
+        arrowInterval = setInterval(MoveArrows, 1000);
 
-   
+    })
+    // This function resizes objects of the game according to the current size of the screen
+    function windowResize() {
+        $(window).resize(function () {
+            $("#leftArrow").stop();
+            $("#rightArrow").stop();
+            $("#leftArrow").addClass("hidescreen");
+            $("#rightArrow").addClass("hidescreen");
+            setTimeout(
+                function () {
+                    $("#leftArrow").removeClass("hidescreen");
+                    $("#rightArrow").removeClass("hidescreen");
+                }, 2100);
+            SetArrows();
+        })
+    }
+    // This function enables the sound of the selected content number from the page
+    function EnableSound(number) {
+        let source = $("#source_" + number);
+        let $sound = $("<audio>");
+        $sound.attr("src", source.attr('src'));
+        $sound[0].play();
+    }
     function SendAnswer(correctWord, answerTextBox, answerButtonId) {
         $("#" + answerButtonId).attr("disabled", true);
         $("#" + answerButtonId).attr("value", "תשובתך נשלחה");
@@ -77,29 +157,23 @@
 
         }
     }
+    // This function groups the answer and result of the child to the selected content, also keeps track of number of answered contents for the end of the Test
     function RadioSendAnswer(correctWord, answerButtonId, questionContentID, radioName) {
         correctWord = correctWord.trim();
-        //let selectedRadio = $("#" + radioDivId + "input[type='radio']:checked");
-        //if (selectedRadio.length <= 0) {// child pressed without choosing radio button
-           // return;
-        //}
-        // else he did choose an answer from radio buttons
-        //let currentAnswer = selectedRadio.val();// get value of selected radio button
         let ele = document.getElementsByName(radioName);
         let currentAnswer;      
         for (let i = 0; i < ele.length; i++) {
             if (ele[i].checked) 
                 currentAnswer = ele[i].value;              
-            //ele[i].disabled = true;
         }
         if (currentAnswer == null)// if the child pressed without choosing radio button
             return;
         for (let i = 0; i < ele.length; i++) {
             ele[i].disabled = true;
         }
-        //$("#" + radioDivId + "input[type='radio']".attr("disabled", true));// disable all radio in div
-        $("#" + answerButtonId).attr("disabled", true);// disable current send answer button
-        $("#" + answerButtonId).attr("value", "תשובתך נשלחה");
+        $("#soundBtn_" + answerButtonId).attr("disabled", true);
+        $("#button_" + answerButtonId).attr("disabled", true);// disable current send answer button
+        $("#button_" + answerButtonId).attr("value", "תשובתך נשלחה");
         
         //$('input[name='radioName']:checked').val();
 
@@ -121,14 +195,12 @@
         }
         words.push(correctWord);
         questionCounter++;
-        if (questionCounter == questionAmount) {// the end of the test
-            //remove question div and reveal result div and send results to db
-            AddToWrongAnswerDiv();
-            $("#pointsId").text(points);
-            $("#resultDiv").removeClass("hidescreen");
-            $("#questionsDiv").addClass("hidescreen");
-            SaveChildProgress();
-
+        if (questionCounter == questionAmount) {// the end of the Test
+            AddToWrongAnswerDiv();// sending grouped answers and results to be presented to user
+            $("#pointsId").text(points);// sending points earned by user on Test to be presented to user
+            $("#resultDiv").removeClass("hidescreen");// reveal result div
+            $("#questionsDiv").addClass("hidescreen");// remove question div
+            SaveChildProgress();// send results to db
         }
     }
     function SaveChildProgress() {
@@ -177,9 +249,48 @@
             }
         }
     }
+    // This function redirects user to the selected game with the chosent letter
     function GoToGame() {
         window.location.href = "@(Url.Action("GoToGame", "Child"))" + "?letter=" + gameLetter + "&name=" + gameName + "&needContent=" + contentNeeded;
 
+    }
+    // This function sets the location of the image arrows
+    function SetArrows() {
+        let x = $("#instructionId").position();
+        x = x.left - $("#leftArrow").width() - $("#instructionId").width();
+        let x2 = $("#instructionId").position();
+        x2 = x2.left + ($("#instructionId").width() * 2);
+        $("#leftArrow").css("left", x + "px");
+        $("#rightArrow").css("left", x2 + "px");
+    }
+    // This function enables the movement of the image arrows
+    function MoveArrows() {
+        let $leftArrow = $("#leftArrow");
+        let left = $("#instructionId").width();
+        let leftTarget = parseInt($leftArrow.css("left")) + left;
+        $leftArrow.animate({
+
+            left: leftTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
+        let $rightArrow = $("#rightArrow");
+        let right = $("#instructionId").width();
+        let rightTarget = parseInt($rightArrow.css("left")) - right;
+        $rightArrow.animate({
+
+            left: rightTarget
+
+        }, {
+                duration: 500,
+                easing: "linear",
+                complete: SetArrows
+
+            });
     }
 </script>
 
@@ -192,54 +303,66 @@
             <h1>מבחן מילים</h1>
             <h2>עבור כל שאלה בחר במילה המתאימה לתמונה</h2>
         </div>
+        <div id="arrowDiv">
+            <img id="leftArrow" class="arrow" src="~/Pictures/Game_17/arrowLeft.png" />
+            <i id="instructionId" class="fa fa-volume-up"></i>
+            <img id="rightArrow" class="arrow" src="~/Pictures/Game_17/arrowRight.png" />
+        </div>
         @for (int i = 0; i < Model.questions.Count(); i++)
         {
 
-        <div class="contentToDisplay">
+            <h3>------------------------------------------------------------</h3>
+            <div class="contentToDisplay">
 
-            @{
-                var optionsWord = new List<string>();
-                if (Model.ContentOptions.ContainsKey(Model.questions[i].ContentID))
-                {
-                    optionsWord = Model.ContentOptions[Model.questions[i].ContentID];
-                }
-
-            }
-            <div id='radioButtonDiv_@i'>
-                @foreach (var str in optionsWord)
-                {
-
-                    if (Model.questions[i].Word.Equals(str))
+                @{
+                    var optionsWord = new List<string>();
+                    if (Model.ContentOptions.ContainsKey(Model.questions[i].ContentID))
                     {
-                        <input type="radio" class='true' name='radio_@i' value=@str />
-                        <label>@str</label>
+                        optionsWord = Model.ContentOptions[Model.questions[i].ContentID];
                     }
-                    else
-                    {
-                        <input type="radio" class='false' name='radio_@i' value=@str />
-                        <label>@str</label>
-                    }
+
                 }
-            </div>
-            @*<div>
-                <input type="text" id='textbox_@i' placeholder="רשום את תשובתך כאן" />
-            </div>*@
-            <div class="ContentPhoto" style="width:100px; height:100px; background-image:url('@(BLL.Services.ContentServices.GetFilePath(Model.questions[i].Data.PhotoFile))')">
+                <div id='radioButtonDiv_@i'>
+                    @foreach (var str in optionsWord)
+                    {
+
+                        if (Model.questions[i].Word.Equals(str))
+                        {
+                            <input type="radio" class='true' name='radio_@i' value=@str />
+                            <label>@str</label>
+                        }
+                        else
+                        {
+                            <input type="radio" class='false' name='radio_@i' value=@str />
+                            <label>@str</label>
+                        }
+                    }
+                </div>
+                @*<div>
+                    <input type="text" id='textbox_@i' placeholder="רשום את תשובתך כאן" />
+                </div>*@
+                <div class="ContentPhoto" style="width:100px; height:100px; background-image:url('@(BLL.Services.ContentServices.GetFilePath(Model.questions[i].Data.PhotoFile))')">
+
+                </div>
+
+                <div id="controlsDiv">
+                    <audio id='controls_@i' controls>
+                        <source id='source_@i' src="@Url.Content(BLL.Services.ContentServices.GetFilePath(Model.questions[i].Data.VoiceFile))" type="audio/ogg">
+                    </audio>
+                </div>
+                <div id="sound_@i">
+                    <input id='soundBtn_@i' class="soundBtn" type="button" value="🎵" onclick="EnableSound('@i')" />
+
+                </div>
+
+                @*<input type="button" value="אשר" class="confirmBtn slick-next" id='button_@i' onclick="SendAnswer('@Model.questions[i].Data.UnDotedWord', 'textbox_@i','button_@i')" />*@
+                <input class="myButton" type="button" value="שליחת תשובה" id='button_@i' onclick="RadioSendAnswer('@Model.questions[i].Word', '@i', '@Model.questions[i].ContentID','radio_@i')" />
+
 
             </div>
-            <div>
-                <audio controls>
-                    <source src="@Url.Content(BLL.Services.ContentServices.GetFilePath(Model.questions[i].Data.VoiceFile))" type="audio/ogg">
-                </audio>
-            </div>
-
-
-            @*<input type="button" value="אשר" class="confirmBtn slick-next" id='button_@i' onclick="SendAnswer('@Model.questions[i].Data.UnDotedWord', 'textbox_@i','button_@i')" />*@
-            <input type="button" value="שליחת תשובה"  id='button_@i' onclick="RadioSendAnswer('@Model.questions[i].Word', 'button_@i', '@Model.questions[i].ContentID','radio_@i')" />
-
-
-        </div>
         }
+        <h3>------------------------------------------------------------</h3>
+
     </section>
     }
     else
@@ -251,7 +374,7 @@
             <h3>ציונך במבחן:<span id="pointsId"></span></h3>
 
             <div id="wrongAnswerDiv"></div>
-            <input id="buttonGo" type="button" value="מעבר למשחק" onclick="GoToGame()" />
+            <input class="myButton" id="buttonGo" type="button" value="מעבר למשחק" onclick="GoToGame()" />
 
         </div>
 </body>   
@@ -261,7 +384,8 @@
         background-position: center center;
         background-repeat: no-repeat;
         background-size: cover;
-        
+        padding:10px;
+        border:5px solid black;
     }
 
     #ConfirmContentsContainer {

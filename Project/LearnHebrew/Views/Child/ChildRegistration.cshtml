@@ -23,7 +23,13 @@
 
     }
 </script>
-
+<style>
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%
+    }
+</style>
 <h1>עמוד הרשמות של ילד</h1>
 @*@using (Html.BeginForm("SaveChild", "Child", FormMethod.Post))*@
 @*{*@
@@ -34,7 +40,7 @@
     </div>
     <div>
         <label>בחר צבע אהוב</label>
-        <input id="ChildColor" name="ChildColor" />
+        <input type="color" id="ChildColor" name="ChildColor" />
     </div>
     <input type="button" value="שמור" onclick="SaveChild()" />
 </div>
