@@ -22,16 +22,17 @@ namespace BLL.LearnHebrewEntities
         [DataContract]
         public class AdultData
         {
+            [DataMember]
             public bool IsTeacher { get; set; }
-
-            public List<int> ChildsIDs { get; set; } 
-
+            [DataMember]
+            public List<int> ChildsIDs { get; set; }
+            [DataMember]
             public List<int> ContentIDsConfermed { get; set; }
 
             public AdultData()
             {
-                this.ChildsIDs = new List<int>();
-                this.ContentIDsConfermed = new List<int>();
+                ChildsIDs = new List<int>();
+                ContentIDsConfermed = new List<int>();
             }
         }
     }

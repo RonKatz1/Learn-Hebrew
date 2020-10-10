@@ -13,6 +13,8 @@
     }
 </script>
 
+@Html.Partial("~/Views/Adult/_ReturnToMainAdultPage.cshtml", Model)
+
 <h2>בחר ילד לצפייה בהתקדמות שלו</h2>
 
 @if(Model.AdultChilds != null && Model.AdultChilds.Count() > 0)

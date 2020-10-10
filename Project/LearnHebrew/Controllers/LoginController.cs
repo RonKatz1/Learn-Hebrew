@@ -72,5 +72,12 @@ namespace LearnHebrew.Controllers
                 return Content("fail");
             }
         }
+
+        public ActionResult Logout()
+        {
+            Auxiliray.Session.AdultInSession = null;
+            Auxiliray.Session.ChildInSession = null;
+            return View("~/Views/Home/Index.cshtml");
+        }
     }
 }

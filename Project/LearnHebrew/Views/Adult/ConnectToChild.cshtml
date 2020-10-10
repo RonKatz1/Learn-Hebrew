@@ -4,8 +4,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>ConnectToChild</h2>
+@Html.Partial("~/Views/Adult/_ReturnToMainAdultPage.cshtml", Model)
 
+<h2>ConnectToChild</h2>
 
 <div id="ConnectToChildFormContainer">
     @using (Html.BeginForm("SaveChildConnection", "Adult", FormMethod.Post, new { enctype = "multipart/form-data" }))

@@ -656,6 +656,7 @@
     <Content Include="Views\Game\Game_2.cshtml" />
     <Content Include="Views\Adult\_ChildProgressInfo.cshtml" />
     <Content Include="Views\Child\Test.cshtml" />
+    <Content Include="Views\Adult\_ReturnToMainAdultPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
