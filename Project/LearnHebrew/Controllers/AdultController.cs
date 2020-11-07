@@ -322,7 +322,7 @@ namespace LearnHebrew.Controllers
             return View("~/Views/Adult/ChildProgress.cshtml", m);
         }
 
-        public ActionResult ShowChildProgress(int ChildID)
+        public ActionResult ShowChildProgress(int ChildID, string letterFilltered = "הכל")
         {
             Models.ChildProgressModel m = new Models.ChildProgressModel();
 
@@ -330,7 +330,14 @@ namespace LearnHebrew.Controllers
             {
                 var progresses = BLL.Services.ChildProgressServices.LoadAllChildProgressesByChildID(ChildID);
 
+                if(!letterFilltered.Equals("הכל") && progresses != null && progresses.Count() > 0)
+                {
+                    progresses = progresses.Where(p => p.Data.Letter.ToString().Equals(letterFilltered)).ToList();
+                }
+
                 m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p=>p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p=>p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                m.ChildID = ChildID;
+                LearnHebrew.Auxiliray.Session.LetterForPrograssFillter = letterFilltered;
             }
             catch(Exception ex)
             {
@@ -342,7 +349,20 @@ namespace LearnHebrew.Controllers
 
         public ActionResult CreateUnseen()
         {
-            return View();
+
+            Models.UnseenModel m = new Models.UnseenModel();
+
+            if (Auxiliray.Session.AdultInSession == null)
+                return Content("fail");
+
+            BLL.LearnHebrewEntities.Unseen unseen = new BLL.LearnHebrewEntities.Unseen();
+
+            unseen.AdultID = Auxiliray.Session.AdultInSession.AdultID;
+
+            m.Adult = Auxiliray.Session.AdultInSession;
+
+            return View("~/Views/Adult/CreateUnseen.cshtml", m);
+
         }
 
         public ActionResult ShowExistsUnseen()

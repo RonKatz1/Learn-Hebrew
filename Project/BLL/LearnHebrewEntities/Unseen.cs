@@ -22,14 +22,26 @@ namespace BLL.LearnHebrewEntities
         public class UnseenData
         {
             [DataMember]
-            public string Name { get; set; }
+            public string UnseenName { get; set; }
+
             [DataMember]
-            public List<BLL.LearnHebrewEntities.Content> Contents { get; set; }
+            public Dictionary<string, ContentFile> UnseenContents;
 
             public UnseenData()
             {
-                Contents = new List<Content>();
+                UnseenContents = new Dictionary<string, ContentFile>();
             }
+        }
+
+        [DataContract]
+        public class ContentFile
+        {
+            [DataMember]
+            public string Name { get; set; }
+            [DataMember]
+            public string Code { get; set; }
+            [DataMember]
+            public string Extention { get; set; }
         }
     }
 }
