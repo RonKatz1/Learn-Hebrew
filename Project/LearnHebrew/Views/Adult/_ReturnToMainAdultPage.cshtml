@@ -1,0 +1,13 @@
+﻿@model LearnHebrew.Models.AdultModel
+
+<div>
+    <input type="button" id="returnToMainPageBtn" onclick="ReturnToMainPage()" value="חזור לעמוד ראשי"/>
+</div>
+
+
+<script>
+    function ReturnToMainPage() {
+        window.location.href = "@Url.Action("Index","Adult"@*, new { AdultID = Model.Adult.AdultID}*@)"
+    }
+</script>
+

@@ -10,26 +10,20 @@
 <h2>UploadContent</h2>
 
 <div id="UploadContentFormContainer">
-    @using (Html.BeginForm("SaveContent", "Adult", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("SaveUnseen", "Adult", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         <div>
             <input type="hidden" name="AdultID" value="@Model.Adult.AdultID" />
+            <input type="hidden" name="AdultID" value="@Model.Adult.AdultID" />
+
         </div>
         <div>
             <label>הכנס מילה מנוקדת</label>
             <input type="text" name="Word" required />
         </div>
         <div>
-            <label>הכנס מילה לא מנוקדת</label>
-            <input type="text" name="UnDotedWord" required />
-        </div>
-        <div>
-            <label>בחר תמונה</label>
-            <input type="file" name="Photo" />
-        </div>
-        <div>
             <label>בחר קטע קול</label>
-            <input type="file" name="Voice" />
+            <input type="file" name="Voice" required />
         </div>
 
         <input type="submit" value="שמור תוכן" />

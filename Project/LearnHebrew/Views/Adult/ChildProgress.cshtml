@@ -11,7 +11,19 @@
             $("#ChildProgressReportContainer").html(data);
         });
     }
+
+    function FillterPrograssResult() {
+        var letterSelected = $("#letterFillter").val();
+        var childID = $("#ChildIDProgressChosen").val();
+        $.post("@Url.Action("ShowChildProgress", "Adult")" + "?ChildID=" + childID + "&letterFilltered=" + letterSelected,  function (data) {
+            $("#ChildProgressReportContainer").html("");
+            $("#ChildProgressReportContainer").html(data);
+        });
+    }
+
 </script>
+
+@Html.Partial("~/Views/Adult/_ReturnToMainAdultPage.cshtml", Model)
 
 <h2>בחר ילד לצפייה בהתקדמות שלו</h2>
 
@@ -27,6 +39,19 @@ else
 {
     <h6>לא קיימים ילדים, אנא הוסף תחילה ילדים לרשימה שלך מהמסך הראשי</h6>
 }
+
+
+@*@{ 
+    string [] letters = { "הכל", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת" };
+}*@
+
+@*<span>סנן לפי אות</span>
+<select id="letterFillter">
+    @foreach(var letter in letters)
+    {
+        <option @(letter == LearnHebrew.Auxiliray.Session.LetterForPrograssFillter ? "selected" : "") value="@(letter)">@letter</option>
+    }
+</select>*@
 
 <div id="ChildProgressReportContainer">
 

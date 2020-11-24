@@ -38,6 +38,21 @@ namespace LearnHebrew.Auxiliray
             }
         }
 
+        public static string LetterForPrograssFillter
+        {
+            get
+            {
+                if (HttpContext.Current.Session["LetterForPrograssFillter"] == null)
+                    return "הכל";
+                else
+                    return (string)HttpContext.Current.Session["LetterForPrograssFillter"];
+            }
+            set
+            {
+                HttpContext.Current.Session["LetterForPrograssFillter"] = value;
+            }
+        }
+
         //public static string ContentPhotoPath
         //{
         //    get {

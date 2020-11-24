@@ -5,10 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
-
+<a href="@Url.Action("Logout","Login")">התנתק</a>
 <h3>hello - @(Model.Adult.Name)</h3>
-
 
 <div>
     <a href="@Url.Action("UplaodContents","Adult")">העלאת תכנים חדשים</a>
@@ -21,4 +19,21 @@
 </div>
 <div>
     <a href="@Url.Action("ChildProgress","Adult")">צפייה בהתקדמות הילד</a>
+</div>
+
+@if (Model.Adult.Data.IsTeacher)
+{
+    <div>
+        <a href="@Url.Action("CreateUnseen","Adult")">צור אנסין חדש</a>
+    </div>
+    <div>
+        <a href="@Url.Action("ShowExistsUnseen","Adult")">צפה באנסין קיים</a>
+    </div>
+}
+
+<div>
+    <a href="@Url.Action("CreateUnseen","Adult")">צור אנסין חדש</a>
+</div>
+<div>
+    <a href="@Url.Action("ShowExistsUnseen","Adult")">צפה באנסין קיים</a>
 </div>

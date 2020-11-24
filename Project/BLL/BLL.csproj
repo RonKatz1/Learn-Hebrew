@@ -128,6 +128,7 @@
     <Compile Include="LearnHebrewEntities\ChildProgress.cs" />
     <Compile Include="LearnHebrewEntities\Content.cs" />
     <Compile Include="LearnHebrewEntities\Serialization.cs" />
+    <Compile Include="LearnHebrewEntities\Unseen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AdultServices.cs" />
     <Compile Include="Services\ChildProgressServices.cs" />

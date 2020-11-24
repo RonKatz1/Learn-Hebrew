@@ -228,6 +228,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\UnseenModel.cs" />
     <Compile Include="Models\childModel.cs" />
     <Compile Include="Models\ChildProgressModel.cs" />
     <Compile Include="Models\GameInformationModel.cs" />
@@ -670,6 +671,8 @@
     <Content Include="Views\Game\Game_2.cshtml" />
     <Content Include="Views\Adult\_ChildProgressInfo.cshtml" />
     <Content Include="Views\Child\Test.cshtml" />
+    <Content Include="Views\Adult\_ReturnToMainAdultPage.cshtml" />
+    <Content Include="Views\Adult\CreateUnseen.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
