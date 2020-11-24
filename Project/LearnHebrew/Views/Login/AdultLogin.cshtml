@@ -10,26 +10,66 @@
     }
 </script>
 
-<div>
-    <h3>מסך כניסת מבוגר</h3>
+<div style="width:50%; margin:auto; padding:10px; text-align:center;">
+    <h3>אנא הזן פרטי התחברות כדי להכנס למערכת</h3>
 </div>
 
-<div>
-    @using (Html.BeginForm("AdultLogin", "Login", FormMethod.Post))
-    {
-        <div>
-            <label>שם משתמש</label>
-            <input name="AdultName" />
-        </div>
-        <div>
-            <label>סיסמא</label>
-            <input name="AdultPassword" />
-        </div>
 
-        <button type="submit">התחבר</button>
+<div id="LoginAdultContainer">
+    <div>
+        @using (Html.BeginForm("AdultLogin", "Login", FormMethod.Post))
+        {
+            <div class="LoginInput">
+                <label>שם משתמש</label>
+                <input name="AdultName" />
+            </div>
+            <div class="LoginInput">
+                <label>סיסמא</label>
+                <input name="AdultPassword" />
+            </div>
+    
+            <button type="submit">התחבר</button>
+        }
+    </div>
+    
+    <div class="RegisterBtnDiv">
+        <span>
+            משתמש חדש? לחץ על מנת להתחבר למערכת בפעם הראשונה
+        </span>
+        <input type="button" value="הרשם" onclick="AdultRegistration()"/>
+    </div>
+</div>
+
+<style>
+    /*#LoginAdultContainer, #RegisterAdultContainer {
+        width: 50%;
+        height: 100%;
+        margin: auto;
+        position: relative;
+        text-align: center;
     }
-</div>
 
-<div>
-    <input type="button" value="הרשם" onclick="AdultRegistration()"/>
-</div>
+    .LoginInput {
+        width: 35%;
+        padding: 10px;
+        margin: auto;
+        height: 40px;
+    }
+
+        .LoginInput label {
+            float: right;
+        }
+
+        .LoginInput input {
+            float: left;
+        }
+
+    .RegisterBtnDiv {
+        margin-top: 80px;
+    }
+
+        .RegisterBtnDiv span {
+            display: block;
+            font-size: 20px;
+        }*/
+</style>

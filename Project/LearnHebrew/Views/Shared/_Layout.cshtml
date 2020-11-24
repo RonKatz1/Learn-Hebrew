@@ -14,8 +14,10 @@
 
     <div id="MainDiv">
         @RenderBody()
-        <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+        @*<footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>*@
     </div>
+
+    <footer id="footerContainer" style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
 
 
     @RenderSection("scripts", required: false)
