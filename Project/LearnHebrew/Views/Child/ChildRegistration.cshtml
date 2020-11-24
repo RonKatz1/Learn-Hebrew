@@ -2,21 +2,46 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script>
+    $(document).ready(function () {
+        windowResize();
+        
+    })
     function SaveChild() {
         var name = $("#ChildName").val();
         var color = $("#ChildColor").val();
+        if (name == "")// if child did not enter a name
+            $("#tryagain").show();
+        else {
+            $.post("@Url.Action("SaveChild", "Child")" + "?Name=" + name + "&Color=" + color, function (data) {
+                if (data != -1) {
+                    $("#tryagain").hide();
+                    $("#main").hide();
+                    $("#passwordDiv").show();
+                    $("#password").text(data);
+                }
+                else {
+                    $("#tryagain").show();
+                }
 
-        $.post("@Url.Action("SaveChild", "Child")" + "?Name=" + name + "&Color=" + color, function (data) {
-            if (data != -1) {
-                $("#main").hide();
-                $("#passwordDiv").show();
-                $("#password").text(data);
-            }
-            else {
-                $("#tryagain").show();
-            }
+            });
+        }
+    }
+    // This function resizes objects of the game according to the current size of the screen
+    function windowResize() {
+        $(window).resize(function () {
 
-    });
+            //let mainTop = Math.floor(parseInt($("html").css("height")) / 4);       
+            //let mainLeft = Math.floor(parseInt($("body").css("width")) / 3);
+
+            //$("#main").css("top", mainTop + "px");
+            //$("#main").css("left", mainLeft + "px");
+
+            //$("#passwordDiv").css("top", mainTop + "px");
+            //$("#passwordDiv").css("left", mainLeft + "px");
+
+
+
+        })
     }
     function goToLoginPage() {
         window.location.href = "@(Url.Action("LoginPage", "Child"))";
@@ -24,33 +49,162 @@
     }
 </script>
 <style>
+    html, body{
+        /*height:100%;*/
+        margin:0;
+        overflow:hidden;
+    }
+    body {       
+        background-image: url('../../Pictures/ChildRegistration/cartoon fresh classroom background .jpg');
+        /*background-position: center;*/
+        background-repeat: no-repeat;
+        /*background-size: cover;*/
+        background-size:100%;
+    }
     footer {
         position: absolute;
         bottom: 0;
         width: 100%
     }
+    .animate-in {
+        /*-webkit-animation: fadeIn .8s ease-in;*/
+        animation: fadeIn .4s ease-in;
+    }
+
+    .animate-out {
+        -webkit-transition: opacity .5s;
+        transition: opacity .11s;
+        opacity: 0;
+    }
+
+    @@-webkit-keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+    #main {
+        position: absolute;
+        /*top: 25%;
+        left: 34%;*/
+        top: 15vw;
+        left: 24vw;
+        margin:auto;
+        text-align:center;
+        /*background-color: darkgreen;*/
+        border: 4px dotted blue;
+        /*padding-right: 20px;*/
+    }
+    .innerInstructions {
+        font-size: 1vw;
+        color: gold;
+    }
+    #passwordDiv {
+        /*position: absolute;
+        top: 25%;
+        left: 34%;*/
+        text-align: center;
+        margin: auto;
+        position: absolute;
+        top: 15vw;
+        left: 24vw;
+    }
+    .labels{
+        color:white;
+        font-size:70px;
+    }
+    #ChildName{
+        /*margin-right:20px;
+        margin-top:20px;*/
+        font-size:1vw;
+    }
+    #ChildColor {
+        /*margin-right: 20px;*/
+        margin-top: 15px;
+        font-size:1vw;
+    }
+    #pageTitle {
+        text-align: center;
+        color: gold;
+        font-size:7vw;
+        
+        /*box-shadow: 5px 10px goldenrod*/
+    }
+    #titleDiv {
+        text-align:center;
+        margin:auto;
+        position:absolute;
+        top: 3vw;
+        left:20vw;
+    }
+    .myButton {
+        box-shadow: inset 0px 1px 0px 0px #f9eca0;
+        background: linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
+        background-color: #f0c911;
+        border-radius: 6px;
+        border: 1px solid #e65f44;
+        cursor: pointer;
+        color: #c92200;
+        font-family: Arial;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 1px 6px;
+        text-decoration: none;
+        text-shadow: 0px 1px 0px #ded17c;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        outline: none;
+    }
+
+        .myButton:hover {
+            background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
+            background-color: #f2ab1e;
+        }
 </style>
-<h1>עמוד הרשמות של ילד</h1>
-@*@using (Html.BeginForm("SaveChild", "Child", FormMethod.Post))*@
-@*{*@
-<div id="main">
-    <div>
-        <label>בחר כינוי</label>
-        <input id="ChildName" name="ChildName" />
+
+<body class="animate-in">
+    <div id="titleDiv">
+        <h1 id="pageTitle">עמוד הרשמות של ילד</h1>
     </div>
-    <div>
-        <label>בחר צבע אהוב</label>
-        <input type="color" id="ChildColor" name="ChildColor" />
+    
+    @*@using (Html.BeginForm("SaveChild", "Child", FormMethod.Post))*@
+    @*{*@
+    <div id="main">
+        <div>
+            <h3 class="innerInstructions">רשום כינוי עבורך ובחר בצבע האהוב עליך, לסיום לחץ על כפתור שמירה</h3>
+            @*<label class="labels" style="color:white">בחר כינוי</label>*@
+            <input id="ChildName" placeholder="כינוי" name="ChildName" />
+        </div>
+        <div>
+            @*<label class="labels" style="color:white">בחר צבע אהוב</label>*@
+            <input type="color" id="ChildColor" name="ChildColor" />
+        </div>
+        <input class="myButton" type="button" value="שמירה" onclick="SaveChild()" />
+        <input class="myButton" type="button" value="ביטול" onclick="goToLoginPage()" />
+        <div id="tryagain" style="display:none">
+            <p id="errorMessage" style="color:red">התרחשה שגיאה, בבקשה נסו שנית</p>
+        </div>
     </div>
-    <input type="button" value="שמור" onclick="SaveChild()" />
-</div>
-<div id="tryagain" style="display:none">
-    <p>try again</p>
-</div>
+    
 
 
-@*}*@
-<div id="passwordDiv" style="display:none">
-    <p id="password"></p><p>זוהי סיסמתך</p>
-    <input type="button" value="סיום הרשמה" onclick="goToLoginPage()" />
-</div>
+    @*}*@
+    <div id="passwordDiv" style="display:none">
+        <h3 class="innerInstructions">זוהי סיסמתך</h3>
+        <p class="labels" style="color:white" id="password"></p>
+        <input type="button"  class="myButton" value="סיום הרשמה" onclick="goToLoginPage()" />
+    </div>
+</body>

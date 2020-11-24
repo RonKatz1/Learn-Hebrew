@@ -3,12 +3,17 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script>
-    //$(document).ready(function () {
-    //    $("#childName").text(sessionStorage.getItem("childName"));
-    //    if ($("#childName").text == "אורח")
-    //        $("#tdTest").hide();
+    $(document).ready(function () {
+       window.addEventListener("beforeunload", function () {
+        document.body.classList.add("animate-out");
+    });
+    })
+    $(window).on("beforeunload", function () {
+        $("body").addClass("animate-out");
+    })
+    //window.addEventListener("beforeunload", function () {
+    //    document.body.classList.add("animate-out");
     //});
-
     function goToStarterPage() {
         window.location.href = "@(Url.Action("SiteIndex", "Home"))";
     }
@@ -16,9 +21,36 @@
 
 </script>
 <style>
-    /** {
-        box-sizing: border-box
-    }*/
+    body {
+        background-image: url('../../Pictures/ChildIndex/students_frame.png');
+        /*background-image: url('../../Pictures/ChildIndex/Webp.net-resizeimage.png');*/
+        /*background-position: center;*/
+        background-repeat: no-repeat;
+        /*background-size: cover;*/
+        background-position: center;
+        background-size: 100% 100%;
+        background-attachment: fixed;
+    }
+    .animate-in {
+    /*-webkit-animation: fadeIn .8s ease-in;*/
+    animation: fadeIn .4s ease-in;
+    }
+
+    .animate-out {
+        -webkit-transition: opacity .5s;
+        transition: opacity .11s;
+        opacity: 0;
+    }
+
+    @@-webkit-keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
 
     /* Container needed to position the overlay. Adjust the width as needed */
     .container {
@@ -55,18 +87,48 @@
     .container:hover .overlay {
         opacity: 1;
     }
-
-    #optionsTable{
+    #leaveBtn {
+        background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
+        -webkit-background-clip: text;
+        color: transparent;
+        border-radius: 30px;
+        font-size: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        border: 2px solid black;
+        outline: none;
+    }
+        #leaveBtn:hover {
+            /*background: linear-gradient(to bottom, grey 5%, grey 20%);
+            background-color: grey;*/
+            background-image: linear-gradient(to left, yellow, orange, red);
+        }
+    #optionsTable {
+        text-align: center;
+        margin: auto;
+    }
+    #upperDiv{
         text-align:center;
         margin:auto;
     }
-
-    footer{
-        position:absolute;
-        bottom:0;
-        width:100%
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%
     }
-
+    #title {
+        font-size: 5vw;
+    }
+    #childName {
+        font-size: 2vw;
+        margin-bottom:20px;
+    }
+    .rainbow {
+        background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
+        -webkit-background-clip: text;
+        color: transparent;
+    }
     img {
         /*max-width: 50%;
         max-height: 50%;*/
@@ -79,34 +141,36 @@
             box-shadow: 0 0 2px 1px rgba(0,140,186,0.5);
         }
 </style>
+<body class="animate-in">
+    
+    <div id="upperDiv" style="display:block">
+        <h1 id="title" class="rainbow">עמוד משתמש של ילד</h1>
+        <input id="leaveBtn" type="button" value="התנתקות" onclick="goToStarterPage()" /><p class="rainbow" id="childName">  שלום @Model.child.Name, בבקשה בחר באחת התמונות הבאות:</p>
+    </div>
+    <table id="optionsTable">
+        <tr>
+            <td id="tdLetters">
 
-<h1>עמוד משתמש של ילד</h1>
-<div style="display:block">
-    <input type="button" value="התנתקות" onclick="goToStarterPage()" /><p id="childName">  שלום @Model.child.Name</p>
-</div>
-<table id="optionsTable">
-    <tr>
-        <td id="tdLetters">
-            
-            <div class="container">
-                <a href="@(Url.Action("ChildLetters", "Child"))">
-                    <img class="image" src="~/Pictures/teacher.jpeg" />
-                </a>
-                <div class="overlay">למידת אותיות</div>
-            </div>
-        </td>
-        <td id="tdHelp">
-            
-            <div class="container">
-                <a href="@(Url.Action("HelpPage", "Child"))">
-                    <img class="image" src="~/Pictures/questionMark.jpeg" />
-                </a>
-                <div class="overlay">עזרה והסברים</div>
-            </div>
-            
-        </td>
-        <td id="tdTest">
-            <img src="~/Pictures/class.jpeg" />
-        </td>
-    </tr>
-</table>
+                <div class="container">
+                    <a href="@(Url.Action("ChildLetters", "Child"))">
+                        <img class="image" src="~/Pictures/teacher.jpeg" />
+                    </a>
+                    <div class="overlay">למידת אותיות</div>
+                </div>
+            </td>
+            <td id="tdHelp">
+
+                <div class="container">
+                    <a href="@(Url.Action("HelpPage", "Child"))">
+                        <img class="image" src="~/Pictures/questionMark.jpeg" />
+                    </a>
+                    <div class="overlay">עזרה והסברים</div>
+                </div>
+
+            </td>
+            <td id="tdTest">
+                <img src="~/Pictures/class.jpeg" />
+            </td>
+        </tr>
+    </table>
+</body>

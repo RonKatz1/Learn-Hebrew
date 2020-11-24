@@ -86,14 +86,14 @@ namespace LearnHebrew.Controllers
                 }
                 else
                 {
-                    message.message = "טעות";
+                    message.message = "קרתה שגיאה, בבקשה נסו להיכנס לאתר בעזרת כפתור כניסה רשומה שוב";
                     return View("~/Views/Login/ChildLogin.cshtml", message);
                 }
 
             }
             catch (Exception ex)
             {
-                message.message = "טעות";
+                message.message = "קרתה שגיאה, בבקשה נסו להיכנס לאתר בעזרת כפתור כניסה רשומה שוב";
                 return View("~/Views/Login/ChildLogin.cshtml", message);
             }
 
@@ -212,6 +212,8 @@ namespace LearnHebrew.Controllers
         [Route("Child/GetGameLetters")]
         public JsonResult GetGameLetters(string Letter)
         {
+            // This function will need to be examined after "deployment" for url sourcing the correct path for letter images
+
             Console.WriteLine(Request.Url);
             
             GameContentDto dto = new GameContentDto();
@@ -235,7 +237,7 @@ namespace LearnHebrew.Controllers
         public String GetContentPath(string file)
         {
             Console.WriteLine(Request.Url);
-            var localPath = "http://localhost:58432/ContentFiles/";
+            var localPath = "http://localhost:58432/ContentFiles/";// this line will be changed when the site is 'deployed'
             //var filePath = file.Code + "." + file.Extention;
 
             return localPath;// + filePath;
@@ -245,12 +247,14 @@ namespace LearnHebrew.Controllers
         {
             Models.GameInformationModel m = new Models.GameInformationModel();
             m.Letter = letter;
-            if (needContent == "true")
+            if (needContent == "true") // if the selected game requires approved content to be functional
             {
                 var specificContent = BLL.Services.ContentServices.LoadAllContents();
                 specificContent = specificContent.Where(c => c.Data.IsApproved && c.Data.UnDotedWord.StartsWith(Char.ToString(letter))).ToList();
 
                 m.Contents = specificContent;
+
+                //currrently there is no approved game which requires approved content. this option is kept for future upgrades.
             }
             else// needContent == "false"
             {

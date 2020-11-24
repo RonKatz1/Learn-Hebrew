@@ -171,7 +171,7 @@
         heart = $("<img>");
         heart.attr("src", "/Pictures/Game_19/heart.png");
         heart.attr("id", "heartId");
-        //LoadGameInstruction();
+        LoadGameInstruction();
         FillLetters();
         windowResize();
         SetArrows();
@@ -182,6 +182,19 @@
         heart.css("top", 5 + "px");
         $("body").keydown(userKey_Options);
     })
+    // This function pre loads the game instructions
+    function LoadGameInstruction() {
+        let obj = document.createElement("audio");
+        obj.src = "/Audio/Game_19/Game_19_instructions.mp4";
+        obj.volume = 0.3;
+        obj.autoPlay = false;
+        obj.preLoad = true;
+        obj.controls = true;
+
+        $("#instructionId").click(function () {
+            obj.play();
+        });
+    }
     // This function resizes objects of the game according to the current size of the screen
     function windowResize() {
         $(window).resize(function () {

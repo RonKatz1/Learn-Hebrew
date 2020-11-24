@@ -18,23 +18,57 @@
 
     body {
         background-image: url('../../Pictures/Alphabet/children_by _tree.jpg');
-        background-position: center;
+        /*background-position: center;*/
         background-repeat: no-repeat;
-        background-size: cover;
+        /*background-size: cover;*/
+        background-position: center;
+        background-size: 100%;
+        background-attachment: fixed;
+    }
+    .animate-in {
+        /*-webkit-animation: fadeIn .8s ease-in;*/
+        animation: fadeIn .4s ease-in;
     }
 
-    /*.footerClass {
+    .animate-out {
+        -webkit-transition: opacity .5s;
+        transition: opacity .11s;
+        opacity: 0;
+    }
+
+    @@-webkit-keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+    .footerClass {
         position: absolute;
         bottom: 0;
         width: 100%
     }
 
-    footer {
+    /*footer {
         position: absolute;
         bottom: 0;
         width: 100%
     }*/
-
+    #title {
+        font-size: 5vw;
+    }
     #letterTable tr{
        height:70px;
     }
@@ -74,15 +108,26 @@
     }
 
     #buttonGo {
-        background-color: blue;
+        background-color: green;
         color: white;
     }
 
     #buttonCancel {
         background-color: red;
         color: white;
+        border: 2px solid black;
+        padding: 5px;
+        outline: none;
+        border-radius:5px;
     }
-
+    #buttonCancel:hover{
+        color:grey;
+        background-color:orangered;
+    }
+    #upperDiv {
+        text-align: center;
+        margin: auto;
+    }
     .letter {
         max-width: 50%;
         max-height: 50%;
@@ -124,6 +169,56 @@
     #gameTextId {
         /*font-family:dana_yad_alefalefalefnormal;*/
     }
+    .rainbow {
+        background-image: repeating-linear-gradient(45deg, violet, indigo, blue, green, yellow, orange, red, violet);
+        text-align: center;
+        background-size: 800% 800%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;       
+        animation: rainbow 8s ease infinite;
+    }
+
+    @@keyframes rainbow {
+        0% {
+            background-position: 0% 50%
+        }
+
+        50% {
+            background-position: 100% 25%
+        }
+
+        100% {
+            background-position: 0% 50%
+        }
+    }
+    #buttonTest {
+        color: white;
+        background-color: blue;
+        border: 2px solid black;
+        padding: 5px;
+        outline: none;
+        border-radius: 5px;
+    }
+    #buttonTest:hover{
+        color:gray;
+        background-color:deepskyblue;
+    }
+    #leaveBtn {
+        background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
+        -webkit-background-clip: text;
+        color: transparent;
+        border-radius: 30px;
+        font-size: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        border: 2px solid black;
+        outline: none;
+    }
+
+        #leaveBtn:hover {          
+            background-image: linear-gradient(to left, yellow, orange, red);
+        }
 </style>
 <script>
     let letterForGame;// the letter char which will eventually be transported to the selected game
@@ -138,6 +233,7 @@
             "false", "false", "false", "false", "false", "false", "false", "false",
             "false", "false", "false", "false", "false", "false", "false"];
         $("#buttonGo").prop('disabled', true);
+        $("footer").addClass("footerClass");
 
 
         //var originalBG = $("<body>").css("background-color");
@@ -172,7 +268,7 @@
             letterForGame = $letterId;
             $("#letterTable").addClass("hidescreen");
             $("#gameDiv").removeClass("hidescreen");
-            //$("<footer>").addClass("footerClass");
+            $("footer").removeClass("footerClass");
 
 
         });
@@ -224,7 +320,7 @@
         //}, function () {
         //    $(this).css('box-shadow', 'none');
         //    });
-
+        $("footer").addClass("footerClass");
         $("#buttonGo").prop('disabled', true);
         $("#gameDiv").addClass("hidescreen");
         $("#letterTable").removeClass("hidescreen");
@@ -240,11 +336,12 @@
          window.location.href = "@(Url.Action("ReturnToIndex", "Child"))";
     }
 </script>
-<body>
-    <h1>עמוד לימודי אותיות לילד  </h1>
-    <div>
-        <input type="button" value="חזור לעמוד משתמש ילד" onclick="goToIndexPage()" />
-        <p>מלל כלשהו</p>
+<body class="animate-in">
+    
+    <div id="upperDiv">
+        <h1 class="rainbow" id="title">עמוד לימודי אותיות לילד  </h1>
+        <input type="button" id="leaveBtn" value="חזור לעמוד משתמש ילד" onclick="goToIndexPage()" />
+        
     </div>
     <table id="letterTable">
         <tr>
@@ -326,12 +423,12 @@
         </tr>
     </table>
     <div class="hidescreen" id="gameDiv">
-        <div id="gameTextDiv"><h1 id="gameTextId">בחרו במשחק</h1></div>
+        <div id="gameTextDiv"><h1 class="rainbow" id="gameTextId">בחרו במשחק</h1></div>
 
         <table id="gameTable">
             <tr>
                 <td>
-                    <img id="1" class="gameImg" src="~/Pictures/Game_preview/game_1_preview.png" />
+                    <img id="8" class="gameImg" src="~/Pictures/Game_preview/game_8_preview.png" />
                 </td>
                 <td>
                     <img id="12" class="gameImg" src="~/Pictures/Game_preview/game_12_preview.png" />
@@ -376,11 +473,11 @@
                     <img id="2" class="gameImg" src="~/Pictures/Game_preview/game_2_preview.png" />
                 </td>
                 <td>
-                    <img id="8" class="gameImg" src="~/Pictures/Game_preview/game_8_preview.jpeg" />
+                    @*<img id="8" class="gameImg" src="~/Pictures/Game_preview/game_8_preview.jpeg" />*@
                 </td>
             </tr>
         </table>
-        <input id="buttonGo" type="button" value="מעבר" onclick="GoToGame()" />
+        <input id="buttonGo" type="button" value="מעבר ישיר למשחק" onclick="GoToGame()" />
         <input id="buttonCancel" type="button" value="ביטול" onclick="RemoveGamePreviewDiv()" />
         <input id="buttonTest" type="button" value="מעבר למבחן" onclick="GoToTest()" />
     </div>

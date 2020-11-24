@@ -125,6 +125,7 @@
     $(document).ready(function () {
         FillLetters();  
         LoadSoundAndPicture();
+        LoadGameInstruction();
         GetSignPath();
         windowResize();
         SetArrows();
@@ -209,6 +210,19 @@
                 signPath = "/Pictures/Game_8/cheese.png";
                 break;
         }
+    }
+    // This funcion pre loads the instruction audio of the game
+    function LoadGameInstruction() {
+        let obj = document.createElement("audio");
+        obj.src = "/Audio/Game_8/Game_8_instructions.mp4";
+        obj.volume = 0.3;
+        obj.autoPlay = false;
+        obj.preLoad = true;
+        obj.controls = true;
+
+        $("#instructionId").click(function () {
+            obj.play();
+        });
     }
     //This function gets the path of the selected letter images
     function FillLetters() {

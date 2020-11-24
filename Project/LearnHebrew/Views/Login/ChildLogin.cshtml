@@ -28,56 +28,205 @@
         window.location.href = "@(Url.Action("LoadChildGuest", "Child"))";
 
     }
+    function ShowRegisteredEntrance() {
+        $("#childName").show();
+        $("#childPassword").show();
+        $("#submitBtn").show();
+        $("#errorMessage").text("");
+    }
 </script>
 <style>
+    body {
+        background-image: url('../../Pictures/ChildLogin/rainbow_background.png');
+        background-position: center;
+        background-size: auto 100%;
+        background-attachment:fixed;
+    }
     footer {
         position: absolute;
         bottom: 0;
         width: 100%
     }
+    #mainTable{
+        text-align:center;
+        margin:auto;
+        margin-top:100px;
+    }
+    .animate-in {
+        /*-webkit-animation: fadeIn .8s ease-in;*/
+        animation: fadeIn .4s ease-in;
+    }
+
+    .animate-out {
+        -webkit-transition: opacity .5s;
+        transition: opacity .11s;
+        opacity: 0;
+    }
+
+    @@-webkit-keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+    /*#mainTable tr{
+        margin-bottom:100px;
+    }
+    #buttonsTR{
+        margin-bottom:100px;
+    }*/
+    #submitBtn {
+        margin-top: 100px;
+        box-shadow: inset 0px 1px 0px 0px #f9eca0;
+        background: linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
+        background-color: #f0c911;
+        border-radius: 120px;
+        border: 1px solid #e65f44;
+        cursor: pointer;
+        color: #c92200;
+        font-family: Arial;
+        /*font-size: 30px;*/
+        font-size: 2vw;
+        font-weight: bold;
+        padding: 1.5vw;
+        text-decoration: none;
+        text-shadow: 0px 1px 0px #ded17c;
+        outline: none;
+    }
+        #submitBtn:hover {
+            background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
+            background-color: #f2ab1e;
+        }
+    #childName {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    #buttonsTR td {
+        width: 140px;
+    }
+    .myBtnBouncy {
+        color: #494949 !important;
+        /*font-size:15px;*/
+        font-size: 1vw;
+        text-decoration: none;
+        background: #ffffff;
+        /*padding: 20px;*/
+        padding: 1.2vw;
+        border: 4px solid #494949 !important;
+        display: inline-block;
+        transition: all 0.4s ease 0s;
+        outline: none;
+    }
+        .myBtnBouncy:hover {
+            color: #ffffff !important;
+            background: #f6b93b;
+            border-color: #f6b93b !important;
+            transition: all 0.4s ease 0s;
+        }
+    .bouncy {
+        animation: bouncy 5s infinite linear;
+        position: relative;
+    }
+    @@keyframes bouncy {
+        0%{
+            top:0em;
+        }
+        40% {
+            top: 0em;
+        }
+        43% {
+            top: -0.9em;
+        }
+        46% {
+            top: 0em;
+        }
+        48% {
+            top: -0.4em;
+        }
+        50% {
+            top: 0em;
+        }
+        100% {
+            top: 0em;
+        }
+    }
+
+    .rainbow {
+        background-image: repeating-linear-gradient(45deg, violet, indigo, blue, green, yellow, orange, red, violet);
+        text-align: center;
+        background-size: 800% 800%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        /*font-size: 70px;*/
+        font-size: 7vw;
+        animation: rainbow 8s ease infinite;
+    }
+
+    @@keyframes rainbow {
+        0% {
+            background-position: 0% 50%
+        }
+
+        50% {
+            background-position: 100% 25%
+        }
+
+        100% {
+            background-position: 0% 50%
+        }
+    }
 </style>
 
-
-<h1>עמוד כניסה של ילד</h1>
-
-<table>
-    <tr><td colspan="2"><p>הכנסת פרטי ילד רשום</p></td></tr>
-    @using (Html.BeginForm("IndexPage", "Child", FormMethod.Post))
-    {
-
-
-        <tr>
-            <td><input name="childName" maxlength="15" id="childName" /></td>
-            <td><p>כינוי</p></td>
+<body class="animate-in">
+    <h1 class="rainbow">עמוד כניסה של ילד</h1>
+    <table id="mainTable">
+        <tr id="buttonsTR">
+            <td><input type="button" class="bouncy myBtnBouncy" value="כניסה רשומה" onclick="ShowRegisteredEntrance()" /></td>
+            <td><input type="button" class="bouncy myBtnBouncy" style="animation-delay:0.07s" value="כניסת אורח" onclick="goToUserPageGuest()" /></td>
+            <td><input type="button" class="bouncy myBtnBouncy" style="animation-delay:0.17s" value="הרשמה לאתר" onclick="goToRegistration()" /></td>
         </tr>
+        @using (Html.BeginForm("IndexPage", "Child", FormMethod.Post))
+        {
+         <tr>
+             <td  colspan="3">
+                 <input style="display:none" name="childName" maxlength="15" id="childName" placeholder="כינוי" />
+             </td>
+         </tr>
         <tr>
-            <td><input name="childPassword" type="password" id="childPassword" /></td>
-            <td><p>ססמה</p></td>
+            <td  colspan="3">
+                <input style="display:none" name="childPassword" type="password" id="childPassword" placeholder="סיסמה" />
+            </td>
         </tr>
-        @*<tr><td><input type="button" value="כניסה רשומה" onclick="goToUserPage()" /></td></tr>*@
-        <tr><td><button type="submit">כניסה רשומה</button></td></tr>
-        <tr><td colspan="2"><p style="color:red">@Model.message</p></td></tr>
-    }
-    <tr>
-        <td><input type="button" value="כניסה אורח" onclick="goToUserPageGuest()" /></td>
-        <td><p>משתמש אורח</p></td>
-    </tr>
-    <tr>
-        <td><input type="button" value="הרשמות" onclick="goToRegistration()" /></td>
-        <td><p>משתמש חדש</p></td>
-    </tr>
-</table>
+        <tr><td  colspan="3"><button type="submit" id="submitBtn" style="display:none">בוא נתחיל ללמוד</button></td></tr>
+        <tr><td colspan="3"><p id="errorMessage" style="color:red">@Model.message</p></td></tr>
+        }
+    </table>
+    
 
-@*@using (Html.BeginForm("SaveChild", "Login", FormMethod.get))
-    {
-        <div>
-            <label>בחר כינוי</label>
-            <input name="ChildName" />
-        </div>
-        <div>
-            <label>בחר צבע אהוב</label>
-            <input name="ChildColor" />registration
-        </div>
+    @*@using (Html.BeginForm("SaveChild", "Login", FormMethod.get))
+        {
+            <div>
+                <label>בחר כינוי</label>
+                <input name="ChildName" />
+            </div>
+            <div>
+                <label>בחר צבע אהוב</label>
+                <input name="ChildColor" />registration
+            </div>
 
-        <button type="submit">שמור</button>
-    }*@
+            <button type="submit">שמור</button>
+        }*@
+</body>

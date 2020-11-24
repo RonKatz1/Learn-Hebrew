@@ -7,18 +7,27 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <style>
-    body{
-        background-color:aqua;
-
+    body {
+        /*background-color: aqua;*/
+        background-image: url('../../Pictures/Test/desk_background.png');
+        background-position: center;
+        /*background-repeat: no-repeat;
+        background-size: cover;*/
     }
     label {
         margin-right: 5px;
         margin-left: 5px;
+        font-size:20px;
+        color:orange;
     }
 
     footer {
         bottom: 0;
         width: 100%
+    }
+    .endTestMessage {
+        color: darkorange;
+        font-weight: bold;
     }
     .hidescreen {
         display: none;
@@ -29,7 +38,9 @@
     }
     #titleId {
         text-align: center;
-        color:darkorange;
+        color: darkorange;
+        font-weight: bold;
+        text-decoration: underline;
     }
     #questionsDiv {
         text-align: center;
@@ -106,11 +117,25 @@
     let arrowInterval;// the interval variable of the arrow animation
     
     $(document).ready(function () {
+        LoadTestInstruction();
         windowResize();
         SetArrows();
         arrowInterval = setInterval(MoveArrows, 1000);
 
     })
+    // This funcion pre loads the instruction audio of the test
+    function LoadTestInstruction() {
+        let obj = document.createElement("audio");
+        obj.src = "/Audio/Test/Test_instructions.mp4";
+        obj.volume = 0.3;
+        obj.autoPlay = false;
+        obj.preLoad = true;
+        obj.controls = true;
+
+        $("#instructionId").click(function () {
+            obj.play();
+        });
+    }
     // This function resizes objects of the game according to the current size of the screen
     function windowResize() {
         $(window).resize(function () {
@@ -341,7 +366,7 @@
                 @*<div>
                     <input type="text" id='textbox_@i' placeholder="רשום את תשובתך כאן" />
                 </div>*@
-                <div class="ContentPhoto" style="width:100px; height:100px; background-image:url('@(BLL.Services.ContentServices.GetFilePath(Model.questions[i].Data.PhotoFile))')">
+                <div class="ContentPhoto" style="background-image:url('@(BLL.Services.ContentServices.GetFilePath(Model.questions[i].Data.PhotoFile))')">
 
                 </div>
 
@@ -370,8 +395,8 @@
         <h3>אין שאלות </h3>
     }
         <div id="resultDiv" class="hidescreen">
-            <h3>זהו סוף המבחן, במידה וטעית בשאלה מסויימת היא תופיע למטה</h3>
-            <h3>ציונך במבחן:<span id="pointsId"></span></h3>
+            <h3 class="endTestMessage">זהו סוף המבחן, במידה וטעית בשאלה מסויימת היא תופיע למטה</h3>
+            <h3 class="endTestMessage">ציונך במבחן:<span id="pointsId"></span></h3>
 
             <div id="wrongAnswerDiv"></div>
             <input class="myButton" id="buttonGo" type="button" value="מעבר למשחק" onclick="GoToGame()" />
@@ -386,6 +411,9 @@
         background-size: cover;
         padding:10px;
         border:5px solid black;
+        width:200px;
+        height:200px;
+        margin-top:10px;
     }
 
     #ConfirmContentsContainer {
