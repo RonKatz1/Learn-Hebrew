@@ -193,7 +193,7 @@
     let arrowInterval;// the interval variable of the arrow animation
 
     $(document).ready(function () {
-        //LoadGameInstruction();
+        LoadGameInstruction();
         FillLetters();
         windowResize();
         SetArrows();
@@ -201,6 +201,19 @@
         cockroaches = ["/Pictures/Game_13/cockroach1UD.png","/Pictures/Game_13/cockroach2UD.png"];
         $("body").keydown(userKey_Options);
     })
+    // This function pre loads the game instructions
+    function LoadGameInstruction() {
+        let obj = document.createElement("audio");
+        obj.src = "/Audio/Game_13/Game_13_instructions.mp4";
+        obj.volume = 0.3;
+        obj.autoPlay = false;
+        obj.preLoad = true;
+        obj.controls = true;
+
+        $("#instructionId").click(function () {
+            obj.play();
+        });
+    }
     // This function resizes objects on the screen  
     function windowResize() {
         $(window).resize(function () {

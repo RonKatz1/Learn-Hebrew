@@ -240,8 +240,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Audio\Game_12\eat.mp3" />
+    <Content Include="Audio\Game_12\Game_12_instructions.mp4" />
+    <Content Include="Audio\Game_13\Game_13_instructions.mp4" />
     <Content Include="Audio\Game_13\gun_fire2.mp3" />
     <Content Include="Audio\Game_16\error.mp3" />
+    <Content Include="Audio\Game_16\Game_16_instructions.mp4" />
     <Content Include="Audio\Game_16\good_sound.mp3" />
     <Content Include="Audio\Game_17\ballon_bad.mp3" />
     <Content Include="Audio\Game_17\ballon_good.mp3" />
@@ -251,10 +254,13 @@
     <Content Include="Audio\Game_17\bang4.mp3" />
     <Content Include="Audio\Game_17\Game_17_instructions.mp3" />
     <Content Include="Audio\Game_19\bounce.mp3" />
+    <Content Include="Audio\Game_19\Game_19_instructions.mp4" />
     <Content Include="Audio\Game_19\silver_bounce.mp3" />
     <Content Include="Audio\Game_20\doh.mp3" />
+    <Content Include="Audio\Game_20\Game_20_instructions.mp4" />
     <Content Include="Audio\Game_20\good_sound.mp3" />
     <Content Include="Audio\Game_21\doh.mp3" />
+    <Content Include="Audio\Game_21\Game_21_instructions.mp4" />
     <Content Include="Audio\Game_21\slash.mp3" />
     <Content Include="Audio\Game_22\blast.mp3" />
     <Content Include="Audio\Game_22\Game_22_instructions.mp3" />
@@ -266,10 +272,12 @@
     <Content Include="Audio\Game_5\game_explanation.mp3" />
     <Content Include="Audio\Game_5\SFX_Explosion_02.mp3" />
     <Content Include="Audio\Game_5\shot.mp3" />
+    <Content Include="Audio\Game_8\Game_8_instructions.mp4" />
     <Content Include="Audio\Game_8\gun_fire.mp3" />
-    <Content Include="Audio\Game_9\Game_9_instructions.mp3" />
+    <Content Include="Audio\Game_9\Game_9_instructions.mp4" />
     <Content Include="Audio\Game_9\lose_life.mp3" />
     <Content Include="Audio\Game_9\SFX_Explosion_03.mp3" />
+    <Content Include="Audio\Test\Test_instructions.mp4" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -417,6 +425,10 @@
     <Content Include="Pictures\Alphabet\ת3.png" />
     <Content Include="Pictures\Alphabet\ת4.png" />
     <Content Include="Pictures\Alphabet\ת5.png" />
+    <Content Include="Pictures\ChildIndex\students_frame.png" />
+    <Content Include="Pictures\ChildIndex\Webp.net-resizeimage.png" />
+    <Content Include="Pictures\ChildLogin\rainbow_background.png" />
+    <Content Include="Pictures\ChildRegistration\cartoon fresh classroom background .jpg" />
     <Content Include="Pictures\class.jpeg" />
     <Content Include="Pictures\Game_12\arrowLeft.png" />
     <Content Include="Pictures\Game_12\arrowRight.png" />
@@ -585,10 +597,12 @@
     <Content Include="Pictures\Game_preview\game_22_preview.png" />
     <Content Include="Pictures\Game_preview\game_2_preview.png" />
     <Content Include="Pictures\Game_preview\game_5_preview.png" />
-    <Content Include="Pictures\Game_preview\game_8_preview.jpeg" />
+    <Content Include="Pictures\Game_preview\game_8_preview.png" />
     <Content Include="Pictures\Game_preview\game_9_preview.png" />
+    <Content Include="Pictures\Help\back to school doodle .png" />
     <Content Include="Pictures\questionMark.jpeg" />
     <Content Include="Pictures\teacher.jpeg" />
+    <Content Include="Pictures\Test\desk_background.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\slick\config.rb" />
