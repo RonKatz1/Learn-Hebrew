@@ -3,25 +3,32 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div class="RegistraitionInstruction">
+    <span>
+        על מנת להרשם למערכת אנא מלא את כל הפרטים הבאים. פרטים אלה ישמשו אותך על מנת להתחבר למערכת
+    </span>
+    <p>
+        במידה ואתה מורה, בחר את הסימון של מורה
+    </p>
+</div>
 
-
-<div>
+<div id="RegisterAdultContainer">
     @using (Html.BeginForm("SaveAdult", "Adult", FormMethod.Post))
     {
-        <div>
+        <div class="LoginInput">
             <label>שם משתמש</label>
             <input name="AdultName" />
         </div>
-        <div>
+        <div class="LoginInput">
             <label>סיסמא</label>
             <input name="AdultPassword" />
         </div>
 
-        <div>
+        <div class="LoginInput">
             <label>הרשם כמורה</label>
             <input type="checkbox" value="true" name="IsSignAsTeacher" />
         </div>
 
-        <button type="submit">התחבר</button>
+        <button type="submit">הרשם</button>
     }
 </div>

@@ -1,16 +1,43 @@
 ﻿@model LearnHebrew.Models.ChildProgressModel
 
-@{
-    string[] letters = { "הכל", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת" };
+
+@{ 
+    Layout = "";
 }
 
-<span>סנן לפי אות</span>
-<select id="letterFillter" onchange="FillterPrograssResult()">
-    @foreach (var letter in letters)
-    {
-        <option @(letter == LearnHebrew.Auxiliray.Session.LetterForPrograssFillter ? "selected" : "") value="@(letter)">@letter</option>
-    }
-</select>
+@{
+    string[] letters = { "הכל", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת" };
+
+    var orderby = new Dictionary<int, string>();
+    orderby.Add(0, "תאריך");
+    orderby.Add(1, "אות");
+
+}
+
+<div class="FiltterOptionsDiv">
+    <span>סנן לפי אות</span>
+    <select id="letterFillter">
+        @foreach (var letter in letters)
+        {
+            <option @(letter == LearnHebrew.Auxiliray.Session.LetterForPrograssFillter ? "selected" : "") value="@(letter)">@letter</option>
+        }
+
+    </select>
+    <span>סדר תוצאות לפי:</span>
+    <select id="orderResultBy">
+        @foreach(var ob in orderby)
+        {
+            <option value="@ob.Key" @(ob.Key == Model.LastOrderBy ? "selected" : "")>@ob.Value</option>
+        }
+        @*<option value="0" selected>תאריך</option>
+        <option value="1">אות</option>*@
+    </select>
+    <select id="AscDesc">
+        <option value="0" @(Model.LastIsAsc ? "selected" : "")>מהקטן לגדול</option>
+        <option value="1" @(Model.LastIsAsc ? "" : "selected")>מהגדול לקטן</option>
+    </select>
+    <input type="button" onclick="FillterPrograssResult()" value="לחץ לסינון" />
+</div>
 
 <input type="hidden" value="@Model.ChildID" id="ChildIDProgressChosen"/>
 
@@ -97,11 +124,36 @@ else
 }
 
 <style>
+
+    table{width:95%;}
+
     table td, table th {
         border-collapse: collapse;
         border: 1px solid;
         text-align: center;
         min-width: 100px;
         padding: 5px 10px;
+    }
+
+    #ChildProgressReportContainer {
+        height: 78%;
+        position: absolute;
+        overflow: auto;
+    }
+
+    .FiltterOptionsDiv {
+        margin: 20px 0px;
+    }
+
+    .FiltterOptionsDiv span {
+        font-size: 18px;
+        margin: 0 10px;
+    }
+    
+    .FiltterOptionsDiv select {
+        width: 150px;
+        height: 25px;
+        padding-right: 5px;
+        margin-left: 15px;
     }
 </style>

@@ -322,7 +322,7 @@ namespace LearnHebrew.Controllers
             return View("~/Views/Adult/ChildProgress.cshtml", m);
         }
 
-        public ActionResult ShowChildProgress(int ChildID, string letterFilltered = "הכל")
+        public ActionResult ShowChildProgress(int ChildID, string letterFilltered = "הכל", int OrderBy = 0, bool IsAsc = true)
         {
             Models.ChildProgressModel m = new Models.ChildProgressModel();
 
@@ -335,9 +335,30 @@ namespace LearnHebrew.Controllers
                     progresses = progresses.Where(p => p.Data.Letter.ToString().Equals(letterFilltered)).ToList();
                 }
 
-                m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p=>p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p=>p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                switch(OrderBy)
+                {
+                    case 0:
+                        if(IsAsc)
+                            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderBy(p => p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                        else
+                            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p => p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                        break;
+                    case 1:
+                        if(IsAsc)
+                            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderBy(p => p.Data.Letter).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                        else
+                            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p => p.Data.Letter).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                        break;
+                    default:
+                        m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p => p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                        break;
+                }
+                //m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p=>p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p=>p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
                 m.ChildID = ChildID;
                 LearnHebrew.Auxiliray.Session.LetterForPrograssFillter = letterFilltered;
+
+                m.LastIsAsc = IsAsc;
+                m.LastOrderBy = OrderBy;
             }
             catch(Exception ex)
             {

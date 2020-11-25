@@ -5,35 +5,52 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<a href="@Url.Action("Logout","Login")">התנתק</a>
-<h3>hello - @(Model.Adult.Name)</h3>
 
-<div>
-    <a href="@Url.Action("UplaodContents","Adult")">העלאת תכנים חדשים</a>
-</div>
-<div>
-    <a href="@Url.Action("ConfirmContents","Adult")">אישור תכנים חדשים</a>
-</div>
-<div>
-    <a href="@Url.Action("ConnectToChild","Adult")">קישור לילד רשום</a>
-</div>
-<div>
-    <a href="@Url.Action("ChildProgress","Adult")">צפייה בהתקדמות הילד</a>
-</div>
+<div id="AdultPageSize">
 
-@if (Model.Adult.Data.IsTeacher)
-{
-    <div>
-        <a href="@Url.Action("CreateUnseen","Adult")">צור אנסין חדש</a>
+    <div class="topBanner">
+        <h3>שלום - @(Model.Adult.Name)</h3>
+
+        <a href="@Url.Action("Logout","Login")">התנתק</a>
     </div>
-    <div>
-        <a href="@Url.Action("ShowExistsUnseen","Adult")">צפה באנסין קיים</a>
-    </div>
-}
 
-<div>
-    <a href="@Url.Action("CreateUnseen","Adult")">צור אנסין חדש</a>
+
+    <div class="AdultActionOptionsContainer">
+
+        <span>ברשותך מספר פעולות שהינך יכול לבצע, לחץ על אחת מהן כדי הלתקדם</span>
+
+        <div class="AdultActionOptions">
+            <a href="@Url.Action("UplaodContents","Adult")">העלאת תכנים חדשים</a>
+        </div>
+        <div class="AdultActionOptions">
+            <a href="@Url.Action("ConfirmContents","Adult")">אישור תכנים חדשים</a>
+        </div>
+        <div class="AdultActionOptions">
+            <a href="@Url.Action("ConnectToChild","Adult")">קישור לילד רשום</a>
+        </div>
+        <div class="AdultActionOptions">
+            <a href="@Url.Action("ChildProgress","Adult")">צפייה בהתקדמות הילד</a>
+        </div>
+
+        @if (Model.Adult.Data.IsTeacher)
+        {
+            <div class="AdultActionOptions">
+                <a href="@Url.Action("CreateUnseen","Adult")">צור אנסין חדש</a>
+            </div>
+            <div class="AdultActionOptions">
+                <a href="@Url.Action("ShowExistsUnseen","Adult")">צפה באנסין קיים</a>
+            </div>
+        }
+
+    </div>
 </div>
-<div>
-    <a href="@Url.Action("ShowExistsUnseen","Adult")">צפה באנסין קיים</a>
-</div>
+
+<style>
+    #AdultPageSize { width: 100%; height: 100%; padding: 0px 40px; }
+    .topBanner {margin-bottom: 40px;}
+    .topBanner h3 { display: inline-block; padding-left:20px; border-left: 1px solid; }
+    .topBanner a {color: black; font-size: 16px; padding-right: 10px;}
+    .AdultActionOptionsContainer span { font-size: 20px; }
+    .AdultActionOptions { margin: 20px 0px; }
+    .AdultActionOptions a { color: black; font-size: 26px; text-decoration: underline; }
+</style>
