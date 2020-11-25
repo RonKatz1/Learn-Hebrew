@@ -1,69 +1,74 @@
 ﻿@model LearnHebrew.Models.AdultModel
 
 @{
-    ViewBag.Title = "UploadContent";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@Html.Partial("~/Views/Adult/_ReturnToMainAdultPage.cshtml", Model)
 
-<h2>UploadContent</h2>
+<div id="AdultPageSize">
+    @Html.Partial("~/Views/Adult/_ReturnToMainAdultPage.cshtml", Model)
 
-<div id="UploadContentFormContainer">
-    @using (Html.BeginForm("SaveContent", "Adult", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        <div>
-            <input type="hidden" name="AdultID" value="@Model.Adult.AdultID" />
-        </div>
-        <div>
-            <label>הכנס מילה מנוקדת</label>
-            <input type="text" name="Word" required />
-        </div>
-        <div>
-            <label>הכנס מילה לא מנוקדת</label>
-            <input type="text" name="UnDotedWord" required />
-        </div>
-        <div>
-            <label>בחר תמונה</label>
-            <input type="file" name="Photo" />
-        </div>
-        <div>
-            <label>בחר קטע קול</label>
-            <input type="file" name="Voice" />
-        </div>
+    <h2>העלאת תכנים ללימוד לאתר</h2>
 
-        <input type="submit" value="שמור תוכן" />
-    }
+    <div id="UploadContentFormContainer">
+        @using (Html.BeginForm("SaveContent", "Adult", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+            <p>
+                ברשותכם יכולת להעלות תכני לימוד לאתר.
+                אנא הכניסו מילה מנוקדת, תמונה שמייצגת את המילה וקובץ קול עם הגייה נכונה של המילה.
+                כמו כן קיימת לרשותכם מערכת לניקוד מילים בעברית
+            </p>
+
+            <div>
+                <input type="hidden" name="AdultID" value="@Model.Adult.AdultID" />
+            </div>
+            <div class="ContentInput">
+                <label>הכנס מילה מנוקדת</label>
+                <input type="text" name="Word" required />
+            </div>
+            <div class="ContentInput">
+                <label>הכנס מילה לא מנוקדת</label>
+                <input type="text" name="UnDotedWord" required />
+            </div>
+            <div class="ContentInput">
+                <label>בחר תמונה</label>
+                <input type="file" name="Photo" />
+            </div>
+            <div class="ContentInput">
+                <label>בחר קטע קול</label>
+                <input type="file" name="Voice" />
+            </div>
+
+            <input class="saveContentBtn" type="submit" value="שמור תוכן" />
+        }
+    </div>
+
+
+    <div id="nikodSite">
+
+        @*<iframe src="http://www.nakdan.com/nakdan.aspx" scrolling="no" frameborder="0"></iframe>*@
+
+        @*<iframe id="nikodIframe" src="https://www.nikuda.co.il" scrolling="no" frameborder="0"></iframe>*@
+
+        <iframe id="nikodIframe" src="https://nakdan.dicta.org.il/nikudedit#" scrolling="no" frameborder="0"></iframe>
+
+        
+    </div>
+
 </div>
-
-
-<div id="nikodSite">
-
-    <iframe src="http://www.nakdan.com/nakdan.aspx" scrolling="no" frameborder="0"></iframe>
-
-</div>
-
 
 <style>
-    #UploadContentFormContainer {
-        width: 47%;
-        display: inline-block;
-        float: left;
-    }
+    #AdultPageSize { width: 100%; height: 100%; padding: 0px 40px; }
+    #UploadContentFormContainer { width: 47%; display: inline-block; float: left; }
+    #nikodSite { width: 47%; border: 1px solid; height: 500px; display: inline-block; position: relative;  overflow: hidden; }
+    /*iframe { position: absolute; height: 2000px; width: 100%; top: -420px; }*/
+    #nikodIframe { position: absolute; width: 100%; height: 100%;}
 
-    #nikodSite {
-        width: 47%;
-        border: 1px solid;
-        height: 500px;
-        display: inline-block;
-        position: relative;
-        overflow: hidden;
-    }
+    #UploadContentFormContainer p { width: 50%; font-size: 16px; }
+    .ContentInput { width: 400px; padding: 10px; margin-bottom: 20px; height: 40px; }
+    .ContentInput label { float: right; }
+    .ContentInput input { float: left;  }
+    .saveContentBtn {margin-top:20px;}
 
-    iframe {
-        position: absolute;
-        height: 2000px;
-        width: 100%;
-        top: -420px;
-    }
 </style>

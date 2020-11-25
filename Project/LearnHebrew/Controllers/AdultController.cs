@@ -356,6 +356,9 @@ namespace LearnHebrew.Controllers
                 //m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p=>p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p=>p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
                 m.ChildID = ChildID;
                 LearnHebrew.Auxiliray.Session.LetterForPrograssFillter = letterFilltered;
+
+                m.LastIsAsc = IsAsc;
+                m.LastOrderBy = OrderBy;
             }
             catch(Exception ex)
             {

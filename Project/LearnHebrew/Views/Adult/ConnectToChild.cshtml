@@ -4,25 +4,47 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@Html.Partial("~/Views/Adult/_ReturnToMainAdultPage.cshtml", Model)
 
-<h2>ConnectToChild</h2>
+<div id="AdultPageSize">
 
-<div id="ConnectToChildFormContainer">
-    @using (Html.BeginForm("SaveChildConnection", "Adult", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        <div>
-            <input type="hidden" name="AdultID" value="@Model.Adult.AdultID" />
-        </div>
-        <div>
-            <label>הכנס את שם הילד בעת הרישום שלו</label>
-            <input type="text" name="ChildName" required />
-        </div>
-        <div>
-            <label>הכנס את הסיסמה שהילד קיבל בעת הרישום שלו</label>
-            <input type="text" name="ChildPassword" />
-        </div>
+    @Html.Partial("~/Views/Adult/_ReturnToMainAdultPage.cshtml", Model)
 
-        <input type="submit" value="שמור" />
-    }
+    <div class="connectChildPageDetaile">
+
+        <h2>מי הילד שלך?</h2>
+        <span>
+            אם ברצונך לצפות בהתקדמות הילד שלך שרשום לאתר, אנא הזן את השם שלו ואת הסיסמא שקיבל בעת ההתחברות שלו.
+        </span>
+    </div>
+
+    <div id="ConnectToChildFormContainer">
+        @using (Html.BeginForm("SaveChildConnection", "Adult", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div>
+                <input type="hidden" name="AdultID" value="@Model.Adult.AdultID" />
+            </div>
+            <div class="connectChildInput">
+                <label>הכנס את שם הילד בעת הרישום שלו</label>
+                <input type="text" name="ChildName" required />
+            </div>
+            <div class="connectChildInput">
+                <label>הכנס את הסיסמה שהילד קיבל בעת הרישום שלו</label>
+                <input type="text" name="ChildPassword" />
+            </div>
+
+            <input class="connectChildBtn" type="submit" value="שמור" />
+        }
+    </div>
 </div>
+
+<style>
+    #AdultPageSize { width: 100%; height: 100%;padding: 0px 40px; }
+    .connectChildPageDetaile { margin-bottom: 20px; }
+    .connectChildPageDetaile span { font-size: 18px; }
+    .connectChildInput { width: 500px; padding: 10px; margin-bottom: 20px; height: 40px; }
+    .connectChildInput label { float: right; }
+    .connectChildInput input { float: left;  }
+    
+
+
+</style>
