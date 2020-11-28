@@ -5,7 +5,15 @@
 }
 
 <script>
-    function ShowChildProgress(ChildID) {
+    @*function ShowChildProgress(ChildID) {
+        $.post("@Url.Action("ShowChildProgress", "Adult")" + "?ChildID=" + ChildID,  function (data) {
+            $("#ChildProgressReportContainer").html("");
+            $("#ChildProgressReportContainer").html(data);
+        });
+    }*@
+
+    function ShowChildProgress() {
+        var ChildID = $("#adultChildsList").val();
         $.post("@Url.Action("ShowChildProgress", "Adult")" + "?ChildID=" + ChildID,  function (data) {
             $("#ChildProgressReportContainer").html("");
             $("#ChildProgressReportContainer").html(data);
@@ -34,12 +42,19 @@
 
     @if (Model.AdultChilds != null && Model.AdultChilds.Count() > 0)
     {
-        foreach (var child in Model.AdultChilds)
-        {
-            <div class="childsDiv">
-                <span onclick="ShowChildProgress(@child.ChildID)">@child.Name</span>
-            </div>
-        }
+        @*foreach (var child in Model.AdultChilds)
+            {
+                <div class="childsDiv">
+                    <span onclick="ShowChildProgress(@child.ChildID)">@child.Name</span>
+                </div>
+            }*@
+        <select id="adultChildsList">
+            @foreach (var child in Model.AdultChilds)
+            {
+                <option value="@child.ChildID">@child.Name</option>
+            }
+        </select>
+        <input type="button" class="adultChildsListBtn" value="הצג תוצאות" onclick="ShowChildProgress()"/>
     }
     else
     {
@@ -74,5 +89,16 @@
         font-size: 16px;
     }
 
-    #ChildProgressReportContainer {margin-top:20px;}
+    #adultChildsList {
+        width: 200px;
+        height: 30px;
+        font-size: 16px;
+        padding-right: 10px;
+    }
+    .adultChildsListBtn {width:120px; height:30px;}
+
+    #ChildProgressReportContainer {
+        margin-top: 20px;
+        position: relative;
+    }
 </style>

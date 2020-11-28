@@ -674,6 +674,7 @@
     <Content Include="Views\Child\Test.cshtml" />
     <Content Include="Views\Adult\_ReturnToMainAdultPage.cshtml" />
     <Content Include="Views\Adult\CreateUnseen.cshtml" />
+    <Content Include="Views\Game\Game_15.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

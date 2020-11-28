@@ -1,7 +1,7 @@
 ﻿@model LearnHebrew.Models.ChildProgressModel
 
 
-@{ 
+@{
     Layout = "";
 }
 
@@ -25,12 +25,12 @@
     </select>
     <span>סדר תוצאות לפי:</span>
     <select id="orderResultBy">
-        @foreach(var ob in orderby)
+        @foreach (var ob in orderby)
         {
             <option value="@ob.Key" @(ob.Key == Model.LastOrderBy ? "selected" : "")>@ob.Value</option>
         }
         @*<option value="0" selected>תאריך</option>
-        <option value="1">אות</option>*@
+            <option value="1">אות</option>*@
     </select>
     <select id="AscDesc">
         <option value="0" @(Model.LastIsAsc ? "selected" : "")>מהקטן לגדול</option>
@@ -39,7 +39,7 @@
     <input type="button" onclick="FillterPrograssResult()" value="לחץ לסינון" />
 </div>
 
-<input type="hidden" value="@Model.ChildID" id="ChildIDProgressChosen"/>
+<input type="hidden" value="@Model.ChildID" id="ChildIDProgressChosen" />
 
 @if (Model.ChildProgresses != null && Model.ChildProgresses.Count() > 0)
 {
@@ -86,16 +86,18 @@
                         <td>
                             @foreach (var content in p.Data.WrongAnswers)
                             {
-                                <span>הילד בחר במילה: <strong>@(content.Value) </strong> </span>
-                                if (p.Data.ChosenContents != null && p.Data.ChosenContents.Count() > 0 && p.Data.ChosenContents.ContainsKey(content.Key))
-                                {
-                                    <span>במקום במילה: <strong>@(p.Data.ChosenContents[content.Key].Word) </strong> </span>
-                                }
-                                else
-                                {
-                                    <span>במקום במילה: </span>
-                                }
+                                @*<span>הילד בחר במילה: <strong>@(content.Value) </strong> </span>
+                                    if (p.Data.ChosenContents != null && p.Data.ChosenContents.Count() > 0 && p.Data.ChosenContents.ContainsKey(content.Key))
+                                    {
+                                        <span>במקום במילה: <strong>@(p.Data.ChosenContents[content.Key].Word) </strong> </span>
+                                    }
+                                    else
+                                    {
+                                        <span>במקום במילה: </span>
+                                    }*@
                             }
+                            <input type="button" value="הצג טעויות" onclick="ShowWrongAnswers(@p.ProgressID)" />
+
                         </td>
                     }
                     else
@@ -123,37 +125,114 @@ else
     <h3>הילד עדיין לא התחיל ללמוד</h3>
 }
 
+
+<div id="blackBackgroundPopup"></div>
+@foreach (var p in Model.ChildProgresses)
+{
+    if (p.Data.WrongAnswers != null && p.Data.WrongAnswers.Count() > 0)
+    {
+        <div id="WrongAnswerPopup_@p.ProgressID" class="WrongAnswerPopup">
+
+            <div class="closePopup">
+                <span onclick="ClosePopup(@p.ProgressID)">X</span>
+            </div>
+
+            <table>
+                <tr>
+                    <th>מילה שבחר</th>
+                    <th>המילה הנכונה שהיה צריך לבחור</th>
+                </tr>
+                @foreach (var wa in p.Data.WrongAnswers)
+                {
+                    <tr>
+                        <td>@wa.Value</td>
+                        @if (p.Data.ChosenContents != null && p.Data.ChosenContents.Count() > 0 && p.Data.ChosenContents.ContainsKey(wa.Key))
+                        {
+                            <td>@(p.Data.ChosenContents[wa.Key].Word)</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+}
+
+<script>
+    function ShowWrongAnswers(progressID) {
+        $(".WrongAnswerPopup").hide();
+        $("#blackBackgroundPopup").show();
+        $("#WrongAnswerPopup_" + progressID).show();
+    }
+
+    function ClosePopup(progressID) {
+        $("#blackBackgroundPopup").hide();
+        $("#WrongAnswerPopup_" + progressID).hide();
+    }
+</script>
+
+
 <style>
 
-    table{width:95%;}
-
-    table td, table th {
-        border-collapse: collapse;
-        border: 1px solid;
-        text-align: center;
-        min-width: 100px;
-        padding: 5px 10px;
+    table {
+        width: 95%;
     }
+
+        table td, table th {
+            border-collapse: collapse;
+            border: 1px solid;
+            text-align: center;
+            min-width: 100px;
+            padding: 5px 10px;
+        }
 
     #ChildProgressReportContainer {
         height: 78%;
         position: absolute;
         overflow: auto;
+        width:90%;
     }
 
     .FiltterOptionsDiv {
         margin: 20px 0px;
     }
 
-    .FiltterOptionsDiv span {
-        font-size: 18px;
-        margin: 0 10px;
+        .FiltterOptionsDiv span {
+            font-size: 18px;
+            margin: 0 10px;
+        }
+
+        .FiltterOptionsDiv select {
+            width: 150px;
+            height: 25px;
+            padding-right: 5px;
+            margin-left: 15px;
+        }
+
+
+    #blackBackgroundPopup {width:100%; height:100%; background-color:black; opacity:0.3; display:none; position:fixed; top:0; right:0;}
+
+    .WrongAnswerPopup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        background: beige;
+        width: 400px;
     }
-    
-    .FiltterOptionsDiv select {
-        width: 150px;
-        height: 25px;
-        padding-right: 5px;
-        margin-left: 15px;
+
+    .WrongAnswerPopup table{width:100%;}
+
+    .closePopup {text-align:center; background-color:white;}
+    .closePopup span {
+        cursor:pointer;
+        font-size:18px;
+        font-weight: bold;
     }
+
 </style>
