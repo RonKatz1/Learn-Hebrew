@@ -1,6 +1,6 @@
 ﻿@model LearnHebrew.Models.GameInformationModel
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
@@ -13,7 +13,8 @@
         background-image: url('../../Pictures/Game_21/woodwall1.png');
         background-position: center;
         background-repeat: no-repeat;
-        background-size: cover;
+        background-size: 100% 100%;
+        background-attachment: fixed;
     }
 
     section {
@@ -23,10 +24,10 @@
         margin: auto;
         cursor: none;
     }
-
     footer {
-        position: absolute;
+        /*position: absolute;*/
         bottom: 0;
+        font-weight: bold;
         width: 100%
     }
     .fireball {
@@ -70,7 +71,7 @@
     #scoreId {
         margin-left: 15px;
         font-size: x-large;
-        color: gold;
+        color: darkred;
     }
     .myButton {
         box-shadow: inset 0px 1px 0px 0px #f9eca0;
@@ -229,7 +230,7 @@
         FillHearts();
         gameoverIndicator = setInterval(createEnemy, enemySpawn);
     }
-
+    // This function places the heart images in the game
     function FillHearts() {
         $heartDiv = $("#heartDiv");
         for (let i = 0; i < lives; i++) {
@@ -240,6 +241,7 @@
 
         }
     }
+    // This finction creates the fireball images in the game and places them at the location of the mouse
     function CreateFireBall() {
         let $fireBall = $("<img>");
         $fireBall.attr("src", "/Pictures/Game_21/fireball.png");
@@ -406,7 +408,7 @@
             GameOver();
         }
     }
-
+    // This function removes the heart images and calls for the recreation of them 
     function RemoveHeart() {
         $("#heartDiv").empty();
         FillHearts();
@@ -436,6 +438,7 @@
     function GameOver() {
         clearInterval(gameoverIndicator);
         $("#silenceBtn").remove();
+        $("footer").css("position", "absolute");
         $("#sectionId").addClass("hidescreen");
         $("#buttonRet").addClass("hidescreen");
         $("#finalScore").text($("#scoreId").text());
@@ -527,4 +530,6 @@
         <h3 id="gameOverh">ניקוד<b>: <span id="finalScore"></span></b></h3>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>

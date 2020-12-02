@@ -1,6 +1,6 @@
 ﻿@model LearnHebrew.Models.GameInformationModel
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
@@ -29,7 +29,7 @@
     }
 
     footer {
-        position: absolute;
+        font-weight: bold;
         bottom: 0;
         width: 100%
     }
@@ -146,6 +146,8 @@
     <div id="silenceDiv">
         <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
     </div>
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>
 
 <script>
@@ -469,6 +471,7 @@
         if (gameOver()) {
             if (lives == 0) {
                 $("#finalScore").text(counter);
+                $("footer").css("position", "absolute");
                 $("#silenceBtn").remove();
                 $("#canvasId").addClass("hidescreen");
                 $("#buttonRet").addClass("hidescreen");
@@ -525,6 +528,7 @@
     // This function enables screen of victory
     function WinnerEndGame() {
         $("#buttonRet").addClass("hidescreen");
+        $("footer").css("position", "absolute");
         $("#silenceBtn").remove();
         clearInterval(drawInterval);
         $("#canvasId").addClass("hidescreen");

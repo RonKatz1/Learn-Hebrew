@@ -1,6 +1,6 @@
 ﻿@model LearnHebrew.Models.GameInformationModel
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
@@ -11,7 +11,10 @@
         background-image: url('../../Pictures/Game_20/clouds_background.png');
         background-position: center;
         background-repeat: no-repeat;
-        background-size: cover;
+        background-size: 100% 100%;
+        background-attachment: fixed;
+        padding-top: 0;
+        height: 98.5vh;
     }
 
     section {
@@ -22,8 +25,10 @@
     }
 
     footer {
-        position: absolute;
+        font-weight: bold;
+        /*position: absolute;*/
         bottom: 0;
+        /*margin-top:10px;*/
         width: 100%
     }
     .cloud {
@@ -59,6 +64,7 @@
         position: absolute;
         width: 50px;
         height: 50px;
+        left:5px;
     }
 
     .pipe {
@@ -494,6 +500,7 @@
         clearInterval(flappingBirdIndicator);
         clearInterval(obstacleIndicator);
         $("#silenceBtn").remove();
+        $("footer").css("position", "absolute");
         $("#sectionId").addClass("hidescreen");
         $("#buttonRet").addClass("hidescreen");
         $("#finalScore").text($("#scoreId").text());
@@ -584,4 +591,6 @@
         <h1 id="gameOverh"><b>ניקוד: </b><b><span id="finalScore"></span></b></h1>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>

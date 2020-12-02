@@ -31,6 +31,12 @@
         background-size: 100% 100%;
         background-attachment: fixed;
     }
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        font-weight: bold;
+    }
     .animate-in {
     /*-webkit-animation: fadeIn .8s ease-in;*/
     animation: fadeIn .4s ease-in;
@@ -140,9 +146,14 @@
         img:hover {
             box-shadow: 0 0 2px 1px rgba(0,140,186,0.5);
         }
+
+        @@media(max-width: 1336px)
+        {
+            #tdLetters{width:20px;}
+        }
 </style>
 <body class="animate-in">
-    
+
     <div id="upperDiv" style="display:block">
         <h1 id="title" class="rainbow">עמוד משתמש של ילד</h1>
         <input id="leaveBtn" type="button" value="התנתקות" onclick="goToStarterPage()" /><p class="rainbow" id="childName">  שלום @Model.child.Name, בבקשה בחר באחת התמונות הבאות:</p>
@@ -173,4 +184,6 @@
             </td>
         </tr>
     </table>
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>
