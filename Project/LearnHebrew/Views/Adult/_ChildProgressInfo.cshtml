@@ -161,6 +161,46 @@ else
     }
 }
 
+
+<div id="GraphReport">
+    <canvas id="barcanvas"></canvas>  
+</div>
+
+<script>
+    var chart = {
+        labels: ["בדיקה"],
+        datasets: [{
+            label: 'count 1',
+            backgroundColor: [
+                "#f990a7",
+                "#aad2ed",
+            ],
+            borderWidth: 2,
+            data: ["123456"]
+        }]
+    }
+
+    window.onload = function () {
+        var ctx1 = $("#barcanvas").getContext("2d");
+        window.myBar = new Chart(ctx1,
+            {
+                type: 'bar',
+                data: barChartData,
+                options:
+                {
+                    title:
+                    {
+                        display: true,
+                        text: "ProductWise Sales Count"
+                    },
+                    responsive: true,
+                    maintainAspectRatio: true
+                }
+            });
+    }  
+</script>
+
+
 <script>
     function ShowWrongAnswers(progressID) {
         $(".WrongAnswerPopup").hide();
