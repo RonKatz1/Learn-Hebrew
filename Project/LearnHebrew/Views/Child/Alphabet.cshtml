@@ -22,7 +22,7 @@
         background-repeat: no-repeat;
         /*background-size: cover;*/
         background-position: center;
-        background-size: 100%;
+        background-size: 100% 100%;
         background-attachment: fixed;
     }
     .animate-in {
@@ -61,11 +61,12 @@
         width: 100%
     }
 
-    /*footer {
+    footer {
+        font-weight: bold;
         position: absolute;
         bottom: 0;
         width: 100%
-    }*/
+    }
     #title {
         font-size: 5vw;
     }
@@ -233,7 +234,7 @@
             "false", "false", "false", "false", "false", "false", "false", "true",
             "false", "false", "false", "false", "false", "false", "false"];
         $("#buttonGo").prop('disabled', true);
-        $("footer").addClass("footerClass");
+      
 
 
         //var originalBG = $("<body>").css("background-color");
@@ -268,7 +269,7 @@
             letterForGame = $letterId;
             $("#letterTable").addClass("hidescreen");
             $("#gameDiv").removeClass("hidescreen");
-            $("footer").removeClass("footerClass");
+            $("footer").css("position", "relative");
 
 
         });
@@ -320,7 +321,7 @@
         //}, function () {
         //    $(this).css('box-shadow', 'none');
         //    });
-        $("footer").addClass("footerClass");
+        $("footer").css("position","absolute");
         $("#buttonGo").prop('disabled', true);
         $("#gameDiv").addClass("hidescreen");
         $("#letterTable").removeClass("hidescreen");
@@ -337,11 +338,11 @@
     }
 </script>
 <body class="animate-in">
-    
+
     <div id="upperDiv">
         <h1 class="rainbow" id="title">עמוד לימודי אותיות לילד  </h1>
         <input type="button" id="leaveBtn" value="חזור לעמוד משתמש ילד" onclick="goToIndexPage()" />
-        
+
     </div>
     <table id="letterTable">
         <tr>
@@ -481,4 +482,6 @@
         <input id="buttonCancel" type="button" value="ביטול" onclick="RemoveGamePreviewDiv()" />
         <input id="buttonTest" type="button" value="מעבר למבחן" onclick="GoToTest()" />
     </div>
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>

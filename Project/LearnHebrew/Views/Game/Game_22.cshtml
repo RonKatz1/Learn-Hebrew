@@ -1,7 +1,7 @@
 ﻿@model LearnHebrew.Models.GameInformationModel
 
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
@@ -12,7 +12,9 @@
         background-image: url('../../Pictures/Game_22/sidewalk_background.png');
         background-position: center;
         background-repeat: no-repeat;
-        background-size: cover;
+        /*background-size: cover;*/
+        background-size: 100% 100%;
+        background-attachment: fixed;
     }
 
     section {
@@ -22,10 +24,10 @@
         height: 35%;
         
     }
-
     footer {
         position: absolute;
         bottom: 0;
+        font-weight: bold;
         width: 100%
     }
     .heart {
@@ -653,4 +655,6 @@
         <h1 id="gameOverh" style="font-size:60px"><b>ניקוד: </b><b><span id="finalScore"></span></b></h1>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>

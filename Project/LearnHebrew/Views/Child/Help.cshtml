@@ -12,8 +12,22 @@
         background-image: url('../../Pictures/Help/back to school doodle .png');
         /*background-size: cover;*/
         background-position: center;
-        background-size: auto 100%;
+        background-size: auto 20%;
         background-attachment: fixed;
+    }
+    h3 {
+        padding-bottom: 30px;
+        font-size: 40px;
+    }
+
+    h2 {
+        padding-bottom: 30px;
+        font-size: 50px;
+    }
+    footer {
+        font-weight: bold;
+        bottom: 0;
+        width: 100%
     }
     .animate-in {
         /*-webkit-animation: fadeIn .8s ease-in;*/
@@ -51,7 +65,7 @@
         font-weight:bold;
     }
     #title {
-        font: 60px Arial, sans-serif;
+        font: 80px Arial, sans-serif;
         font-weight: bold;
         text-decoration:underline;
         color: yellow;
@@ -96,9 +110,7 @@
         text-align:center;
 
     }
-    h3 {
-        padding-bottom: 30px;
-    }
+   
     #bottomDiv {
         margin: 40px;
     }
@@ -106,7 +118,7 @@
 <body class="animate-in">
     <h1 id="title">עזרה והסברים</h1>
     <div id="btnDiv">
-        <input type="button" class="myButton" value="חזור לעמוד משתמש ילד" onclick="goToIndexPage()" />      
+        <input type="button" class="myButton" value="חזור לעמוד משתמש ילד" onclick="goToIndexPage()" />
     </div>
     <div id="TableofContentsId">
         <a href="#q1"><h2 class="info">איך אני מגיע לאזור למידת אותיות ?</h2></a>
@@ -129,8 +141,8 @@
     </div>
     <div id="informationDiv">
         @*<a id="q1">
-        <h3 class="info">ניתן להגיע לאזור למידת אותיות בלחיצה <a class="info" href="/Child/ReturnToAlphabet">כאן.</a></h3>
-        </a>*@
+            <h3 class="info">ניתן להגיע לאזור למידת אותיות בלחיצה <a class="info" href="/Child/ReturnToAlphabet">כאן.</a></h3>
+            </a>*@
 
         <h3 class="info">ניתן להגיע לאזור למידת אותיות בלחיצה <a id="q1" class="info" href="/Child/ReturnToAlphabet">כאן.</a></h3>
 
@@ -210,4 +222,6 @@
         <h3>במידה וקיימת שאלה אשר לא נענתה בעמוד זה רצוי לפנות לעזרת מבוגר אשר בסביבתך.</h3>
         <h3>אנחנו מקווים שעזרנו לכם ומאחלים לכם הצלחה בלימודי השפה העברית.</h3>
     </div>
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>

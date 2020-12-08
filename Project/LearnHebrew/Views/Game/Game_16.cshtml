@@ -1,6 +1,6 @@
 ﻿@model LearnHebrew.Models.GameInformationModel
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
@@ -12,12 +12,14 @@
         background-image: url('../../Pictures/Game_16/bucket_background.png');
         background-position: center;
         background-repeat: no-repeat;
-        background-size: cover;
+        background-size: 100% 100%;
+        background-attachment: fixed;
     }
 
     footer {
-        position: absolute;
+        /*position: absolute;*/
         bottom: 0;
+        font-weight: bold;
         width: 100%
     }
     section {
@@ -66,11 +68,28 @@
         text-align: right;
         height: 50%;
     }
-
+    #emptyBucket {
+        color: red;
+        font-size: 6vw;
+    }
     #messageDiv {
         position: absolute;
+        
+        animation: animate-blink 1.5s infinite;
     }
+    @@keyframes animate-blink {
+        0% {
+            opacity: 1;
+        }
 
+        50% {
+            opacity: 0.5;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
     #scoreId {
         margin-left: 15px;
         font-size: x-large;
@@ -443,6 +462,7 @@
     function GameOver() {
         clearInterval(gameoverIndicator);
         $("#silenceBtn").remove();
+        $("footer").css("position", "absolute");
         $("#sectionId").addClass("hidescreen");
         $("#buttonRet").addClass("hidescreen");
         $("#finalScore").text($("#scoreId").text());
@@ -530,7 +550,7 @@
         <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
     </div>
     <section id="sectionId" class="w3-display-container">
-        <div id="messageDiv" class="hidescreen"><h1 style="color:red;font-size:100px"><b>רוקנו את הדלי</b></h1></div>
+        <div id="messageDiv" class="hidescreen"><h1 id="emptyBucket"><b>רוקנו את הדלי</b></h1></div>
         <div id="heartDiv"></div>
         <div id="scoreDiv" class="w3-display-topleft"><p id="scoreId">0</p></div>
         <img id="bucketId" src="~/Pictures/Game_16/bucket.png" />
@@ -539,4 +559,6 @@
         <h1 style="color:gold; font-size:60px"><b>ניקוד: </b><b><span id="finalScore"></span></b></h1>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>

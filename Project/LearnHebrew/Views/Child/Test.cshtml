@@ -22,6 +22,7 @@
     }
 
     footer {
+        font-weight: bold;
         bottom: 0;
         width: 100%
     }
@@ -322,86 +323,89 @@
 <body>
     @if (Model.questions != null && Model.questions.Count() > 0)
     {
-        
-    <section id="questionsDiv">
-        <div id="titleId">
-            <h1>מבחן מילים</h1>
-            <h2>עבור כל שאלה בחר במילה המתאימה לתמונה</h2>
-        </div>
-        <div id="arrowDiv">
-            <img id="leftArrow" class="arrow" src="~/Pictures/Game_17/arrowLeft.png" />
-            <i id="instructionId" class="fa fa-volume-up"></i>
-            <img id="rightArrow" class="arrow" src="~/Pictures/Game_17/arrowRight.png" />
-        </div>
-        @for (int i = 0; i < Model.questions.Count(); i++)
-        {
 
-            <h3>------------------------------------------------------------</h3>
-            <div class="contentToDisplay">
-
-                @{
-                    var optionsWord = new List<string>();
-                    if (Model.ContentOptions.ContainsKey(Model.questions[i].ContentID))
-                    {
-                        optionsWord = Model.ContentOptions[Model.questions[i].ContentID];
-                    }
-
-                }
-                <div id='radioButtonDiv_@i'>
-                    @foreach (var str in optionsWord)
-                    {
-
-                        if (Model.questions[i].Word.Equals(str))
-                        {
-                            <input type="radio" class='true' name='radio_@i' value=@str />
-                            <label>@str</label>
-                        }
-                        else
-                        {
-                            <input type="radio" class='false' name='radio_@i' value=@str />
-                            <label>@str</label>
-                        }
-                    }
-                </div>
-                @*<div>
-                    <input type="text" id='textbox_@i' placeholder="רשום את תשובתך כאן" />
-                </div>*@
-                <div class="ContentPhoto" style="background-image:url('@(BLL.Services.ContentServices.GetFilePath(Model.questions[i].Data.PhotoFile))')">
-
-                </div>
-
-                <div id="controlsDiv">
-                    <audio id='controls_@i' controls>
-                        <source id='source_@i' src="@Url.Content(BLL.Services.ContentServices.GetFilePath(Model.questions[i].Data.VoiceFile))" type="audio/ogg">
-                    </audio>
-                </div>
-                <div id="sound_@i">
-                    <input id='soundBtn_@i' class="soundBtn" type="button" value="🎵" onclick="EnableSound('@i')" />
-
-                </div>
-
-                @*<input type="button" value="אשר" class="confirmBtn slick-next" id='button_@i' onclick="SendAnswer('@Model.questions[i].Data.UnDotedWord', 'textbox_@i','button_@i')" />*@
-                <input class="myButton" type="button" value="שליחת תשובה" id='button_@i' onclick="RadioSendAnswer('@Model.questions[i].Word', '@i', '@Model.questions[i].ContentID','radio_@i')" />
-
-
+        <section id="questionsDiv">
+            <div id="titleId">
+                <h1>מבחן מילים</h1>
+                <h2>עבור כל שאלה בחר במילה המתאימה לתמונה</h2>
             </div>
-        }
-        <h3>------------------------------------------------------------</h3>
+            <div id="arrowDiv">
+                <img id="leftArrow" class="arrow" src="~/Pictures/Game_17/arrowLeft.png" />
+                <i id="instructionId" class="fa fa-volume-up"></i>
+                <img id="rightArrow" class="arrow" src="~/Pictures/Game_17/arrowRight.png" />
+            </div>
+            @for (int i = 0; i < Model.questions.Count(); i++)
+            {
 
-    </section>
+                <h3>------------------------------------------------------------</h3>
+                <div class="contentToDisplay">
+
+                    @{
+                        var optionsWord = new List<string>();
+                        if (Model.ContentOptions.ContainsKey(Model.questions[i].ContentID))
+                        {
+                            optionsWord = Model.ContentOptions[Model.questions[i].ContentID];
+                        }
+
+                    }
+                    <div id='radioButtonDiv_@i'>
+                        @foreach (var str in optionsWord)
+                        {
+
+                            if (Model.questions[i].Word.Equals(str))
+                            {
+                                <input type="radio" class='true' name='radio_@i' value=@str />
+                                <label>@str</label>
+                            }
+                            else
+                            {
+                                <input type="radio" class='false' name='radio_@i' value=@str />
+                                <label>@str</label>
+                            }
+                        }
+                    </div>
+                    @*<div>
+                            <input type="text" id='textbox_@i' placeholder="רשום את תשובתך כאן" />
+                        </div>*@
+                    <div class="ContentPhoto" style="background-image:url('@(BLL.Services.ContentServices.GetFilePath(Model.questions[i].Data.PhotoFile))')">
+
+                    </div>
+
+                    <div id="controlsDiv">
+                        <audio id='controls_@i' controls>
+                            <source id='source_@i' src="@Url.Content(BLL.Services.ContentServices.GetFilePath(Model.questions[i].Data.VoiceFile))" type="audio/ogg">
+                        </audio>
+                    </div>
+                    <div id="sound_@i">
+                        <input id='soundBtn_@i' class="soundBtn" type="button" value="🎵" onclick="EnableSound('@i')" />
+
+                    </div>
+
+                    @*<input type="button" value="אשר" class="confirmBtn slick-next" id='button_@i' onclick="SendAnswer('@Model.questions[i].Data.UnDotedWord', 'textbox_@i','button_@i')" />*@
+                    <input class="myButton" type="button" value="שליחת תשובה" id='button_@i' onclick="RadioSendAnswer('@Model.questions[i].Word', '@i', '@Model.questions[i].ContentID','radio_@i')" />
+
+
+                </div>
+            }
+            <h3>------------------------------------------------------------</h3>
+
+        </section>
+
     }
     else
     {
         <h3>אין שאלות </h3>
     }
-        <div id="resultDiv" class="hidescreen">
-            <h3 class="endTestMessage">זהו סוף המבחן, במידה וטעית בשאלה מסויימת היא תופיע למטה</h3>
-            <h3 class="endTestMessage">ציונך במבחן:<span id="pointsId"></span></h3>
+    <div id="resultDiv" class="hidescreen">
+        <h3 class="endTestMessage">זהו סוף המבחן, במידה וטעית בשאלה מסויימת היא תופיע למטה</h3>
+        <h3 class="endTestMessage">ציונך במבחן:<span id="pointsId"></span></h3>
 
-            <div id="wrongAnswerDiv"></div>
-            <input class="myButton" id="buttonGo" type="button" value="מעבר למשחק" onclick="GoToGame()" />
+        <div id="wrongAnswerDiv"></div>
+        <input class="myButton" id="buttonGo" type="button" value="מעבר למשחק" onclick="GoToGame()" />
 
-        </div>
+    </div>
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>   
 <style>
 

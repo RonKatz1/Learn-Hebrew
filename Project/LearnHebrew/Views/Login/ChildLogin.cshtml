@@ -33,19 +33,22 @@
         $("#childPassword").show();
         $("#submitBtn").show();
         $("#errorMessage").text("");
+        $("footer").css("position", "relative");
     }
 </script>
 <style>
     body {
         background-image: url('../../Pictures/ChildLogin/rainbow_background.png');
         background-position: center;
-        background-size: auto 100%;
-        background-attachment:fixed;
+        background-size: 100% 100%;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
     }
     footer {
         position: absolute;
         bottom: 0;
-        width: 100%
+        width: 100%;
+        font-weight: bold;
     }
     #mainTable{
         text-align:center;
@@ -214,7 +217,7 @@
         <tr><td colspan="3"><p id="errorMessage" style="color:red">@Model.message</p></td></tr>
         }
     </table>
-    
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
 
     @*@using (Html.BeginForm("SaveChild", "Login", FormMethod.get))
         {

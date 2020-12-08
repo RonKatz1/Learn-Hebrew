@@ -1,6 +1,6 @@
 ﻿@model LearnHebrew.Models.GameInformationModel
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" />
@@ -20,12 +20,14 @@
         background-image: url('../../Pictures/Game_5/planet.jpg');
         background-position: center;
         background-repeat: no-repeat;
-        background-size: cover;
+        /*background-size: cover;*/
+        background-size: 100% 100%;
+        background-attachment: fixed;
     }
-
     footer {
-        position: absolute;
+        /*position: absolute;*/
         bottom: 0;
+        font-weight: bold;
         width: 100%
     }
     #user {
@@ -90,7 +92,7 @@
         left: 7%;
         position: absolute;
         font-size: x-large;
-        color: gold;
+        color: red;
     }
 
     #instructionId {
@@ -485,6 +487,7 @@
         clearInterval(gameoverIndicator);
         RemoveShots();
         $("#sectionId").addClass("hidescreen");
+        $("footer").css("position", "absolute");
         $("#tableId").addClass("hidescreen");
         $("#buttonId").addClass("hidescreen");
         $("#instructionDiv").addClass("hidescreen");
@@ -531,7 +534,7 @@
         <input id="buttonRet" class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
         <div id="silenceDiv">
             <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
-            <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+            @*<footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>*@
         </div>
     </div>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
@@ -539,5 +542,7 @@
         <input id="retBtn" class="buttonClass" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
 
     </div>
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>
 

@@ -24,6 +24,7 @@
     }
 
     footer {
+        font-weight: bold;
         position: absolute;
         bottom: 0;
         width: 100%
@@ -142,9 +143,11 @@
         <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
     </div>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h1  id="gameOverh"><b>ניקוד: </b><b><span id="finalScore"></span></b></h1>
+        <h1 id="gameOverh"><b>ניקוד: </b><b><span id="finalScore"></span></b></h1>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
+    <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
+
 </body>
 
 <script>
