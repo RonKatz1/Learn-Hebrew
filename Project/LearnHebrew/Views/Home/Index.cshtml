@@ -27,11 +27,21 @@
         <h3>מי אתה?</h3>
     </div>
     <div id="Child" onclick="GoToChildLogin()">
-        <span>אני ילד</span>
+        <div class="UserTypeTitle">
+            <span>אני ילד</span>
+        </div>
+        <div class="UserTypeImage">
+            @*<img src="~/Pictures/children.png" />*@
+        </div>
     </div>
 
     <div id="Adult" onclick="GoToAdultLogin()">
-        <span>אני מבוגר</span>
+        <div class="UserTypeTitle">
+            <span>אני מבוגר</span>
+        </div>
+        <div class="UserTypeImage">
+            @*<img src="~/Pictures/adults.png" />*@
+        </div>
     </div>
 </div>
 
@@ -45,7 +55,7 @@
         width: 80%;
         margin: auto;
         text-align: center;
-        height: 80%;
+        height: 90%;
         position:relative;
     }
 
@@ -54,7 +64,7 @@
         width: 100%;
         height: 20%;
         position: relative;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
     }
 
     #HeaderChoseTypeDiv h3 {
@@ -67,13 +77,38 @@
     }
 
     #Child, #Adult {
-        width: 45%;
-        height: 80%;
+        width: 48%;
+        height: 78%;
         background: #e4dfdf;
         display: inline-block;
         position:absolute;
+        cursor:pointer;
     }
 
-    #Child {right: 10px;}
-    #Adult {left: 10px;}
+    #Child {right: 0px;}
+    #Adult {left: 0px;}
+
+    .UserTypeTitle {
+        height: 20%;
+        font-size: 30px;
+        padding: 10px;
+    }
+
+    #Child .UserTypeImage {
+        background-image: url(../Pictures/children.png);
+        z-index: 10;
+        width: 100%;
+        height: 80%;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+
+    #Adult .UserTypeImage {
+        background-image: url(../Pictures/adults.png);
+        z-index: 10;
+        width: 100%;
+        height: 80%;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
 </style>

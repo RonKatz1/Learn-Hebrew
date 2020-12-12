@@ -17,6 +17,8 @@
         $.post("@Url.Action("ShowChildProgress", "Adult")" + "?ChildID=" + ChildID,  function (data) {
             $("#ChildProgressReportContainer").html("");
             $("#ChildProgressReportContainer").html(data);
+
+            $("#chooseInfoView").show();
         });
     }
 
@@ -29,6 +31,17 @@
             $("#ChildProgressReportContainer").html("");
             $("#ChildProgressReportContainer").html(data);
         });
+    }
+
+    function ChosePrgressInfoViewOption(type) {
+        if (type == 1) {
+            $("#ChildProgressReportContainer").show();
+            $(".chartWrapper").hide();
+        }
+        else if (type == 2) {
+            $("#ChildProgressReportContainer").hide();
+            $(".chartWrapper").show();
+        }
     }
 
 </script>
@@ -61,20 +74,26 @@
         <h6>לא קיימים ילדים, אנא הוסף תחילה ילדים לרשימה שלך מהמסך הראשי</h6>
     }
 
-    <div id="ChildProgressReportContainer">
 
-    </div>
+        <div class="AllProgressInfoContainer">
+            <div id="chooseInfoView" style="display:none">
 
-    @*<div id="ChildProgressGraphReportContainer">
-            <canvas id="barcanvas"></canvas>
-        </div>*@
+                <input type="button" value="הצג טבלה" onclick="ChosePrgressInfoViewOption(1)" />
+                <input type="button" value="הצג כגרף" onclick="ChosePrgressInfoViewOption(2)" />
 
-    <div class="chartWrapper">
-        <div class="chartAreaWrapper">
-            <canvas id="myChart" ></canvas>
+            </div>
+
+            <div id="ChildProgressReportContainer">
+
+            </div>
+
+            <div class="chartWrapper" style="display:none;">
+                <div class="chartAreaWrapper">
+                    <canvas id="myChart"></canvas>
+                </div>
+                <canvas id="myChartAxis"></canvas>
+            </div>
         </div>
-        <canvas id="myChartAxis" ></canvas>
-    </div>
 </div>
 
 
@@ -110,5 +129,9 @@
         width: 90%;
         max-height:500px;
         overflow-y:scroll;
+    }
+
+    .AllProgressInfoContainer{
+        padding-bottom: 40px;
     }
 </style>
