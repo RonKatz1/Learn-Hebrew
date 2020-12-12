@@ -165,44 +165,47 @@ else
         CreateGraph();
     });
 
-    function clearCanvas() {
+
+    function clearCanvas()
+    {
         $("#ChildProgressGraphReportContainer").html("");
         $("#ChildProgressGraphReportContainer").append($('<canvas id="barcanvas"></canvas>'));
     }
 
+    function generateColor() {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        return "rgba(" + r + "," + g + "," + b + ", 0.5)";
+    }
+
+
+    function generatColorList(x) {
+        var colorArray = [];
+        for (i = 0; i < x; i++) {
+            colorArray.push(generateColor());
+        }
+        return colorArray;
+    }
+
     function CreateGraph() {
-
-        var ctx = document.getElementById("myChart").getContext("2d");
-
-        var data = {
-            labels: @Html.Raw(Model.GraphLabels),
-            datasets: [
-                {
-                    label: "ניקוד לאורך זמן",
-                    fillColor: "rgba(54,162,235,0.2)",
-                    strokeColor: "rgba(54,162,235,1)",
-                    pointColor: "rgba(54,162,235,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(54,162,235,1)",
-                    data: [@Html.Raw(Model.GraphData)]
-                }
-            ]
-        };
-
-        var options = {
+        var barChartData = {
+            labels: [@Html.Raw(Model.GraphLabels)],
+            datasets: [{
+                label: '',
+                backgroundColor: generatColorList(@Model.GraphLabels.Count()),
+                borderWidth: 2,
+                data: [@Html.Raw(Model.GraphData)]
+            }]
+        }
+        var barChartOprions = {
+            title: {
+                text: 'גרף ניקוד לאורך זמן',
+                display: true
+            },
             scales: {
                 xAxes: [{
-                    display: true,
-                    //type: 'time',
-                    //distribution: 'series',
-                    //time: {
-                    //    parser: 'DD/MM/YYYY',
-                    //    displayFormats: {
-                    //        'day': 'DD/MM/YYYY'
-                    //    }
-                    //},
-                    stacked: true,
+                    stacked: false,
                     ticks: {
                         beginAtZero: true
                     },
@@ -216,23 +219,15 @@ else
             }
         }
 
-        window.myChart = new Chart(ctx, {
-            type: "line",
-            data: data,
-            options: options
-            //onAnimationComplete: function () {
-            //    var sourceCanvas = this.chart.ctx.canvas;
-            //    var copyWidth = this.scale.xScalePaddingLeft - 5;
-            //    // the +5 is so that the bottommost y axis label is not clipped off
-            //    // we could factor this in using measureText if we wanted to be generic
-            //    var copyHeight = this.scale.endPoint + 5;
-            //    var targetCtx = document.getElementById("myChartAxis").getContext("2d");
-            //    targetCtx.canvas.width = copyWidth;
-            //    targetCtx.drawImage(sourceCanvas, 0, 0, copyWidth, copyHeight, 0, 0, copyWidth, copyHeight);
-            //}
-        });
-
+        var ctx1 = document.getElementById("barcanvas").getContext("2d");
+        window.myBar = new Chart(ctx1,
+            {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOprions
+            });
     }
+
 </script>
 
 
@@ -251,24 +246,6 @@ else
 
 
 <style>
-
-    .chartWrapper {
-        position: relative;
-        width:90%;
-        height:500px;
-    }
-
-        .chartWrapper > canvas {
-            position: absolute;
-            left: 0;
-            top: 0;
-            pointer-events: none;
-        }
-
-    .chartAreaWrapper {
-        width: 100%;
-        height:100%;
-    }
 
     table {
         width: 95%;

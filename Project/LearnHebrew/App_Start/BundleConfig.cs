@@ -28,7 +28,7 @@ namespace LearnHebrew
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/slick/slick.css",
-                      "~/Content/site.css"));
+                      "~/Content/Site.css"));
         }
     }
 }

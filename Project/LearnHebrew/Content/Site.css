@@ -1,4 +1,35 @@
-﻿body {
+﻿
+
+/*@font-face {
+	font-family: 'Gan';
+	src:local('Gan'), url('../../Content/Fonts/Gan/ganclm_bold-webfont.woff') format('woff'), url('../../Content/Fonts/Gan/ganclm_bold-webfont.ttf') format('ttf');
+}
+@font-face {
+	font-family: 'Miri';
+	src: url('../../Content/Fonts/miri/miriwin-webfont.eot');
+	src:local('Miri'), url('../../Content/Fonts/Miri/miriwin-webfont.woff') format('woff'), url('../../Content/Fonts/Miri/miriwin-webfont.ttf') format('ttf');
+}
+
+@font-face {
+	font-family: 'Noot';
+	src: url('../../Content/Fonts/Noot/noot-aj.eot');
+	src:local('Noot'), url('../../Content/Fonts/Noot/noot-aj.woff') format('woff'), url('../../Content/Fonts/Noot/noot-aj.ttf') format('ttf');
+}*/
+
+@font-face {
+    font-family: 'gan';
+    src: url('Fonts/Gan/ganclm_bold-webfont.woff') format('woff');
+}
+@font-face {
+    font-family: 'miri';
+    src: url('Fonts/Miri/miriwin-webfont.woff') format('woff');
+}
+@font-face {
+    font-family: 'noot';
+    src: url('Fonts/Noot/noot-aj.woff') format('woff');
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
     direction:rtl;

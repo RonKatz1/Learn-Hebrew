@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace LearnHebrew.Controllers
 {
+    [Fillter.LoginFillter]
     public class AdultController : Controller
     {
         //private string ContentPhotoPath = "C:/Users/tal/Documents/GitHub/Learn-Hebrew/Project/Photos";
@@ -330,35 +331,75 @@ namespace LearnHebrew.Controllers
             {
                 var progresses = BLL.Services.ChildProgressServices.LoadAllChildProgressesByChildID(ChildID);
 
+                progresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate != null && p.Data.EndDate.Year > DateTime.MinValue.Year && p.Data.EndDate.Year < DateTime.MaxValue.Year).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+
                 if(!letterFilltered.Equals("הכל") && progresses != null && progresses.Count() > 0)
                 {
                     progresses = progresses.Where(p => p.Data.Letter.ToString().Equals(letterFilltered)).ToList();
                 }
 
-                switch(OrderBy)
+                switch (OrderBy)
                 {
                     case 0:
-                        if(IsAsc)
-                            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderBy(p => p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
-                        else
-                            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p => p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                        if (IsAsc)
+                            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.OrderBy(p => p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                        else                                                                             
+                            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.OrderByDescending(p => p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
                         break;
                     case 1:
-                        if(IsAsc)
-                            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderBy(p => p.Data.Letter).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                        if (IsAsc)
+                            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.OrderBy(p => p.Data.Letter).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
                         else
-                            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p => p.Data.Letter).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.OrderByDescending(p => p.Data.Letter).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
                         break;
                     default:
-                        m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p => p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                        m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.OrderByDescending(p => p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
                         break;
                 }
+
+                //switch(OrderBy)
+                //{
+                //    case 0:
+                //        if(IsAsc)
+                //            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderBy(p => p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                //        else
+                //            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p => p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                //        break;
+                //    case 1:
+                //        if(IsAsc)
+                //            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderBy(p => p.Data.Letter).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                //        else
+                //            m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p => p.Data.Letter).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                //        break;
+                //    default:
+                //        m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p => p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p => p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
+                //        break;
+                //}
                 //m.ChildProgresses = progresses != null && progresses.Count() > 0 ? progresses.Where(p=>p.Data.EndDate < DateTime.MaxValue).OrderByDescending(p=>p.Data.Date).ToList() : new List<BLL.LearnHebrewEntities.ChildProgress>();
                 m.ChildID = ChildID;
                 LearnHebrew.Auxiliray.Session.LetterForPrograssFillter = letterFilltered;
 
                 m.LastIsAsc = IsAsc;
                 m.LastOrderBy = OrderBy;
+
+                var graphLabels = new List<string>();
+                var graphData = new List<string>();
+                foreach (var p in m.ChildProgresses)
+                {
+                    var amountOfContents = p.Data.ChosenContents != null ? p.Data.ChosenContents.Count() : 0;
+                    var failedAmount = p.Data.WrongAnswers != null ? p.Data.WrongAnswers.Count() : 0;
+                    var totalPoints = (amountOfContents - failedAmount);
+
+                    graphLabels.Add(p.Data.EndDate.ToString("dd/MM/yyyy HH:mm:ss"));
+                    graphData.Add(totalPoints.ToString());
+                }
+                //m.GraphLabels = string.Join(",", graphLabels);
+                var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                m.GraphLabels = serializer.Serialize(graphLabels);
+
+                m.GraphData = string.Join(",", graphData);
+                m.GraphLabelsList = graphLabels;
+                m.GraphDataList = graphData;
             }
             catch(Exception ex)
             {
