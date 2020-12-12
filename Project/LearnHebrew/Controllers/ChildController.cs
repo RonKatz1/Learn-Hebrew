@@ -8,6 +8,7 @@ using LearnHebrew.DTO;
 
 namespace LearnHebrew.Controllers
 {
+    [Fillter.LoginFillter]
     public class ChildController : Controller
     {
         public int SaveChild(string Name, string Color)

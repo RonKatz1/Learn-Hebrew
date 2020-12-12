@@ -24,5 +24,17 @@
 
 
     @RenderSection("scripts", required: false)
+
+
+    @*<script>
+        var sessionTimeOut = @Session.Timeout - 1;
+
+        var stm = parseInt(sessionTimeOut) * 60 * 1000;
+        setTimeout('SessionEnd()', stm);
+
+        function SessionEnd() {
+            window.location = "/Home/LogOut";
+        }
+    </script>*@
 </body>
 </html>

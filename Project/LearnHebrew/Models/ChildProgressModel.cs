@@ -12,5 +12,10 @@ namespace LearnHebrew.Models
 
         public int LastOrderBy { get; set; }
         public bool LastIsAsc { get; set; }
+
+        public string GraphLabels { get; set; }
+        public string GraphData { get; set; }
+        public List<string> GraphLabelsList { get; set; }
+        public List<string> GraphDataList { get; set; }
     }
 }

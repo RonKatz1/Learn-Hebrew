@@ -226,6 +226,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="DTO\GameContentDto.cs" />
     <Compile Include="DTO\TestResultDto.cs" />
+    <Compile Include="Fillter\LoginFillter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -626,7 +627,9 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\slick\slick.js" />
     <Content Include="Scripts\slick\slick.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -670,11 +673,12 @@
     <Content Include="Views\Game\Game_7_Hangman.cshtml" />
     <Content Include="Views\Adult\ChildProgress.cshtml" />
     <Content Include="Views\Game\Game_2.cshtml" />
-    <Content Include="Views\Adult\_ChildProgressInfo.cshtml" />
     <Content Include="Views\Child\Test.cshtml" />
     <Content Include="Views\Adult\_ReturnToMainAdultPage.cshtml" />
     <Content Include="Views\Adult\CreateUnseen.cshtml" />
     <Content Include="Views\Game\Game_15.cshtml" />
+    <Content Include="Views\Adult\_ChildProgressInfo.cshtml" />
+    <Content Include="Views\Adult\_ChildProgressInfo - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

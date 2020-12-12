@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace LearnHebrew.Controllers
 {
+    [Fillter.LoginFillter]
     public class ContentController : Controller
     {
 
