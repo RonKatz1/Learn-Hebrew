@@ -72,13 +72,13 @@ footer#footerContainer {
 }
 
 /* Main Page */
-.Child, .Adult {
+/*#Child, #Adult {
     width: 48%;
     height: 200px;
     background: green;
     color: white;
     display: inline-block;
-}
+}*/
 
 
 /* Adult Login and Registraition */

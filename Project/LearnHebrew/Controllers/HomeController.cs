@@ -10,6 +10,8 @@ namespace LearnHebrew.Controllers
     {
         public ActionResult Index()
         {
+            Auxiliray.Session.AdultInSession = new BLL.LearnHebrewEntities.Adult();
+            Auxiliray.Session.ChildInSession = new BLL.LearnHebrewEntities.Child();
             return View();
         }
 
@@ -45,8 +47,8 @@ namespace LearnHebrew.Controllers
         }
         public ActionResult SiteIndex()
         {
-            Auxiliray.Session.AdultInSession = null;
-            Auxiliray.Session.ChildInSession = null;
+            Auxiliray.Session.AdultInSession = new BLL.LearnHebrewEntities.Adult();
+            Auxiliray.Session.ChildInSession = new BLL.LearnHebrewEntities.Child();
             return View("~/Views/Home/index.cshtml");
         }
 
