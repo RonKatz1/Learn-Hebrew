@@ -614,6 +614,14 @@
     <Content Include="Content\slick\slick-theme.scss" />
     <Content Include="Content\slick\slick.less" />
     <Content Include="Content\slick\slick.scss" />
+    <Content Include="Content\Fonts\Gan\ganclm_bold-webfont.ttf" />
+    <Content Include="Content\Fonts\Gan\ganclm_bold-webfont.woff" />
+    <Content Include="Content\Fonts\Miri\miriwin-webfont.eot" />
+    <Content Include="Content\Fonts\Miri\miriwin-webfont.ttf" />
+    <Content Include="Content\Fonts\Miri\miriwin-webfont.woff" />
+    <Content Include="Content\Fonts\Noot\noot-aj.eot" />
+    <Content Include="Content\Fonts\Noot\noot-aj.ttf" />
+    <Content Include="Content\Fonts\Noot\noot-aj.woff" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
