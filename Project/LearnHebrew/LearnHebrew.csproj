@@ -293,6 +293,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Pictures\adults.png" />
     <Content Include="Pictures\Alphabet\aaiin.jpeg" />
     <Content Include="Pictures\Alphabet\alef.jpeg" />
     <Content Include="Pictures\Alphabet\bet.jpeg" />
@@ -430,7 +431,9 @@
     <Content Include="Pictures\ChildIndex\Webp.net-resizeimage.png" />
     <Content Include="Pictures\ChildLogin\rainbow_background.png" />
     <Content Include="Pictures\ChildRegistration\cartoon fresh classroom background .jpg" />
+    <Content Include="Pictures\children.png" />
     <Content Include="Pictures\class.jpeg" />
+    <Content Include="Pictures\cryingImogi.gif" />
     <Content Include="Pictures\Game_12\arrowLeft.png" />
     <Content Include="Pictures\Game_12\arrowRight.png" />
     <Content Include="Pictures\Game_12\chef_kitchen.PNG" />

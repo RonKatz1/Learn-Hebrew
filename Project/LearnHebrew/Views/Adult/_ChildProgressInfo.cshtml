@@ -191,6 +191,9 @@ else
         };
 
         var options = {
+            legend: {
+                display: false
+            },
             scales: {
                 xAxes: [{
                     display: true,
@@ -210,7 +213,8 @@ else
                 yAxes: [{
                     stacked: true,
                     ticks: {
-
+                        max: 4.5,
+                        min: 0
                     },
                 }],
             }
@@ -256,6 +260,7 @@ else
         position: relative;
         width:90%;
         height:500px;
+        margin-top:20px;
     }
 
         .chartWrapper > canvas {
@@ -280,6 +285,13 @@ else
             text-align: center;
             min-width: 100px;
             padding: 5px 10px;
+        }
+
+        table thead tr {
+            background: #bdbdbd;
+        }
+        table tbody tr:nth-child(odd) {
+            background: #5e5eec52;
         }
 
     #ChildProgressGraphReportContainer {
