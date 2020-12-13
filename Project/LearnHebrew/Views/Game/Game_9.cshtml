@@ -19,7 +19,7 @@
     section {
         width: 50%;
         height: 80%;
-        border: 1px solid black;
+        /*border: 1px solid black;*/
         position: relative;
         margin: auto;
     }
@@ -110,7 +110,10 @@
     #silenceDiv {
         text-align: center;
     }
-
+    #messageId {
+        color: gold;
+        font-family: 'Noot';
+    }
     #silenceBtn {
         margin: 15px;
         border-radius: 30px;
@@ -127,6 +130,15 @@
 
     #arrowDiv {
         position: relative;
+    }
+    #title {
+        font-family: 'Miri';
+        color:gold;
+    }
+
+    #secondTitle {
+        font-family: 'Gan';
+        color:darkgoldenrod;
     }
 </style>
 <script>
@@ -622,8 +634,8 @@
 
 <body>
     <div style="text-align:center">
-        <h1 style="color:gold"> פולשי האותיות </h1>
-        <h2 style="color:goldenrod"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
+        <h1 id="title"> פולשי האותיות </h1>
+        <h2 id="secondTitle"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
         <div id="arrowDiv">
             <img id="leftArrow" class="arrow" src="~/Pictures/Game_9/arrowLeft.png" />
             <i style="color:goldenrod" id="instructionId" class="fa fa-volume-up"></i>
@@ -641,7 +653,7 @@
         <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
     </div>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h1 style="color:gold" id="messageId"><b></b></h1>
+        <h1 id="messageId"><b></b></h1>
         <h1 style="color:gold"><b>ניקוד: </b><span id="finalScore"><b></b></span></h1>
         <input class="myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>

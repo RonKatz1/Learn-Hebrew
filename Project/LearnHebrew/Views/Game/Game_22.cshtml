@@ -136,6 +136,15 @@
     #arrowDiv {
         position: relative;
     }
+    #title {
+        font-family: 'Miri';
+        color:orange;
+    }
+
+    #secondTitle {
+        font-family: 'Gan';
+        color:orange;
+    }
 </style>
 <script>
     let validLetters = [];// array of valid src of letter images per the user choosing before picking this game
@@ -630,8 +639,8 @@
 
 <body>
     <div style="text-align:center">
-        <h1 style="color:orange"> האיש הרץ </h1>
-        <h2 style="color:orange"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
+        <h1 id="title"> האיש הרץ </h1>
+        <h2 id="secondTitle"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
         <div id="arrowDiv">
             <img id="leftArrow" class="arrow" src="~/Pictures/Game_22/arrowLeft.png" />
             <i id="instructionId" class="fa fa-volume-up"></i>

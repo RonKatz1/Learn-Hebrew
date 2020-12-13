@@ -8,7 +8,7 @@
 
 <style>
     body{
-        padding-top:0px;
+        /*padding-top:0px;*/
         background-color:darkgreen;
         padding-bottom:0px;
     }
@@ -119,13 +119,20 @@
             background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
             background-color: #f2ab1e;
         }
+    #title {
+        font-family: 'Miri';
+    }
+
+    #secondTitle {
+        font-family: 'Gan';
+    }
 </style>
 
 
 <body>
     <div style="text-align:center">
-        <h1 style="color:gold"> הנחש הרעב </h1>
-        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתורי החיצים</h2>
+        <h1 id="title" style="color:gold"> הנחש הרעב </h1>
+        <h2 id="secondTitle" style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתורי החיצים</h2>
         <div id="arrowDiv">
             <img id="leftArrow" class="arrow" src="~/Pictures/Game_2/arrowLeft.png" />
             <i id="instructionId" class="fa fa-volume-up"></i>

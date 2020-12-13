@@ -71,10 +71,11 @@
     #emptyBucket {
         color: red;
         font-size: 6vw;
+        font-family: 'Noot';
     }
     #messageDiv {
-        position: absolute;
-        
+        /*position: absolute;*/
+        text-align:center;
         animation: animate-blink 1.5s infinite;
     }
     @@keyframes animate-blink {
@@ -161,6 +162,12 @@
 
     #arrowDiv {
         position: relative;
+    }
+    #title {
+        font-family: 'Miri';
+    }
+    #secondTitle {
+        font-family: 'Gan';
     }
 </style>
 <script>
@@ -535,8 +542,8 @@
 
 <body>
     <div style="text-align:center">
-        <h1 style="color:gold"> דלי אותיות </h1>
-        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
+        <h1 id="title" style="color:gold"> דלי אותיות </h1>
+        <h2 id="secondTitle" style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
         <div id="arrowDiv">
             <img id="leftArrow" class="arrow" src="~/Pictures/Game_16/arrowLeft.png" />
             <i id="instructionId" class="fa fa-volume-up"></i>

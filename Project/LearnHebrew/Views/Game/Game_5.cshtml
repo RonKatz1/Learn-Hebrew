@@ -148,6 +148,13 @@
     #arrowDiv {
         position: relative;
     }
+    #title {
+        font-family: 'Miri';
+    }
+
+    #secondTitle {
+        font-family: 'Gan';
+    }
 </style>
 <script>
     let move = 25;// setting moving distance per move for user
@@ -515,8 +522,8 @@
 
 <body>
     <div style="text-align:center">
-        <h1 style="color:gold"> חללית חלל </h1>
-        <h2 style="color:gold">עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה</h2>
+        <h1 id="title" style="color:gold"> חללית חלל </h1>
+        <h2 id="secondTitle" style="color:gold">עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה</h2>
         <div id="arrowDiv">
             <img id="leftArrow" class="arrow" src="~/Pictures/Game_5/arrowLeft.png" />
             <i id="instructionId" class="fa fa-volume-up"></i>
