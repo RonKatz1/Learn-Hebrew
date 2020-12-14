@@ -238,7 +238,7 @@ namespace LearnHebrew.Controllers
         public String GetContentPath(string file)
         {
             Console.WriteLine(Request.Url);
-            var localPath = "http://localhost:58432/ContentFiles/";// this line will be changed when the site is 'deployed'
+            var localPath = "/ContentFiles/";
             //var filePath = file.Code + "." + file.Extention;
 
             return localPath;// + filePath;

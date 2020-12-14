@@ -647,49 +647,7 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
-    <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Login\ChildLogin.cshtml" />
-    <Content Include="Views\Login\AdultLogin.cshtml" />
-    <Content Include="Views\Adult\AdultRegistration.cshtml" />
-    <Content Include="Views\Adult\Index.cshtml" />
-    <Content Include="Views\Registration\ChildRegistration.cshtml" />
-    <Content Include="Views\User\ChildUser.cshtml" />
-    <Content Include="Views\User\Letters.cshtml" />
-    <Content Include="Views\Child\ChildRegistration.cshtml" />
-    <Content Include="Views\Child\Index.cshtml" />
-    <Content Include="Views\Child\Help.cshtml" />
-    <Content Include="Views\Child\Alphabet.cshtml" />
-    <Content Include="Views\Game\Game_6.cshtml" />
-    <Content Include="Views\Game\Game_1.cshtml" />
-    <Content Include="Views\Game\Game_5.cshtml" />
-    <Content Include="Views\Game\Game_12.cshtml" />
-    <Content Include="Views\Game\Game_19.cshtml" />
-    <Content Include="Views\Adult\ConfirmContents.cshtml" />
-    <Content Include="Views\Adult\ConnectToChild.cshtml" />
-    <Content Include="Views\Adult\UploadContent.cshtml" />
-    <Content Include="Views\Game\Game_8.cshtml" />
-    <Content Include="Views\Game\Game_20.cshtml" />
-    <Content Include="Views\Game\Game_21.cshtml" />
-    <Content Include="Views\Game\Game_17.cshtml" />
-    <Content Include="Views\Game\Game_22.cshtml" />
-    <Content Include="Views\Game\Game_16.cshtml" />
-    <Content Include="Views\Game\Game_13.cshtml" />
-    <Content Include="Views\Game\Game_9.cshtml" />
-    <Content Include="Views\Game\Game_7_Hangman.cshtml" />
-    <Content Include="Views\Adult\ChildProgress.cshtml" />
-    <Content Include="Views\Game\Game_2.cshtml" />
-    <Content Include="Views\Child\Test.cshtml" />
-    <Content Include="Views\Adult\_ReturnToMainAdultPage.cshtml" />
-    <Content Include="Views\Adult\CreateUnseen.cshtml" />
-    <Content Include="Views\Game\Game_15.cshtml" />
-    <Content Include="Views\Adult\_ChildProgressInfo.cshtml" />
-    <Content Include="Views\Adult\_ChildProgressInfo - Copy.cshtml" />
+    <Content Include="Views\**\*.*" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
