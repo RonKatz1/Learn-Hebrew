@@ -61,9 +61,8 @@
     /* Container needed to position the overlay. Adjust the width as needed */
     .container {
         position: relative;
-        /*width: 50%;*/
         max-width: 300px;
-        max-height: 300px;
+        max-height: 300px;       
     }
 
     /* Make the image to responsive */
@@ -134,9 +133,24 @@
         /*font-family: 'Noot';*/
     }
     .rainbow {
-        background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
+        background-image: repeating-linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
         -webkit-background-clip: text;
         color: transparent;
+        background-size: 800% 800%;
+        animation: rainbow 8s ease infinite;
+    }
+    @@keyframes rainbow {
+        0% {
+            background-position: 0% 50%
+        }
+
+        50% {
+            background-position: 100% 25%
+        }
+
+        100% {
+            background-position: 0% 50%
+        }
     }
     img {
         /*max-width: 50%;
@@ -182,9 +196,9 @@
                 </div>
 
             </td>
-            <td id="tdTest">
+            @*<td id="tdTest">
                 <img src="~/Pictures/class.jpeg" />
-            </td>
+            </td>*@
         </tr>
     </table>
     <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>
