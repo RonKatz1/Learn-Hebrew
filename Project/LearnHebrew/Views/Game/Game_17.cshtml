@@ -125,9 +125,21 @@
         height: 30px;
         position: absolute;
     }
-
+    #messageId {
+        font-size:100px;
+        font-weight: bold;
+        color:green;
+        font-family: 'Noot';
+    }
     #arrowDiv {
         position: relative;
+    }
+    #title {
+        font-family: 'Miri';
+    }
+
+    #secondTitle {
+        font-family: 'Gan';
     }
 </style>
 
@@ -527,8 +539,8 @@
 
 <body>
     <div style="text-align:center">
-        <h1 style="color:black"><b> פיצוץ בלון </b></h1>
-        <h2 style="color:black"><b> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה</b></h2>
+        <h1 id="title" style="color:black"><b> פיצוץ בלון </b></h1>
+        <h2 id="secondTitle" style="color:black"><b> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה</b></h2>
         <div id="arrowDiv">
             <img id="leftArrow" class="arrow" src="~/Pictures/Game_17/arrowLeft.png" />
             <i id="instructionId" class="fa fa-volume-up"></i>
@@ -548,7 +560,7 @@
         <input id="silenceBtn" type="button" value="🔔" onclick="ChangeSilenceBtn()" />
     </div>
     <div style="z-index:90;text-align:center" id="endGameScreen" class="hidescreen">
-        <h3 style="color:green; font-size:100px; font-weight:bold" id="messageId"></h3>
+        <h3 id="messageId"></h3>
         <input class="gameOverBtn, myButton" type="button" value="חזרה לעמוד אותיות" onclick="GoToAlphabet()" />
     </div>
     <footer style="text-align:center;font-size:x-small;display:block"><p>Ⓒ 2020 Learn-Hebrew</p></footer>

@@ -133,6 +133,13 @@
     #arrowDiv {
         position: relative;
     }
+    #title {
+        font-family: 'Miri';
+    }
+
+    #secondTitle {
+        font-family: 'Gan';
+    }
 </style>
 <script>
     let currentMousePos = { x: -1, y: -1 }; //axis X and Y for last location of mouse in the game section
@@ -508,8 +515,8 @@
 
 <body>
     <div style="text-align:center">
-        <h1 style="color:gold"> נינג'ה אותיות </h1>
-        <h2 style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
+        <h1 id="title" style="color:gold"> נינג'ה אותיות </h1>
+        <h2 id="secondTitle" style="color:gold"> עבור שמיעת הוראות המשחק לחץ על סימן השמיעה למטה, להתחלת המשחק לחץ על כפתור התחלה או אנטר</h2>
         <div id="arrowDiv">
             <img id="leftArrow" class="arrow" src="~/Pictures/Game_20/arrowLeft.png" />
             <i id="instructionId" class="fa fa-volume-up"></i>

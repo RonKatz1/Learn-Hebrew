@@ -57,7 +57,7 @@ namespace BLL.Services
 
         public static string GetFilePath(BLL.LearnHebrewEntities.ContentFile file)
         {
-            var localPath = "http://localhost:58432/ContentFiles/";
+            var localPath = "/ContentFiles/";
             var filePath = file.Code + "." + file.Extention;
 
             return localPath + filePath;

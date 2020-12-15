@@ -27,8 +27,10 @@
         width: 100%
     }
     .endTestMessage {
-        color: darkorange;
+        color: yellow;
+        font-size:30px;
         font-weight: bold;
+        font-family:'Noot';
     }
     .hidescreen {
         display: none;
@@ -74,6 +76,24 @@
         color: goldenrod;
         margin-bottom: 5px;
         font-size: 30px;
+        animation: animate-blink 1.5s infinite;
+    }
+    @@keyframes animate-blink {
+        0% {
+            opacity: 1;
+        }
+        25%{
+            opacity: 0.75;
+        }
+        50% {
+            opacity: 0.5;
+        }
+        75%{
+            opacity: 0.75;
+        }
+        100% {
+            opacity: 1;
+        }
     }
     #controlsDiv{
         margin:10px;
@@ -102,6 +122,19 @@
             background: linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
             background-color: #f2ab1e;
         }
+    #title {
+        font-family: 'Miri';
+        color: gold;
+    }
+
+    #secondTitle {
+        font-family: 'Gan';
+        color: gold;
+    }
+    .mistakeTexts {
+        font-size: 60px;
+        
+    }
 </style>
 <script>
     const gameLetter = '@Model.Letter';
@@ -267,8 +300,10 @@
                 let right = wrongAnswersCorrection[i];
                 sentenceWrong.text("התשובה שנרשמה היא: " + wrong + "   ");
                 sentenceWrong.css('color', 'red');
+                sentenceWrong.addClass("mistakeTexts");
                 sentenceRight.text("התשובה הנכונה היא: " + right);
                 sentenceRight.css('color', 'green');
+                sentenceRight.addClass("mistakeTexts");
                 $("#wrongAnswerDiv").append(sentenceWrong);
                 $("#wrongAnswerDiv").append(sentenceRight);
                 $("#wrongAnswerDiv").append("<br/>");
@@ -326,8 +361,8 @@
 
         <section id="questionsDiv">
             <div id="titleId">
-                <h1>מבחן מילים</h1>
-                <h2>עבור כל שאלה בחר במילה המתאימה לתמונה</h2>
+                <h1 id="title">מבחן מילים</h1>
+                <h2 id="secondTitle">עבור כל שאלה בחר במילה המתאימה לתמונה</h2>
             </div>
             <div id="arrowDiv">
                 <img id="leftArrow" class="arrow" src="~/Pictures/Game_17/arrowLeft.png" />
@@ -398,7 +433,7 @@
     }
     <div id="resultDiv" class="hidescreen">
         <h3 class="endTestMessage">זהו סוף המבחן, במידה וטעית בשאלה מסויימת היא תופיע למטה</h3>
-        <h3 class="endTestMessage">ציונך במבחן:<span id="pointsId"></span></h3>
+        <h3 class="endTestMessage">ציונך במבחן: <span id="pointsId"></span></h3>
 
         <div id="wrongAnswerDiv"></div>
         <input class="myButton" id="buttonGo" type="button" value="מעבר למשחק" onclick="GoToGame()" />
