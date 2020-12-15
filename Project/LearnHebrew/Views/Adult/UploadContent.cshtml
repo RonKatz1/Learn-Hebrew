@@ -4,6 +4,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<script>
+    $(document).on("submit", "form", function (event) {
+        $("#nikodSite").html("");
+        window.onbeforeunload = null;
+    });
+</script>
 
 <div id="AdultPageSize">
     @Html.Partial("~/Views/Adult/_ReturnToMainAdultPage.cshtml", Model)
@@ -11,7 +17,7 @@
     <h2>העלאת תכנים ללימוד לאתר</h2>
 
     <div id="UploadContentFormContainer">
-        @using (Html.BeginForm("SaveContent", "Adult", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("SaveContent", "Adult", FormMethod.Post, new {id= "SaveContentForm", enctype = "multipart/form-data" }))
         {
 
             <p>
@@ -51,7 +57,7 @@
 
         @*<iframe id="nikodIframe" src="https://www.nikuda.co.il" scrolling="no" frameborder="0"></iframe>*@
 
-        <iframe id="nikodIframe" src="https://nakdan.dicta.org.il/nikudedit#" scrolling="no" frameborder="0"></iframe>
+        <iframe id="nikodIframe" src="https://nakdan.dicta.org.il/nikudedit#" scrolling="no" frameborder="0" ></iframe>
 
         
     </div>
