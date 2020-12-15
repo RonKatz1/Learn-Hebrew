@@ -50,5 +50,10 @@ namespace Domain.Repositories
             return this.LearnHebrewDB.Adults.Where(a => a.Name == Name && a.Password == Password).FirstOrDefault();
 
         }
+
+        public List<Adult> LoadAll()
+        {
+            return this.LearnHebrewDB.Adults.ToList();
+        }
     }
 }

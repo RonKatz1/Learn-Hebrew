@@ -17,6 +17,21 @@ namespace BLL.Services
             }
         }
 
+        public static List<Adult> LoadAll()
+        {
+            List<Domain.Entity.Adult> entities = new List<Domain.Entity.Adult>();
+            List<Adult> adults = new List<Adult>();
+            using (Domain.Repositories.AdultRepository repo = new Domain.Repositories.AdultRepository())
+            {
+                entities = repo.LoadAll();
+            }
+            foreach(var entity in entities)
+            {
+                adults.Add(ConvertEntityToBusiness(entity));
+            }
+            return adults;
+        }
+
         public static Adult LoadAdultByNameAndPassword(string name, string password)
         {
             using (Domain.Repositories.AdultRepository repo = new Domain.Repositories.AdultRepository())

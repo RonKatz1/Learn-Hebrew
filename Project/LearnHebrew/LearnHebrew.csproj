@@ -607,6 +607,7 @@
     <Content Include="Pictures\questionMark.jpeg" />
     <Content Include="Pictures\teacher.jpeg" />
     <Content Include="Pictures\Test\desk_background.png" />
+    <Content Include="Pictures\veryGood.gif" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\slick\config.rb" />

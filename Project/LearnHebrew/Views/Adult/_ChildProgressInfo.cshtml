@@ -37,89 +37,100 @@
 
 <input type="hidden" value="@Model.ChildID" id="ChildIDProgressChosen" />
 
-@if (Model.ChildProgresses != null && Model.ChildProgresses.Count() > 0)
-{
-    <table>
+<div class="ChildProgressTableReport">
 
-        <thead>
-            <tr>
-                <th>תאריך למידה</th>
-                <th>אות</th>
-                <th>מילים נלמדות</th>
-                <th>מילים שלא הצליח</th>
-                <th>ניקוד</th>
-            </tr>
-        </thead>
+    @if (Model.ChildProgresses != null && Model.ChildProgresses.Count() > 0)
+    {
+        <table>
 
-        <tbody>
-            @foreach (var p in Model.ChildProgresses)
-            {
-
+            <thead>
                 <tr>
-                    <td>@(p.Data.Date.ToShortDateString())</td>
-                    <td>@(p.Data.Letter)</td>
+                    <th>תאריך למידה</th>
+                    <th>אות</th>
+                    <th>מילים נלמדות</th>
+                    <th>מילים שלא הצליח</th>
+                    <th>ניקוד</th>
+                </tr>
+            </thead>
 
-                    @if (p.Data.ChosenContents != null && p.Data.ChosenContents.Count() > 0)
-                    {
-                        <td>
+            <tbody>
+                @foreach (var p in Model.ChildProgresses)
+                {
 
-                            @foreach (var content in p.Data.ChosenContents)
-                            {
-                                <span>
-                                    @(content.Value.Word + ", ")
-                                </span>
-                            }
+                    <tr>
+                        <td>@(p.Data.Date.ToShortDateString())</td>
+                        <td>@(p.Data.Letter)</td>
 
-                        </td>
-                    }
-                    else
-                    {
-                        <td>אין תכנים</td>
-                    }
+                        @if (p.Data.ChosenContents != null && p.Data.ChosenContents.Count() > 0)
+                        {
+                            <td>
 
-                    @if (p.Data.WrongAnswers != null && p.Data.WrongAnswers.Count() > 0)
-                    {
-                        <td>
-                            @foreach (var content in p.Data.WrongAnswers)
-                            {
-                                @*<span>הילד בחר במילה: <strong>@(content.Value) </strong> </span>
-                                    if (p.Data.ChosenContents != null && p.Data.ChosenContents.Count() > 0 && p.Data.ChosenContents.ContainsKey(content.Key))
-                                    {
-                                        <span>במקום במילה: <strong>@(p.Data.ChosenContents[content.Key].Word) </strong> </span>
-                                    }
-                                    else
-                                    {
-                                        <span>במקום במילה: </span>
-                                    }*@
-                            }
-                            <input type="button" value="הצג טעויות" onclick="ShowWrongAnswers(@p.ProgressID)" />
+                                @foreach (var content in p.Data.ChosenContents)
+                                {
+                                    <span>
+                                        @(content.Value.Word + ", ")
+                                    </span>
+                                }
 
-                        </td>
-                    }
-                    else
-                    {
-                        <td>אין תשובות לא נכונות</td>
-                    }
-
-                    <td>
-                        @{
-                            var amountOfContents = p.Data.ChosenContents != null ? p.Data.ChosenContents.Count() : 0;
-                            var failedAmount = p.Data.WrongAnswers != null ? p.Data.WrongAnswers.Count() : 0;
-                            var totalPoints = (amountOfContents - failedAmount);
+                            </td>
+                        }
+                        else
+                        {
+                            <td>אין תכנים</td>
                         }
 
-                        @(totalPoints)
-                    </td>
+                        @if (p.Data.WrongAnswers != null && p.Data.WrongAnswers.Count() > 0)
+                        {
+                            <td>
+                                @foreach (var content in p.Data.WrongAnswers)
+                                {
+                                    @*<span>הילד בחר במילה: <strong>@(content.Value) </strong> </span>
+                                        if (p.Data.ChosenContents != null && p.Data.ChosenContents.Count() > 0 && p.Data.ChosenContents.ContainsKey(content.Key))
+                                        {
+                                            <span>במקום במילה: <strong>@(p.Data.ChosenContents[content.Key].Word) </strong> </span>
+                                        }
+                                        else
+                                        {
+                                            <span>במקום במילה: </span>
+                                        }*@
+                                }
+                                <input type="button" value="הצג טעויות" onclick="ShowWrongAnswers(@p.ProgressID)" />
 
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <h3>הילד עדיין לא התחיל ללמוד</h3>
-}
+                            </td>
+                        }
+                        else
+                        {
+                            <td>אין תשובות לא נכונות</td>
+                        }
+
+                        <td>
+                            @{
+                                var amountOfContents = p.Data.ChosenContents != null ? p.Data.ChosenContents.Count() : 0;
+                                var failedAmount = p.Data.WrongAnswers != null ? p.Data.WrongAnswers.Count() : 0;
+                                var totalPoints = (amountOfContents - failedAmount);
+                            }
+
+                            @(totalPoints)
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h3>הילד עדיין לא התחיל ללמוד</h3>
+    }
+</div>
+
+<div class="ChildProgressGraphReport" style="display:none;">
+<div class="chartWrapper" @*style="display:none;"*@>
+    <div class="chartAreaWrapper">
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+</div>
 
 
 <div id="blackBackgroundPopup"></div>
@@ -258,9 +269,9 @@ else
 
     .chartWrapper {
         position: relative;
-        width:90%;
-        height:500px;
-        margin-top:20px;
+        width: 90%;
+        height: 500px;
+        margin-top: 20px;
     }
 
         .chartWrapper > canvas {
@@ -272,7 +283,7 @@ else
 
     .chartAreaWrapper {
         width: 100%;
-        height:100%;
+        height: 100%;
     }
 
     table {
@@ -290,6 +301,7 @@ else
         table thead tr {
             background: #bdbdbd;
         }
+
         table tbody tr:nth-child(odd) {
             background: #5e5eec52;
         }
@@ -312,10 +324,11 @@ else
         }
 
         .FiltterOptionsDiv select {
-            width: 150px;
-            height: 25px;
+            min-width: 150px;
+            height: 30px;
             padding-right: 5px;
             margin-left: 15px;
+            border-radius: 5px;
         }
 
 
@@ -355,4 +368,15 @@ else
             font-size: 18px;
             font-weight: bold;
         }
+
+    .WrongAnswerPopup table tbody tr:first-child {
+        background: #bdbdbd !important;
+    }
+
+    .WrongAnswerPopup table tbody tr:nth-child(even) {
+        background: #5e5eec52;
+    }
+    .WrongAnswerPopup table tbody tr:nth-child(odd) {
+        background: white;
+    }
 </style>

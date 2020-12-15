@@ -91,3 +91,35 @@ footer#footerContainer {
     .RegistraitionInstruction { width: 50%; margin: auto; padding-top: 30px; text-align: center;font-size: 20px;}
     .LoginContainer button {width:200px; height:30px; margin-top:10px;}
     .RegisterBtnDiv input[type='button'] {width:200px; height:30px; margin-top:10px;}
+
+    #returnToMainPageBtn {
+    height: 35px;
+    width: 200px;
+    border-radius: 10px;
+    border: none;
+    background: #8483cf;
+    color: white;
+    font-size: 18px;
+}
+
+    input[type="button"], input[type="submit"], button {
+    min-width: 100px;
+    border-radius: 5px;
+    border: 1px solid;
+    height: 30px;
+    background-color: #70bec1;
+}
+
+    input, [type="text"] {
+    min-width: 200px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid;
+    background: #f3f3f3;
+}
+    input[type="file"] {
+    padding: 3px;
+}
+    input[type="checkbox"] {
+    height: 20px;
+}

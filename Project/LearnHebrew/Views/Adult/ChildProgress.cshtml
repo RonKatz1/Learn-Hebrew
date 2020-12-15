@@ -23,6 +23,10 @@
     }
 
     function FillterPrograssResult() {
+        var type = 1;
+        if ($('.ChildProgressTableReport').is(':hidden')) {
+            type = 2;
+        }
         var letterSelected = $("#letterFillter").val();
         var childID = $("#ChildIDProgressChosen").val();
         var orderBy = $("#orderResultBy").val()
@@ -30,17 +34,19 @@
         $.post("@Url.Action("ShowChildProgress", "Adult")" + "?ChildID=" + childID + "&letterFilltered=" + letterSelected + "&OrderBy=" + orderBy + "&IsAsc=" + isAsc, function (data) {
             $("#ChildProgressReportContainer").html("");
             $("#ChildProgressReportContainer").html(data);
+
+            ChosePrgressInfoViewOption(type);
         });
     }
 
     function ChosePrgressInfoViewOption(type) {
         if (type == 1) {
-            $("#ChildProgressReportContainer").show();
-            $(".chartWrapper").hide();
+            $(".ChildProgressTableReport").show();
+            $(".ChildProgressGraphReport").hide();
         }
         else if (type == 2) {
-            $("#ChildProgressReportContainer").hide();
-            $(".chartWrapper").show();
+            $(".ChildProgressTableReport").hide();
+            $(".ChildProgressGraphReport").show();
         }
     }
 
@@ -61,13 +67,14 @@
                     <span onclick="ShowChildProgress(@child.ChildID)">@child.Name</span>
                 </div>
             }*@
-        <select id="adultChildsList">
+        <select id="adultChildsList" onchange="ShowChildProgress()">
+            <option value="0">בחר ילד</option>
             @foreach (var child in Model.AdultChilds)
             {
                 <option value="@child.ChildID">@child.Name</option>
             }
         </select>
-        <input type="button" class="adultChildsListBtn" value="הצג תוצאות" onclick="ShowChildProgress()" />
+        @*<input type="button" class="adultChildsListBtn" value="הצג תוצאות" onclick="ShowChildProgress()" />*@
     }
     else
     {
@@ -79,19 +86,12 @@
             <div id="chooseInfoView" style="display:none">
 
                 <input type="button" value="הצג טבלה" onclick="ChosePrgressInfoViewOption(1)" />
-                <input type="button" value="הצג כגרף" onclick="ChosePrgressInfoViewOption(2)" />
+                <input type="button" value="הצג גרף" onclick="ChosePrgressInfoViewOption(2)" />
 
             </div>
 
             <div id="ChildProgressReportContainer">
 
-            </div>
-
-            <div class="chartWrapper" style="display:none;">
-                <div class="chartAreaWrapper">
-                    <canvas id="myChart"></canvas>
-                </div>
-                <canvas id="myChartAxis"></canvas>
             </div>
         </div>
 </div>
@@ -120,6 +120,8 @@
         height: 30px;
         font-size: 16px;
         padding-right: 10px;
+        margin-bottom: 20px;
+        border-radius:5px;
     }
     .adultChildsListBtn {width:120px; height:30px;}
 
@@ -127,8 +129,8 @@
         margin-top: 20px;
         position: relative;
         width: 90%;
-        max-height:500px;
-        overflow-y:scroll;
+        /*max-height:500px;
+        overflow-y:scroll;*/
     }
 
     .AllProgressInfoContainer{

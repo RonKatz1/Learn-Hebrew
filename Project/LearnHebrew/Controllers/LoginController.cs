@@ -47,19 +47,24 @@ namespace LearnHebrew.Controllers
                 var name = coll["AdultName"];
                 var password = coll["AdultPassword"];
 
-                if (Auxiliray.Session.AdultInSession != null && Auxiliray.Session.AdultInSession.Name == name && Auxiliray.Session.AdultInSession.Password == password)
-                {
-                    m.Adult = Auxiliray.Session.AdultInSession;
-                    return View("~/Views/Adult/Index.cshtml", m);
-                }
-                else
-                {
-                    adult = BLL.Services.AdultServices.LoadAdultByNameAndPassword(name, password);
-                }
+                //if (Auxiliray.Session.AdultInSession != null && Auxiliray.Session.AdultInSession.Name == name && Auxiliray.Session.AdultInSession.Password == password)
+                //{
+                //    m.Adult = Auxiliray.Session.AdultInSession;
+                //    return View("~/Views/Adult/Index.cshtml", m);
+                //}
+                //else
+                //{
+                //    adult = BLL.Services.AdultServices.LoadAdultByNameAndPassword(name, password);
+                //}
 
-                if (adult == null)
+                adult = BLL.Services.AdultServices.LoadAdultByNameAndPassword(name, password);
+
+
+                if (adult == null || adult.AdultID == 0)
                 {
-                    return Content("fail");
+                    Models.messageModel message = new Models.messageModel();
+                    message.message = "פרטי התחברות שגויים";
+                    return View("~/Views/Login/AdultLogin.cshtml", message);
                 }
 
                 m.Adult = adult;
@@ -69,7 +74,9 @@ namespace LearnHebrew.Controllers
             }
             catch (Exception ex)
             {
-                return Content("fail");
+                Models.messageModel message = new Models.messageModel();
+                message.message = "";
+                return View("~/Views/Login/AdultLogin.cshtml", message);
             }
         }
 

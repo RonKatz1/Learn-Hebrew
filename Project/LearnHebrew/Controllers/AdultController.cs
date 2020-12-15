@@ -33,8 +33,9 @@ namespace LearnHebrew.Controllers
             return View("~/Views/Adult/Index.cshtml", m);
         }
 
-        public ActionResult SaveAdult(FormCollection coll)
+        public ActionResult SaveAdultRegistration(FormCollection coll)
         {
+            Models.messageModel m = new Models.messageModel();
             try
             {
                 BLL.LearnHebrewEntities.Adult adult = new BLL.LearnHebrewEntities.Adult();
@@ -45,6 +46,14 @@ namespace LearnHebrew.Controllers
 
                 if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(password))
                 {
+                    var allAdults = BLL.Services.AdultServices.LoadAll();
+                    var adultWithName = allAdults.Where(a => a.Name.Trim() == name.Trim()).FirstOrDefault();
+                    if(adultWithName != null && adultWithName.AdultID != 0)
+                    {
+                        m.message = "קיים משתמש בשם זה, אנא בחר שם אחר";
+                        return View("~/Views/Adult/AdultRegistration.cshtml", m);
+                    }
+
                     adult.Name = name;
                     adult.Password = password;
                     adult.Data.IsTeacher = isTeacher.Equals("false") ? false : true;

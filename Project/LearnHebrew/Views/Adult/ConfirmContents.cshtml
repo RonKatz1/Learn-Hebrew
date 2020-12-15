@@ -32,16 +32,19 @@
                 }
 
                 if (counter >= totalContent) {
-                    EndContents();
+                    //EndContents();
+                    $("#ConfirmContentsContainer").html("");
+                    $("#FinishContans").show();
                 }
             });
 
     }
 
-    function EndContents() {
-        $("#ConfirmContentsContainer").html("");
-        $("#ConfirmContentsContainer").append($("<h3>").text("אין יותר תכנים לאישור"));
-    }
+    //function EndContents() {
+    //    $("#ConfirmContentsContainer").html("");
+    //    $("#ConfirmContentsContainer").append($("<h3>").text("איזה כיף! סיימת לאשר את כל התכנים החדשים"));
+    //    $("#ConfirmContentsContainer").append($("<div>").prepend('<img src="~/Pictures/veryGood.gif"/>'));
+    //}
 </script>
 
 <div id="AdultPageSize">
@@ -76,6 +79,13 @@
                     counter++;
                 }
             </div>
+
+        </div>
+        <div id="FinishContans">
+            <h3>איזה כיף! סיימת לאשר את כל התכנים החדשים</h3>
+            <div class="veryGoodImogiContainer">
+                <img src="~/Pictures/veryGood.gif" />
+            </div>
         </div>
     }
     else
@@ -98,7 +108,8 @@
     }
 
     #AdultPageSize h3 {text-align:center;}
-    .cryingImogiContainer {text-align:center;}
+    .cryingImogiContainer, veryGoodImogiContainer {text-align:center;}
+
     .ContentPhoto {
         background-position: center center;
         background-repeat: no-repeat;
@@ -119,4 +130,6 @@
     .contentToDisplay {
         width: 100%;
     }
+
+    #FinishContans {display:none;}
 </style>

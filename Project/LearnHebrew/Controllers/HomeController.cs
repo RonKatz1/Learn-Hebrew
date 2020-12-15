@@ -38,12 +38,16 @@ namespace LearnHebrew.Controllers
 
         public ActionResult AdultLogin()
         {
-            return View("~/Views/Login/AdultLogin.cshtml");
+            Models.messageModel message = new Models.messageModel();
+            message.message = "";
+            return View("~/Views/Login/AdultLogin.cshtml", message);
         }
 
         public ActionResult AdultRegistration()
         {
-            return View("~/Views/Adult/AdultRegistration.cshtml");
+            Models.messageModel m = new Models.messageModel();
+            m.message = "";
+            return View("~/Views/Adult/AdultRegistration.cshtml", m);
         }
         public ActionResult SiteIndex()
         {

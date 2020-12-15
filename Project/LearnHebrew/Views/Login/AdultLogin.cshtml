@@ -1,46 +1,76 @@
-﻿
+﻿@model LearnHebrew.Models.messageModel
+
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
 <script>
+    function ReturnToMainPage() {
+        window.location.href = "@Url.Action("Index", "Home")"
+    }
+
     function AdultRegistration() {
         window.location.href = "@(Url.Action("AdultRegistration", "Home"))";
     }
 </script>
 
-<div style="width:50%; margin:auto; padding:10px; text-align:center;">
-    <h3>אנא הזן פרטי התחברות כדי להכנס למערכת</h3>
-</div>
-
-
-<div id="LoginAdultContainer">
-    <div class="LoginContainer">
-        @using (Html.BeginForm("AdultLogin", "Login", FormMethod.Post))
-        {
-            <div class="LoginInput">
-                <label>שם משתמש</label>
-                <input name="AdultName" />
-            </div>
-            <div class="LoginInput">
-                <label>סיסמא</label>
-                <input name="AdultPassword" />
-            </div>
-    
-            <button type="submit">התחבר</button>
-        }
+<div id="AdultPageSize">
+    <div>
+        <input type="button" id="returnToMainPageBtn" onclick="ReturnToMainPage()" value="חזור לעמוד בית" />
     </div>
-    
-    <div class="RegisterBtnDiv">
-        <span>
-            משתמש חדש? לחץ על מנת להתחבר למערכת בפעם הראשונה
-        </span>
-        <input type="button" value="הרשם" onclick="AdultRegistration()"/>
+
+
+    <div style="width:50%; margin:auto; padding:10px; text-align:center;">
+        <h3>אנא הזן פרטי התחברות כדי להכנס למערכת</h3>
+    </div>
+
+
+    <div id="LoginAdultContainer">
+        <div class="LoginContainer">
+            @using (Html.BeginForm("AdultLogin", "Login", FormMethod.Post))
+            {
+                <div class="LoginInput">
+                    <label>שם משתמש</label>
+                    <input name="AdultName" />
+                </div>
+                <div class="LoginInput">
+                    <label>סיסמא</label>
+                    <input name="AdultPassword" />
+                </div>
+
+                <button type="submit">התחבר</button>
+
+                if (!string.IsNullOrEmpty(Model.message))
+                {
+                    <div class="ErrorMsg">
+                        <span>@Model.message</span>
+                    </div>
+                }
+
+            }
+        </div>
+        <div class="RegisterBtnDiv">
+            <span>
+                משתמש חדש? לחץ על מנת להתחבר למערכת בפעם הראשונה
+            </span>
+            <input type="button" value="הרשם" onclick="AdultRegistration()" />
+        </div>
     </div>
 </div>
 
 <style>
 
+    #AdultPageSize {
+        width: 100%;
+        height: 100%;
+        padding: 0px 40px;
+    }
+
+    .ErrorMsg {
+        margin-top: 20px;
+        font-size: 20px;
+        color: red;
+    }
 
 </style>
