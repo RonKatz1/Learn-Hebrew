@@ -102,7 +102,7 @@ footer#footerContainer {
     font-size: 18px;
 }
 
-    input[type="button"], input[type="submit"], button {
+    /*input[type="button"], input[type="submit"], button {
     min-width: 100px;
     border-radius: 5px;
     border: 1px solid;
@@ -122,4 +122,4 @@ footer#footerContainer {
 }
     input[type="checkbox"] {
     height: 20px;
-}
+}*/
