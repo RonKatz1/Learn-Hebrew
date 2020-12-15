@@ -244,6 +244,7 @@
     <Content Include="Audio\Game_12\Game_12_instructions.mp4" />
     <Content Include="Audio\Game_13\Game_13_instructions.mp4" />
     <Content Include="Audio\Game_13\gun_fire2.mp3" />
+    <Content Include="Audio\Game_15\explain.mp4" />
     <Content Include="Audio\Game_16\error.mp3" />
     <Content Include="Audio\Game_16\Game_16_instructions.mp4" />
     <Content Include="Audio\Game_16\good_sound.mp3" />
