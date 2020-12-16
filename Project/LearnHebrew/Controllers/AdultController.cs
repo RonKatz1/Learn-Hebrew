@@ -46,9 +46,10 @@ namespace LearnHebrew.Controllers
 
                 if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(password))
                 {
-                    var allAdults = BLL.Services.AdultServices.LoadAll();
-                    var adultWithName = allAdults.Where(a => a.Name.Trim() == name.Trim()).FirstOrDefault();
-                    if(adultWithName != null && adultWithName.AdultID != 0)
+                    //var allAdults = BLL.Services.AdultServices.LoadAll();
+                    var adultByName = BLL.Services.AdultServices.LoadAdultByName(name);
+
+                    if(adultByName != null && adultByName.AdultID != 0)
                     {
                         m.message = "קיים משתמש בשם זה, אנא בחר שם אחר";
                         return View("~/Views/Adult/AdultRegistration.cshtml", m);
@@ -70,7 +71,8 @@ namespace LearnHebrew.Controllers
                     return Content("fail");
                 }
 
-                return View("~/Views/Login/AdultLogin.cshtml");
+                m.message = "";
+                return View("~/Views/Login/AdultLogin.cshtml", m);
             }
             catch (Exception ex)
             {

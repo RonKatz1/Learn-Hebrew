@@ -51,6 +51,11 @@ namespace Domain.Repositories
 
         }
 
+        public Adult LoadAdultByName(string Name)
+        {
+            return this.LearnHebrewDB.Adults.Where(a => a.Name == Name).FirstOrDefault();
+        }
+
         public List<Adult> LoadAll()
         {
             return this.LearnHebrewDB.Adults.ToList();
