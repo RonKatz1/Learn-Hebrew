@@ -82,8 +82,8 @@ namespace LearnHebrew.Controllers
 
         public ActionResult Logout()
         {
-            Auxiliray.Session.AdultInSession = null;
-            Auxiliray.Session.ChildInSession = null;
+            Auxiliray.Session.AdultInSession = new BLL.LearnHebrewEntities.Adult();
+            Auxiliray.Session.ChildInSession = new BLL.LearnHebrewEntities.Child();
             return View("~/Views/Home/Index.cshtml");
         }
     }

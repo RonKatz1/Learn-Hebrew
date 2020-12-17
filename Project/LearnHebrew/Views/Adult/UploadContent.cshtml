@@ -9,6 +9,12 @@
         $("#nikodSite").html("");
         window.onbeforeunload = null;
     });
+
+    function UploadContent() {
+        $(".saveContentBtn").css({ "pointer-events": "none", "opacity": "0.2" })
+        $(".waitMsg").show();
+        $("#SaveContentForm").submit();
+    }
 </script>
 
 <div id="AdultPageSize">
@@ -46,7 +52,9 @@
                 <input type="file" name="Voice" />
             </div>
 
-            <input class="saveContentBtn" type="submit" value="שמור תוכן" />
+            <input class="saveContentBtn" type="button" value="שמור תוכן" onclick="UploadContent()"/>
+
+            <span class="waitMsg">אנא המתן עד שהתוכן יעלה במלואו</span>
         }
     </div>
 
@@ -76,7 +84,7 @@
     .ContentInput label { float: right; }
     .ContentInput input { float: left;  }
     .saveContentBtn {margin-top:20px;}
-
+    .waitMsg {display:none;font-size: 20px; color: #e43de0;}
     input[type="button"], input[type="submit"], button {
         min-width: 100px;
         border-radius: 5px;
